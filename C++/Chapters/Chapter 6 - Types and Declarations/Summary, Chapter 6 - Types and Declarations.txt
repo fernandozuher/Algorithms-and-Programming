@@ -1,0 +1,233 @@
+Chapter 6 - Types and Declarations
+
+Standard ISO C++
+
+-> implementation-defined: each implementation must provide a specific, well-defined behavior for a construct and that behavior must be documented. For example:
+	unsigned char c1 = 64;
+	unsigned char c2 = 1256;
+	// well defined: a char has at least 8 bits and can always hold 64
+	// implementation-defined: truncation if a char has only 8 bits
+
+	The initialization of c1 is well defined because a char must be at least 8 bits. However, the behavior of the initialization of c2 is implementation-defined because the number of bits in a char is implementation-defined. If the char has only 8 bits, the value 1256 will be truncated to 232 (§10.5.2.1).
+
+	--->>>Most implementation-defined features relate to differences in the hardware used to run a program.<<<---
+
+
+-> unspecified behaviors: a range of possible behaviors are acceptable, but the
+implementer is not obliged to specify which actually occur.
+
+-> undefined behavior: construct is deemed undefined by the standard if no reasonable
+	
+	behavior is required by an implementation. Typically, some obvious implementation technique will cause a program using an undefined feature to behave very badly. For example:
+	const int size = 4∗1024;
+	char page[siz e];
+	void f()
+	{
+		page[size+size] = 7; // undefined
+	}
+
+	Plausible outcomes of this code fragment include overwriting unrelated data and triggering a hardware error/exception. An implementation is not required to choose among plausible outcomes. Where powerful optimizers are used, the actual effects of undefined behavior can become quite unpredictable.
+
+
+The Boolean, character, and integer types are collectively called integral types.
+
+	The integral and floating-point types are collectively called arithmetic types.
+
+			Enumerations and classes (Chapter 16) are called user-defined types because they must be defined by users rather than being available for use without previous declaration, the way fundamental types are.
+
+					In contrast, fundamental types, pointers, and references are collectively referred to as built-in types.
+
+************************************************
+
+IMPORTANT: For most applications, we could use bool for logical values, char for characters, int for integer values, and double for floating-point values. The remaining fundamental types are variations for optimizations, special needs, and compatibility that are best ignored until such needs arise.
+
+************************************************
+
+
+wchar_t : Provided to hold characters of a larger character set such as Unicode (see §7.3.2.2).
+	The size of wchar_t is implementation-defined and large enough to hold the largest character set supported by the implementation’s locale (Chapter 39).
+
+• char16_t : A type for holding 16-bit character sets, such as UTF-16.
+• char32_t : A type for holding 32-bit character sets, such as UTF-32.
+
+
+The unsigned integer types are ideal for uses that treat storage as a bit array. Using an unsigned instead of an int to gain one more bit to represent positive integers is almost never a good idea. Attempts to ensure that some values are positive by declaring variables unsigned will typically be defeated by the implicit conversion rules (§10.5.1, §10.5.2.1).
+
+Unlike plain char 's, plain int 's are always signed. The signed int types are simply more explicit synonyms for their plain int counterparts, rather than different types.
+
+	If you need more detailed control over integer sizes, you can use aliases from <cstdint> (§43.7), such as
+
+		int64_t (a signed integer with exactly 64 bits),
+		uint_fast16_t (an unsigned integer with exactly 8 bits, supposedly the fastest such integer),
+		and int_least32_t (a signed integer with at least 32 bits, just like plain int).
+
+	The plain integer types have well-defined minimal sizes (§6.2.8), so the <cstdint> are sometimes redundant and can be overused.
+
+		Minimal sizes in C++: char 1 byte, short 2 bytes and double 4 bytes
+
+In addition to the standard integer types, an implementation may provide extended integer types (signed and unsigned). These types must behave like integers and are considered integer types when considering conversions and integer literal values, but they usually have greater range (occupy more space).
+
+
+6.2.4.1 Integer Literals
+The compiler ought to warn about literals that are too long to represent, but an error is only guaranteed for {} initializers (§6.3.5).
+
+	For example, 100000 is of type int on a machine with 32-bit int s but of type long int on a machine with 16-bit int s and 32-bit long s. Similarly, 0XA000 is of type int on a machine with 32-bit int s but of type unsigned int on a machine with 16-bit int s. These implementation dependencies can be avoided by using suffixes: 100000L is of type long int on all machines and 0XA000U is of type unsigned int on all machines.
+
+6.2.5 Floating-Point Types
+The floating-point types represent floating-point numbers. A floating-point number is an approximation of a real number represented in a fixed amount of memory.
+
+*************************************
+The reason for providing more than one integer type, more than one unsigned type, and more than one floating-point type is to allow the programmer to take advantage of hardware characteristics. On many machines, there are significant differences in memory requirements, memory access times, and computation speed among the different varieties of fundamental types. If you know a machine, it is usually easy to choose, for example, the appropriate integer type for a particular variable. Writing truly portable low-level code is harder.
+*************************************
+
+In addition, it is guaranteed that a char has at least 8 bits, a short at least 16 bits, and a long at least 32 bits.
+
+If you need a specific size of integer, say, a 16-bit integer, you can #include the standard header <cstdint> that defines a variety of types (or rather type aliases; §6.5). For example:
+
+	int16_t x {0xaabb}; // 2 bytes
+	int64_t xxxx {0xaaaabbbbccccdddd}; // 8 bytes
+	int_least16_t y; // at least 2 bytes (just like int)
+	int_least32_t yy // at least 4 bytes (just like long)
+	int_fast32_t z; // the fastest int type with at least 4 bytes
+		
+<cstddef>: size_t
+The sizeof() is the result of size related to one char size.
+
+A sessão sobre 6.2.9 Alignment não me parece útil de momento.
+
+
+6.3.1 The Structure of Declarations
+Thus, ∗ is prefix and [] and () are postfix. The postfix declarator operators bind tighter than the prefix ones. Consequently, char∗kings[] is an array of pointers to char , whereas char(∗kings)[] is a pointer to an array of char. We have to use parentheses to express types such as ‘‘pointer to array’’ and ‘‘pointer to function’’; see the examples in §7.2.
+
+
+6.3.2 Declaring Multiple Names
+It is often useful to keep frequently used names relatively short and reserve really long names for infrequently used entities.
+
+A hidden global name can be referred to using the scope resolution operator, ::
+For example:
+	int x;
+	void f2()
+	{
+		int x = 1; // hide global x
+		::x = 2; // assign to global x
+		x = 2; // assign to local x
+		
+		// ...
+	}
+
+Este operador :: funciona apenas para variável global.
+Não funciona para variável num escopo acima que não seja global, tipo:
+int i {};
+if (!i) {
+	int i = 3;
+	cout << "\ni local: " << i <<
+			"\ni outside: " << ::i; // error: ‘::i’ has not been declared
+   								    // cout << "\ni outside: " << ::i;
+}
+
+...dá erro de compiliação.
+
+6.3.5 Initialization
+An initializer can use one of four syntactic styles:
+	X a1 {v};
+	X a2 = {v};
+	X a3 = v;
+	X a4(v);
+
+Of these, only the first can be used in every context, and I strongly recommend its use. It is clearer and less error-prone than the alternatives. However, the first form (used for a1) is new in C++11, so the other three forms are what you find in older code. The two forms using = are what you use in C. Old habits die hard, so I sometimes (inconsistently) use = when initializing a simple variable with a simple value.
+
+Initialization using {}, list initialization, does not allow narrowing (§iso.8.5.4). That is:
+	• An integer cannot be converted to another integer that cannot hold its value. For example, char to int is allowed, but not int to char.
+	• A floating-point value cannot be converted to another floating-point type that cannot hold its value. For example, float to double is allowed, but not double to float.
+	• A floating-point value cannot be converted to an integer type.
+	• An integer value cannot be converted to a floating-point type.
+		Por quê?
+
+
+// Esta colocação de que não há vantagem em utilizar o {} não ficou boa porque parece contradizer a recomendação posta acima de "and I strongly recommend its use. It is clearer and less error-prone than the alternatives."
+There is no advantage to using {} initialization, and one trap, when using auto to get the type determined by the initializer. The trap is that if the initializer is a {}-list, we may not want its type deduced (§6.3.6.2). For example:
+	auto z1 {99}; // z1 is an initializer_list<int>
+	auto z2 = 99; // z2 is an int
+	
+So prefer = when using auto.
+
+The empty initializer list, {}, is used to indicate that a default value is desired. For example:
+	int x4 {}; // x4 becomes 0
+	double d4 {}; // d4 becomes 0.0
+	char∗ p {}; // p becomes nullptr
+	vector<int> v4{}; // v4 becomes the empty vector
+	string s4 {}; // s4 becomes ""
+
+Most types have a default value. For integral types, the default value is a suitable representation of zero. For pointers, the default value is nullptr (§7.2.2). For user-defined types, the default value (if any) is determined by the type’s constructors (§17.3.3).
+
+
+6.3.5.1 Missing Initializers
+For many types, including all built-in types, it is possible to leave out the initializer. If you do that – and that has unfortunately been common – the situation is more complicated. If you don’t like the complications, just initialize consistently. The only really good case for an uninitialized variable is a large input buffer.
+
+
+6.3.6 Deducing a Type: auto and decltype()
+The language provides two mechanisms for deducing a type from an expression:
+	• auto for deducing a type of an object from its initializer; the type can be the type of a variable, a const, or a constexpr.
+	• decltype(expr) for deducing the type of something that is not a simple initializer, such as the return type for a function or the type of a class member.
+	The deduction done here is very simple: auto and decltype() simply report the type of an expression already known to the compiler.
+
+auto a3 = 123;
+The type of the integer literal 123 is int, so a3 is an int. That is, auto is a placeholder for the type of the initializer.
+There is not much advantage in using auto instead of int for an expression as simple as 123. The harder the type is to write and the harder the type is to know, the more useful auto becomes.
+
+auto better with =
+non-auto better with {} initializer-list
+
+6.5 Type Aliases
+using Pchar = char∗; // pointer to character
+using PF = int(∗)(double); // pointer to function taking a double and returning an int
+
+typedef é uma sintaxe antiga para o using.
+
+The _t suffix is conventional for aliases (‘‘typedefs’’). The int16_t, int32_t, and other such aliases can be found in <cstdint> (§43.7).
+
+
+-----------------------------------------------------------------
+Para ir além:
+
+- Sobre como o computador representa ponto flutuante:
+https://en.wikipedia.org/wiki/Floating-point_arithmetic
+
+Diferenças reais entre os vários tipos de ints de C++: O standard C/C++ e livro não são claros. Lendo algumas discussões na internet, há falta de clareza e entendimento sobre o mesmo ficando difícil acreditar e entender o que realmente é dito sobre. Nas discussões, percebi que usar apenas int é bom para tornar o código mais portável. Os outros tipos poderiam ser usados para otimização baseado em uma implementação/hardware em particular, mas para isso deveriamos conhecer tal implementação. Em suma: apenas int vai bem.
+
+int
+
+uint_fast16_t
+int16_t // 2 bytes
+int32_t
+int64_t // 8 bytes
+
+int_least16_t // at least 2 bytes (just like int)
+int_least32_t // at least 4 bytes (just like long)
+int_fast32_t
+
+Há ainda outros: https://en.cppreference.com/w/cpp/header/cstdint
+
+https://stackoverflow.com/questions/9239558/what-is-the-difference-between-intxx-t-and-int-fastxx-t
+https://stackoverflow.com/questions/16164025/difference-between-int32-t-and-int-fast32-t
+
+http://www.cplusplus.com/forum/general/76569/
+:
+"
+Hi. Excuse me for mistimed reply.
+a 64-bit CPU does not necessarily perform 64-bit variables fastest. When you call a CPU 64-bit, this is actually the number of bits in general registers that can hold data or address of memory. this action is not time wasting. (performing CPU internal actions)
+Time wasting action is that when CPU wants to communicate with memory controller with address and data bus. If data bus is 64-bits length, then the fastest variable that CPU can handle is a 64-bit integer (or anything that is 64-bits long). but if data bus is not 64-bits length (e.g. 32-bits), for transferring a 64-bit value CPU needs to do the transfer twice. This is time wasting.
+
+Talked too much LOL, excuse me. Check your CPU documentation to make sure what is the length of your CPU data bus. That would be the fastest transfer.
+
+"
+--------------------------------------------------
+Exercício
+
+// Faça tudo num arquivo só: chapter6.cpp
+
+1) Declare e inicialize de imediato uma varíavel de cada um dos seguintes tipos: bool, char, int, float, double
+
+...usando o inicializador de lista - {}. Imprima os valores delas, seguido dos tamanhos ocupados na memória.
+
+Declare uma variável global int de qualquer nome. Na função main() declare uma outra variável de mesmo tipo e nome da global e inicialize com o valor 5. Imprima os valores das duas variáveis.
