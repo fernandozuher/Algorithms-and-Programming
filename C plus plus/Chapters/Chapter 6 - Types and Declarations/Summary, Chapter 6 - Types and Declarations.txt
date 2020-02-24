@@ -3,7 +3,7 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 24/02/2020
 Book: The C++ Programming Language, fourth edition
-About: Chapter 6 - Types and Declarations
+About: Summary, Chapter 6 - Types and Declarations
 */
 
 Standard ISO C++
