@@ -5,7 +5,6 @@ Date: 24/02/2020
 Book: Java The Complete Reference, 11th Edition
 About: Summary, Chapter 4 - Operators
 */
-------------------------------
 
 Arithmetic Operators
 	The operands of the arithmetic operators must be of a numeric type. You cannot use them on boolean types, but you can use them on char types, since the char type in Java is, essentially, a subset of int.
