@@ -1,0 +1,58 @@
+Summary, Chapter 4 - Operators
+------------------------------
+
+Arithmetic Operators
+	The operands of the arithmetic operators must be of a numeric type. You cannot use them on boolean types, but you can use them on char types, since the char type in Java is, essentially, a subset of int.
+		***In C++ you can use bool with arithmetic operators.
+
+
+The Modulus Operator
+	It can be applied to floating-point types as well as integer types.
+		***In C you can use this operator only with int s. To float use fmod().
+
+
+Arithmetic Compound Assignment Operators
+	There are compound assignment operators for all of the arithmetic, binary operators. Thus, any statement of the form var = var op expression; can be rewritten as
+	var op= expression;
+
+	The compound assignment operators provide two benefits. First, they save you a bit of typing, because they are “shorthand” for their equivalent long forms. Second, in some cases they are more efficient than are their equivalent long forms.
+		***In which cases they are more efficients?
+
+
+The Bitwise Operators
+	All of the integer types (except char) are signed integers.
+		***In C/C++ chars also can be signed.
+
+*******************************
+IMPORTANT:
+As you know, byte and short values are promoted to int when an expression is evaluated. Furthermore, the result of such an expression is also an int.
+*******************************
+
+The Left Shift
+	Since each left shift has the effect of doubling the original value, programmers frequently use this fact as an efficient alternative to multiplying by 2. But you need to watch out. If you shift a 1 bit into the high-order position (bit 31 or 63), the value will become negative.
+
+
+The Right Shift
+	>> (sign extension) VS >>> (unsigned shift)
+
+
+Short-Circuit Logical Operators
+	&& x &
+	|| x |
+
+	It is standard practice to use the short-circuit forms of AND and OR in cases involving Boolean logic, leaving the single-character versions exclusively for bitwise operations. However, there are exceptions to this rule. For example, consider the following statement: if(c==1 & e++ < 100) d = 100; Here, using a single & ensures that the increment operation will be applied to e whether c is equal to 1 or not.
+
+	NOTE The formal specification for Java refers to the short-circuit operators as the conditional-and and the conditional-or.
+
+
+Operator Precedence
+	Table 4-1 The Precedence of the Java Operators
+		***It is wrong the first line having postfix as ++(postfix)
+
+
+Using Parentheses
+	In addition to altering the normal precedence of an operator, parentheses can sometimes be used to help clarify the meaning of an expression. For anyone reading your code, a complicated expression can be difficult to understand. Adding redundant but clarifying parentheses to complex expressions can help prevent confusion later. For example, which of the following expressions is easier to read? 
+		a | 4 + c >> b & 7
+		(a | (((4 + c) >> b) & 7))
+
+	One other point: parentheses (redundant or not) do not degrade the performance of your program. Therefore, adding parentheses to reduce ambiguity does not negatively affect your program.
