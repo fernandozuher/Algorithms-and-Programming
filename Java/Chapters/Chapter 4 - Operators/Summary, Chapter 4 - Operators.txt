@@ -1,4 +1,10 @@
-Summary, Chapter 4 - Operators
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 24/02/2020
+Book: Java The Complete Reference, 11th Edition
+About: Summary, Chapter 4 - Operators
+*/
 ------------------------------
 
 Arithmetic Operators
@@ -56,3 +62,6 @@ Using Parentheses
 		(a | (((4 + c) >> b) & 7))
 
 	One other point: parentheses (redundant or not) do not degrade the performance of your program. Therefore, adding parentheses to reduce ambiguity does not negatively affect your program.
+
+Multiple Assignment
+x = y = z = 0;
