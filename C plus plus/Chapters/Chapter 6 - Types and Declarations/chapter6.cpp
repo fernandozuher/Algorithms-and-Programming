@@ -6,6 +6,7 @@ Book: The C++ Programming Language, fourth edition
 About: A homemade exercise just to practice issues
 approached in the Chapter 6 - Types and Declaration.
 */
+-----------------------------------------------------
 
 #include <iostream>
 #include <typeinfo> // typeid()
