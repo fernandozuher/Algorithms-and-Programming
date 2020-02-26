@@ -2,7 +2,7 @@
 Author: Fernando Zuher
 Place: Brazil
 Date: 26/02/2020
-Book: Python Crash Course, 2nd Edition
+Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
 About: Summary, Chapter 4 - Working with Lists
 */
 
