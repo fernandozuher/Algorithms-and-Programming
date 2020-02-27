@@ -2,7 +2,7 @@
 Author: Fernando Zuher
 Place: Brazil
 Date: 24/02/2020
-Book: The C++ Programming Language, fourth edition
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: A homemade exercise just to practice issues
 approached in the Chapter 6 - Types and Declaration.
 */
