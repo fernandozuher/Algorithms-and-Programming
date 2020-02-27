@@ -2,7 +2,7 @@
 Author: Fernando Zuher
 Place: Brazil
 Date: 25/02/2020
-Book: Python Crash Course, 2nd Edition
+Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
 About: Summary, Chapter 3 - Introducing Lists
 */
 
