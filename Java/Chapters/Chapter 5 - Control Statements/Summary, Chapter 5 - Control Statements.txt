@@ -1,0 +1,79 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 28/02/2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary, Chapter 5 - Control Statements
+*/
+
+Java’s program control statements can be put into the following categories: selection, iteration, and jump.
+
+-----------
+SELECTION
+
+Being able to use strings in a switch statement streamlines many situations. For example, using a string-based switch is an improvement over using the equivalent sequence of if/else statements. However, switching on strings can be more expensive than switching on integers. Therefore, it is best to switch on strings only in cases in which the controlling data is already in string form. In other words, don’t use strings in a switch unnecessarily.
+
+In summary, there are three important features of the switch statement to note:
+	• The switch differs from the if in that switch can only test for equality, whereas if can evaluate any type of Boolean expression. That is, the switch looks only for a match between the value of the expression and one of its case constants.
+
+	• No two case constants in the same switch can have identical values. Of course, a switch statement and an enclosing outer switch can have case constants in common.
+	
+	• A switch statement is usually more efficient than a set of nested ifs.
+		***In C it seems there is no significant difference.
+
+The last point is particularly interesting because it gives insight into how the Java compiler works. When it compiles a switch statement, the Java compiler will inspect each of the case constants and create a “jump table” that it will use for selecting the path of execution depending on the value of the expression. Therefore, if you need to select among a large group of values, a switch statement will run much faster than the equivalent logic coded using a sequence of if-elses. The compiler can do this because it knows that the case constants are all the same type and simply must be compared for equality with the switch expression. The compiler has no such knowledge of a long list of if expressions.
+	***Interesting!
+
+-----------
+ITERATION
+
+Each-for loop
+	for (type itr-var : collection)
+
+
+	int nums[][] = new int[3][5];
+	for (int x[] : nums) {
+		for (int y : x)
+			...
+		...
+	}
+
+Local variable type inference
+	var num = 5;
+
+-----------
+JUMP
+
+Jump statements: break, continue and return
+
+Using break as a Form of Goto
+	You can break out of one or more blocks of code. These blocks need not be part of a loop or a switch. They can be any block. Further, you can specify precisely where execution will resume, because this form of break works with a label. As you will see, break gives you the benefits of a goto without its problems.
+
+	break label;
+
+	label: {
+
+		// ...
+		break label;
+		// ...
+
+	}
+	// "break" continues after the block.
+
+	Most often, label is the name of a label that identifies a block of code. This can be a stand-alone block of code but it can also be a block that is the target of another statement. When this form of break executes, control is transferred out of the named block. The labeled block must enclose the break statement, but it does not need to be the immediately enclosing block. This means, for example, that you can use a labeled break statement to exit from a set of nested blocks. But you cannot use break to transfer control out of a block that does not enclose the break statement.
+
+	One of the most common uses for a labeled break statement is to exit from nested loops.
+
+
+continue label;
+	Semelhante a break label, mas muda fluxo de controle para a exata linha do label, não para o final do bloco do label como faz o break. Pode ser usado em laços que englobam outros, semelhante ao break label.
+
+	label: for(...) / while(...) do...while(...) { // fluxo de controle volta para a expressão condicional.
+
+		// ...
+		continue label;
+		// ...
+
+	}
+
+	Good uses of continue are rare. One reason is that Java provides a rich set of loop statements which fit most applications. However, for those special circumstances in which early iteration is needed, the continue statement provides a structured way to accomplish it.
