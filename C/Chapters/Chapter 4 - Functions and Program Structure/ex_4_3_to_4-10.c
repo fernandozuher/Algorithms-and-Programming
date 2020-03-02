@@ -2,8 +2,7 @@
 Author: Fernando Zuher
 Place: Brazil
 Date: 02/03/2020
-Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and
-															 DENNIS M. RITCHIE
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE
 About: Exercises from 4.3 to 4.10, Chapter 4 - Functions and Program Structure
 */
 
