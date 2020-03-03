@@ -14,21 +14,21 @@ that is, convert an integer into a string by calling a recursive routine.
 
 #define MAX_DIGITS_NUMBER 15
 
-void itoa_reverse(int n, char s[]);
+void itoa_recursive(int n, char s[]);
 
 int main() {
 
 	char number_in_string[MAX_DIGITS_NUMBER];
 	int number = -316;
 	
-	itoa_reverse(number, number_in_string);
+	itoa_recursive(number, number_in_string);
 	printf("\n%s\n", number_in_string);
 	
 	return 0;
 }
 
 /* itoa: convert n to characters in s */
-void itoa_reverse(int n, char s[])
+void itoa_recursive(int n, char s[])
 {
 	static int i = 0, len = 0;
 
@@ -40,7 +40,7 @@ void itoa_reverse(int n, char s[])
 
 	len++;
 	if (n / 10)
-		itoa_reverse(n / 10, s);
+		itoa_recursive(n / 10, s);
 	else
 		s[len] = '\0';
 
