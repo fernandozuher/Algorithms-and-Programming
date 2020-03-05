@@ -1,0 +1,108 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 05/03/2020
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
+About: Summary, Chapter 4 - Functions and Program Structure
+*/
+
+4.1 Basics of Functions
+	A do-nothing function like this is sometimes useful as a place holder during program development. If the return type is omitted, int is assumed.
+		***In old C.
+
+	The expression will be converted to the return type of the function if necessary. Parentheses are often used around the expression, but they are optional.
+
+	The calling function is free to ignore the returned value. Furthermore, there need be no expression after return; in that case, no value is returned to the caller. Control also returns to the caller with no value when execution "falls off the end" of the function by reaching the closing right brace. It is not illegal, but probably a sign of trouble, if a function returns a value from one place and no value from another. In any case, if a function fails to return a value, its "value" is certain to be garbage.
+
+
+4.2 Functions Returning Non-Integers
+	atof() <stdlib.h>
+
+	Second, and just as important, the calling routine must know that atof returns a non-int value... The function atof must be declared and defined consistently...
+		***Not nowadays.
+
+
+4.3 External Variables
+	A C program consists of a set of external objects, which are either variables or functions. The adjective "external" is used in contrast to "internal," which describes the arguments and variables defined inside functions. External variables are defined outside of any function, and are thus potentially available to many functions. Functions themselves are always external, because C does not allow functions to be defined inside other functions.
+
+	If a large number of variables must be shared among functions, external variables are more convenient and efficient than long argument lists. As pointed out in Chapter 1, however, this reasoning should be applied with some caution, for it can have a bad effect on program structure, and lead to programs with too many data connections between functions.
+
+	In effect, initializations of automatic variables are just shorthand for assignment statements. Which form to prefer is largely a matter of taste. We have generally used explicit assignments, because initializers in declarations are harder to see and further away from the point of use.
+		***Curioso. No Livro de C++ o autor sugere o exato contrário.
+
+
+4.4 Scope Rule
+	A declaration announces the properties of a variable (primarily its type); a definition also causes storage to be set aside. If the lines
+		int sp; 
+		double val[MAXVAL];
+
+	appear outside of any function, they define the external variables sp and val, cause storage to be set aside, and also serve as the declaration for the rest of that source file. On the other hand, the lines
+		extern int sp;
+		extern double val[];
+
+	declare for the rest of the source file that sp is an int and that val is a double array (whose size is determined elsewhere), but they do not create the variables or reserve storage for them.
+
+	There must be only one definition of an external variable among all the files that make up the source program; other files may contain extern declarations to access it. (There may also be extern declarations in the file containing the definition.) Array sizes must be specified with the definition, but are optional with an extern declaration.
+
+	There is a tradeoff between the desire that each file have access only to the information it needs for its job and the practical reality that it is harder to maintain more header files. Up to some moderate program size, it is probably best to have one header file that contains everything that is to be shared between any two parts of the program; that is the decision we made here. For a much larger program, more organization and more headers would be needed.
+
+
+4.6 Static Variables
+	For global variables
+	For local variables
+	For functions
+
+
+4.7 Register Variables
+	A register declaration advises the compiler that the variable in question will be heavily used. The idea is that register variables are to be placed in machine registers, which may result in smaller and faster programs. But compilers are free to ignore the advice.
+
+	register int x;
+	register char c;
+
+	The register declaration can only be applied to automatic variables and to the formal parameters of a function. In this latter case, it looks like
+
+		f(register unsigned m, register long n)
+		{
+			register int i;
+		}
+
+	In practice, there are restrictions on register variables, reflecting the realities of underlying hardware. Only a few variables in each function may be kept in registers, and only certain types are allowed. Excess register declarations are harmless, however, since the word register is ignored for excessor disallowed declarations. And it is not possible to take the address of a register variable (a topic to be covered in Chapter 5), regardless of whether the variable is actually placed in a register. The specific restrictions on number and types of register variables vary from machine to machine.
+
+
+4.9 Initialization
+	In the absence of explicit initialization, external and static variables are guaranteed to be initialized to zero; automatic and register variables have undefined (i.e., garbage) initial values.
+
+	For external and static variables, the initializer must be a constant expression; the initialization is done once, conceptually before the program begins execution. For automatic and register variables, it is done each time the function or block is entered.
+
+
+4.11.2 Macro Substitution
+
+	#define name replacement text
+
+	#define forever for (;;) /* infinite loop */
+
+	#define max(A, B) ((A) > (B) ? (A) : (B))
+		x = max(p+q, r+s);
+	
+	will be replaced by the line 
+		x = ((p+q) > (r+s) ? (p+q) : (r+s));
+
+	If you examine the expansion of max, you will notice some pitfalls. The expressions are evaluated twice; this is bad if they involve side effects like increment operators or input and output. For instance,
+	max(i++, j++) /* WRONG */
+
+	will increment the larger value twice. Some care also has to be taken with parentheses to make sure the order of evaluation is preserved; consider what happens when the macro
+		#define square(x) x * x /* WRONG */
+		
+		is invoked as square (z + 1)
+
+	Nonetheless, macros are valuable. One practical example comes from <stdio. h>, in which getchar and putchar are often defined as macros to avoid the run-time overhead of a function call per character processed. The functions in <ctype.h> are also usually implemented as macros.
+		***Isto é interessante, pois pode-se pensar em escrever curtas funções, que são usadas frequentemente, como macro.
+
+
+4.11.3 Conditional Inclusion
+	This provides a way to include code selectively, depending on the value of conditions evaluated during compilation.
+
+	The #if line evaluates a constant integer expression (which may not include sizeof, casts, or enum constants). If the expression is non-zero, subsequent lines until an #endif or #elif or #else are included. (The preprocessor statement #elif is like else if.) The expression defined(name) in a #if is 1 if the name has been defined, and 0 otherwise.
+
+	***Não tem exemplos mais claros da utilização disso na explicação.
+
