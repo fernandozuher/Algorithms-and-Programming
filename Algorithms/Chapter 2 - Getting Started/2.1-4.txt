@@ -1,0 +1,29 @@
+2.1-4 Consider the problem of adding two n-bit binary integers, stored in two n-element arrays A and B. The sum of the two integers should be stored in binary form in an (n + 1)-element array C. State the problem formally and write pseudocode for adding the two integers.
+
+
+ADD-BINARY-INTEGERS(A, B)
+	temp = 0
+	for i = A.length downto 1	
+		
+		if A[i] == 1 and B[i] == 1
+			
+			if temp == 0
+				C[i + 1] = 0
+			else
+				C[i + 1] = 1
+			
+			temp = 1
+
+		elseif A[i] == 1 or B[i] == 1
+
+			if temp == 1
+				C[i + 1] = 0
+			else
+				C[i + 1] = 1
+
+		else
+			C[i + 1] = temp
+			temp = 0
+
+	C[i + 1] = temp
+	return C
