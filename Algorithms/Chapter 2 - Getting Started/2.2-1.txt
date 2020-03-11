@@ -1,0 +1,16 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.2-1 Express the function n³/1000 - 100n² - 100n + 3 in terms of Θ-notation.
+
+n³/1000 - 100n² - 100n + 3
+(1/1000) * n³ - 100 * n² - 100 * n + 3
+a * n³ - b * n² - c * n + 3
+an³ - bn² - cn + 3
+n³ - n² - n + 3
+Θ(n³)

@@ -1,0 +1,43 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.2-2 Consider sorting n numbers stored in array A by first finding the smallest element of A and exchanging it with the element in A[1]. Then find the second smallest element of A, and exchange it with A[2]. Continue in this manner for the first n - 1 elements of A. Write pseudocode for this algorithm, which is known as selection sort. What loop invariant does this algorithm maintain? Why does it need to run for only the first n - 1 elements, rather than for all n elements? Give the best-case and worst-case running times of selection sort in Θ-notation.
+
+SELECTION-SORT(A)
+	for i = 1 to A.length - 1		n
+		min = i 					n-1
+		for j = i+1 to A.length		E -> from j = i+1 to n+1 -> (n(n+1)/2) - 1
+			if A[j] < A[min]		E -> from j = i+1 to n -> n(n-1)/2
+				min = j 			worst case: E -> from j = i+1 to n -> n(n-1)/2
+									best case: 0
+		
+		if min != i 				n-1
+			temp = A[i]				worst case: n-1. best case: 0
+			A[i] = A[min]			worst case: n-1. best case: 0
+			A[min] = temp			worst case: n-1. best case: 0
+
+The loop invariant is demonstrated in the subarray [1..i-1] prior to the second for loop.
+It needs to run just on the n-1 elements because the last one will be sorted just after the iteration on the (n-1)th element.
+
+Worst case:
+T(n) = n + n-1 + ((n(n+1)/2) - 1) + n(n-1)/2 + n(n-1)/2 + n-1 + n-1 + n-1 + n-1
+	 = (n² + n)/2 + (n²-n) + 6*(n-1)
+	 = 3n²/2 + n/2 + 5n - 6
+	 = 3n²/2 + 11n/2 - 6
+	 = an² + bn - c
+	 = Θ(n²)
+
+Best case:
+T(n) = n + n-1 + ((n(n+1)/2) - 1) + n(n-1)/2 + 0 + n-1 + 0 + 0 + 0
+	 = (n(n+1) + n(n-1))/2 + 3n - 3
+	 = n(n+1 + n-1)/2 + 3n - 3
+	 = n(2n)/2 + 3n - 3
+	 = n² + 3n - 3
+	 = an² + bn - c
+	 = Θ(n²)
+
