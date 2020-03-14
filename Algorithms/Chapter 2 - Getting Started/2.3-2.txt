@@ -1,0 +1,46 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.3-2 Rewrite the MERGE procedure so that it does not use sentinels, instead stopping once either array L or R has had all its elements copied back to A and then copying the remainder of the other array back into A.
+
+MERGE(A, p, q, r)
+	n1 = q - p + 1
+	n2 = r - q
+	let L[1..n1] and R[1..n2] be new arrays
+
+	for i = 1 to n1
+		L[i] = A[p + i - 1]
+
+	for j = 1 to n2
+		R[j] = A[q + j]
+
+	i = 1
+	j = 1
+	k = p
+
+	while i <= n1 and j <= n2
+
+		if L[i] <= R[j]
+			A[k] = L[i]
+			i = i + 1
+			
+		else A[k] = R[j]
+			j = j + 1
+
+		k = k + 1
+
+	if i > n1
+		while j <= n2
+			A[k] = R[j]
+			j = j + 1
+			k = k + 1
+	else
+		while i <= n1
+			A[k] = L[i]
+			i = i + 1
+			k = k + 1

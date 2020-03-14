@@ -1,0 +1,79 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.3-4 We can express insertion sort as a recursive procedure as follows. In order to sort A[1..n], we recursively sort A[1..n-1] and then insert A[n] into the sorted array A[1..n-1]. Write a recurrence for the running time of this recursive version of insertion sort.
+
+INSERTION-SORT(A, n)
+	if n > 1
+		INSERTION-SORT(A, n-1)
+		INSERTION(A, n)
+
+INSERTION(A, n)
+	i = n - 1
+	while A[n] < A[i] and i > 1
+		i = i - 1
+
+	temp = A[n]
+	j = n
+	for j downto i + 2
+		A[j] = A[j-1]
+
+	A[j] = temp
+
+
+-----
+
+T(n) = Θ(1)						if n = 1,
+	   aT(n/b) + D(n) + C(n)	if n > 1.
+
+Divide: Just computes the size of the array minus one (n-1). Constant time: D(n) = Θ(1)
+
+Conquer: Recursively solve the one subproblem of size n-1, which contributes T(n-1) to the running time.
+
+Combine: The INSERTION procedure on an n-element subarray takes time Θ(n), and so C(n) = Θ(n).
+
+T(n) = Θ(1)						if n = 1,
+	   T(n-1) + Θ(1) + Θ(n)		if n > 1.
+
+T(n) = Θ(1)						if n = 1,
+	   T(n-1) + Θ(n)			if n > 1.
+
+T(n) = c						if n = 1,
+	   T(n-1) + cn				if n > 1.
+
+Recursion tree:
+   cn
+	|
+  T(n-1)
+
+
+   cn
+	|
+  c(n-1)
+  	|
+  T(n-2)
+
+
+	^	   cn 		--------> cn
+	|		|
+	|	  c(n-1)	--------> cn - c
+	|	  	|
+	|	  c(n-2)	--------> cn - 2c
+	n	  	|
+	|	  T(n-3)	--------> cn - 4c
+	|		.
+	|		.
+	|		.
+	|
+	v		c 		--------> c
+		   ---
+			1
+
+TOTAL = cn + cn-c + cn-2c + cn-3c + ... + c = n(n+1)/2 = (n² + n)/2
+	Ignoring the low-order term and the constant c gives: Θ(n²)
+
