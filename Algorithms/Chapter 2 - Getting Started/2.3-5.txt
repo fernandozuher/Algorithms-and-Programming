@@ -29,7 +29,7 @@ BINARY-SEARCH(A, v)
 
 	return NIL										1
 
-The worst case happens when the key is not found. Each time the key is not found in the middle element, the array is divided by 2 while the 'start' index is less than the 'end' index. The divide step just computes the middle of the subarray, which takes
+The worst case happens when the key is not found. Each time the key is not found in the middle element, the array is divided by 2 while the 'start' index is less or equal than the 'end' index. The divide step just computes the middle of the subarray, which takes
 constant time. Thus, D(n) = Θ(4-7).
 
 T(n) = Θ(1)				if start > end,
