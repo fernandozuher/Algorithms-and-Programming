@@ -1,0 +1,15 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.3-6 Observe that the while loop of lines 5–7 of the INSERTION-SORT procedure in Section 2.1 uses a linear search to scan (backward) through the sorted subarray A[1..j-1]. Can we use a binary search (see Exercise 2.3-5) instead to improve the overall worst-case running time of insertion sort to Θ(n lg n)?
+
+	No, in spite of using BINARY-SEARCH and finding quicker the index position in the array to put the 'key', the elements after of that index still need to be pushed further one position. Such "push-behavior" (in the while loop of lines 5-7) is responsible to increase the complexity of the INSERTION-SORT for quadratic order:
+		while i > 0 and A[i] > key
+			A[i+1] = A[i]
+			i = i - 1
+
