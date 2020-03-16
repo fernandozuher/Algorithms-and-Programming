@@ -29,8 +29,42 @@ BINARY-SEARCH(A, v)
 
 	return NIL										1
 
+///////////////////////////////////////////////////////////
+IN C LANGAUGE:
+#include <stdio.h>
+
+int binary_search (int array[], int size, int key);
+
+int main() {
+
+	int array[] = {1, 2, 3, 4, 5}, key;
+	for (int key = 0; key < 7; key++)
+		printf("\nbinary_search, key = %d, index = %d", key, binary_search(array, sizeof(array)/sizeof(array[0]), key));
+
+	printf("\n");
+}
+
+int binary_search (int array[], int size, int key)
+{
+	int start = 0, end = size - 1, middle = (end-start)/2;
+
+	while (start <= end)
+
+		if (key == array[middle])
+			return middle;
+
+		else if (key > array[middle])
+			middle = middle + (end - (start = middle + 1))/2 + 1;
+
+		else
+			middle = middle + ((end = middle - 1) - start)/2 - 1;
+
+	return -1;
+}
+///////////////////////////////////////////////////////////
+
 The worst case happens when the key is not found. Each time the key is not found in the middle element, the array is divided by 2 while the 'start' index is less or equal than the 'end' index. The divide step just computes the middle of the subarray, which takes
-constant time. Thus, D(n) = Θ(4-7).
+constant time. Thus, D(n) = Θ(4-5).
 
 T(n) = Θ(1)				if start > end,
 	   T(n/2) + D(n)	if start <= end.
