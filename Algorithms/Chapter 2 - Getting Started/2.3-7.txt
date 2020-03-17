@@ -1,0 +1,115 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.3-7 Describe a Θ(n lg n)-time algorithm that, given a set S of n integers and another integer x, determines whether or not there exist two elements in S whose sum is exactly x.
+EXERCISE_2_3_7_THETA_NLGN (S, x)
+
+	flag = 0															1
+	for i = 1 to S.length - 1											n
+	
+		j = i + 1														1
+		k = S.length													1
+		
+		while j <= k													(n - (i + 1) + 1)/2
+
+			if S[i] + S[j] == x											1
+				write S[i]," + ", S[j]," = ", x							1
+				flag = 1												1
+			
+			if S[i] + S[k] == x and j!= k // j!=k to avoid repetion		1
+				write S[i]," + ", S[k]," = ", x							1
+				flag = 1												1
+
+			j++															1
+			k--															1
+
+	if !flag															1
+		write "There aren't two elements that summed result in ", x, "."
+
+------------------------------------------------------------------------------
+
+////////////////////////////////////////////////
+In C LANGUAGE:
+#include <stdio.h>
+
+int exercise_2_3_7_theta_n2 (int S[], int length, int x);
+int exercise_2_3_7_theta_nlgn (int S[], int length, int x);
+
+int main() {
+
+	int S[] = {0, 1, 2, 3, 4, 5}, x;
+	int length = sizeof(S)/sizeof(S[0]);
+
+	for (int x = 0; x < 7; x++)
+		exercise_2_3_7_theta_nlgn (S, length, x);
+	
+	printf("\n");
+	return 0;
+}
+
+int exercise_2_3_7_theta_n2 (int S[], int length, int x)
+{
+	int flag = 0;
+	for (int i = 0; i < length - 1; i++)
+		for (int j = i + 1; j < length; j++)
+			if (S[i] + S[j] == x) {
+				printf("\n%d [%d] + %d [%d] = %d", S[i], i, S[j], j, x);
+				flag = 1;
+			}
+
+	if (!flag)
+		printf("\nThere aren't two elements that summed result in %d.", x);
+	printf("\n");
+}
+
+int exercise_2_3_7_theta_nlgn (int S[], int length, int x)
+{
+	int flag = 0, j, k;
+	for (int i = 0; i < length - 1; i++) // n-1
+		
+		// This for is executed half of the time compared to the second for
+		// of the exercise_2_3_7_theta_n2 function.
+		for (j = i + 1, k = length - 1; j <= k; j++, k--) {
+
+			if (S[i] + S[j] == x) {
+				printf("\n%d [%d] + %d [%d] = %d", S[i], i, S[j], j, x);
+				flag = 1;
+			}
+			if (S[i] + S[k] == x && j != k) { // j!=k to avoid repetion of printfs
+				printf("\n%d [%d] + %d [%d] = %d", S[i], i, S[k], k, x);
+				flag = 1;
+			}
+		}
+
+	if (!flag)
+		printf("\nThere aren't two elements that summed result in %d.", x);
+	printf("\n");
+}
+
+///////////////////////////////////////////////////////////
+
+	^  	(n-(i+1)+1)/2 		--------> (n-(1+1)+1)/2 = (n-1)/2
+	|	      |
+	|  	(n-(i+1)+1)/2 		--------> (n-(2+1)+1)/2 = (n-2)/2
+	|	  	  |
+	|   (n-(i+1)+1)/2		--------> (n-(3+1)+1)/2 = (n-3)/2
+  n - 1	  	  |
+	|   (n-(i+1)+1)/2		--------> (n-(4+1)+1)/2 = (n-4)/2
+	|		  .
+	|		  .
+	|		  .
+	|
+	v		  c 			--------> (n-(n-1+1)+1)/2 = 1/2
+		     ---
+			  1
+
+Obs: Ceiling is applied to the expressions.
+
+TOTAL = (n-1)/2 + (n-2)/2 + (n-3)/2 + (n-4)/2 + ... + 1/2 = 
+	Ignoring the constant c gives: Θ(lg n)
+
