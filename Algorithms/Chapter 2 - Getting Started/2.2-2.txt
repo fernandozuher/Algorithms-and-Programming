@@ -10,16 +10,16 @@ About: Exercise, Chapter 2 - Getting Started
 
 SELECTION-SORT(A)
 	for i = 1 to A.length - 1		n
-		min = i 					n-1
+		min = i 			n-1
 		for j = i+1 to A.length		E -> from j = i+1 to n+1 -> (n(n+1)/2) - 1
-			if A[j] < A[min]		E -> from j = i+1 to n -> n(n-1)/2
-				min = j 			worst case: E -> from j = i+1 to n -> n(n-1)/2
-									best case: 0
+			if A[j] < A[min]	E -> from j = i+1 to n -> n(n-1)/2
+				min = j 	worst case: E -> from j = i+1 to n -> n(n-1)/2
+						best case: 0
 		
-		if min != i 				n-1
-			temp = A[i]				worst case: n-1. best case: 0
-			A[i] = A[min]			worst case: n-1. best case: 0
-			A[min] = temp			worst case: n-1. best case: 0
+		if min != i 			n-1
+			temp = A[i]		worst case: n-1. best case: 0
+			A[i] = A[min]		worst case: n-1. best case: 0
+			A[min] = temp		worst case: n-1. best case: 0
 
 The loop invariant is demonstrated in the subarray [1..i-1] prior to the second for loop.
 It needs to run just on the n-1 elements because the last one will be sorted just after the iteration on the (n-1)th element.
