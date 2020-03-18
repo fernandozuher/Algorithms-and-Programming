@@ -1,0 +1,118 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2.3-4 Referring back to the searching problem (see Exercise 2.1-3), observe that if the sequence A is sorted, we can check the midpoint of the sequence against v and eliminate half of the sequence from further consideration. The binary search algorithm repeats this procedure, halving the size of the remaining portion of the sequence each time. Write pseudocode, either iterative or recursive, for binary search. Argue that the worst-case running time of binary search is θ(lg n).
+
+
+BINARY-SEARCH(A, v)
+	start = 1										1
+	end = A.length									1
+	middle = (end - length)/2 + 1					1
+	
+	while start <= end 								1 + lg end
+
+		if v = A[middle]							lg end
+			return middle							
+
+		else if v > A[middle]						
+			start = middle + 1						
+			middle = middle + (end-start)/2 + 1		
+
+		else										
+			end = middle - 1						
+			middle = middle + (end-start)/2 - 1		
+
+	return NIL										1
+
+///////////////////////////////////////////////////////////
+IN C LANGUAGE:
+#include <stdio.h>
+
+int binary_search (int array[], int size, int key);
+
+int main() {
+
+	int array[] = {1, 2, 3, 4, 5}, key;
+	for (int key = 0; key < 7; key++)
+		printf("\nbinary_search, key = %d, index = %d", key, binary_search(array, sizeof(array)/sizeof(array[0]), key));
+
+	printf("\n");
+}
+
+int binary_search (int array[], int size, int key)
+{
+	int start = 0, end = size - 1, middle = (end-start)/2;
+
+	while (start <= end)
+
+		if (key == array[middle])
+			return middle;
+
+		else if (key > array[middle])
+			middle = middle + (end - (start = middle + 1))/2 + 1;
+
+		else
+			middle = middle + ((end = middle - 1) - start)/2 - 1;
+
+	return -1;
+}
+///////////////////////////////////////////////////////////
+
+The worst case happens when the key is not found. Each time the key is not found in the middle element, the array is divided by 2 while the 'start' index is less or equal than the 'end' index. The divide step just computes the middle of the subarray, which takes
+constant time. Thus, D(n) = Θ(4-5).
+
+T(n) = Θ(1)				if start > end,
+	   T(n/2) + D(n)	if start <= end.
+
+T(n) = Θ(1)				if start > end,
+	   T(n/2) + Θ(1)	if start <= end.
+
+T(n) = c				if start > end,
+	   T(n/2) + c		if start <= end.
+
+
+Tree:
+    c
+	|
+  T(n/2)
+
+
+    c
+	|
+    c
+  	|
+  T(n/4)
+
+
+    c
+	|
+    c
+  	|
+  	c
+  	|
+  T(n/8)
+
+
+	^	    c 		--------> c
+	|		|
+	|	    c 		--------> c
+	|	  	|
+	|	    c		--------> c
+  lg n	  	|
+	|	  	c		--------> c
+	|		.
+	|		.
+	|		.
+	|
+	v		c 		--------> c
+		   ---
+			1
+
+TOTAL = c + c + c + c ... + c = lg n*c
+	Ignoring the constant c gives: Θ(lg n)
+
