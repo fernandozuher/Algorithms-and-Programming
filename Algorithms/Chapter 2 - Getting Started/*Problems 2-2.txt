@@ -1,0 +1,91 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2-2 Correctness of bubblesort
+Bubblesort is a popular, but inefficient, sorting algorithm. It works by repeatedly swapping adjacent elements that are out of order.
+
+BUBBLESORT(A)
+	for i = 1 to A.length - 1
+		for j = A.length downto i + 1
+			if A[j] < A[j-1]
+				exchange A[j] with A[j-1]
+
+a. Let A' denote the output of BUBBLESORT(A). To prove that BUBBLESORT is correct, we need to prove that it terminates and that
+
+A'[1] <= A'[2] <= ... <= A'[n],
+
+where n = A.length. In order to show that BUBBLESORT actually sorts, what else do we need to prove?
+	
+
+	The elements of the subarray A'[1..j-1] need to be sorted before the next iteration of the first 'for' loop with 'j'. Each time the first for loop is executed, it is granted that the smallest numbers of the array are sortedly already located in the previous positions of the current j index.
+
+
+
+The next two parts will prove inequality (2.3).
+
+b. State precisely a loop invariant for the for loop in lines 2–4, and prove that this loop invariant holds. Your proof should use the structure of the loop invariant proof presented in this chapter.
+
+
+c. Using the termination condition of the loop invariant proved in part (b), state a loop invariant for the for loop in lines 1–4 that will allow you to prove inequality (2.3). Your proof should use the structure of the loop invariant proof presented in this chapter.
+
+
+d. What is the worst-case running time of bubblesort? How does it compare to the running time of insertion sort?
+
+	BUBBLESORT(A)
+		for i = 1 to A.length - 1               n
+			
+			for j = A.length downto i + 1       n + n-1 + n-2 + ... 2 = 
+	                                              n
+	                                              Σ = j
+	                                             j=2
+	                                                (n(n+1)/2) - 1
+												
+				if A[j] < A[j-1]                n-1 + n-2 + n-3 + ... + 1
+	                                             n-1
+	                                              Σ = j
+	                                             j=1
+	                                                n(n-1)/2
+					exchange A[j] with A[j-1]   n(n-1)/2
+
+	T(n) = n + (n(n+1)/2)-1 + n(n-1)/2 + n(n-1)/2
+	     = n(n-1) + n - 1 + (n(n+1)/2)
+	     = n² - 1 + (n²+n)/2
+	     = Θ(n²)
+
+	The bubble-sort worst-case running time is the same to the insertion-sort one. But the best-case running time of the former is still Θ(n²) against Θ(n) of the latter. Let's see:
+
+	// If array is already sorted, best case
+	BUBBLESORT(A)
+		for i = 1 to A.length - 1                n
+			for j = A.length downto i + 1        (n(n+1)/2) - 1
+				if A[j] < A[j-1]                 n(n-1)/2
+					exchange A[j] with A[j-1]    0
+
+
+	T(n) = n + (n(n+1)/2)-1 + n(n-1)/2
+	     = n - 1 + (n²+n + n²-n)/2
+	     = n - 1 + 2n²/2
+	     = n² + n - 1
+	     = Θ(n²)
+
+	Bubble-Sort continues going through each element of the array in the second 'for' in spite of being already sorted. In Insertion-Sort it doesn't happen: if the next element of the array to be sorted is already in its sorted position, the 'while' loop in the algorithm
+
+	INSERTION-SORT(A)
+		for j = 2 to A.length            n
+			key = A[j]                   n - 1
+			i = j - 1                    n - 1
+			while i > 0 and A[i] > key   0 + 1
+			    A[i + 1] = A[i]          0
+			    i = i - 1                0
+			A[i + 1] = key               1
+
+	T(n) = n + n-1 + n-1 + 1 + 1 = 3n = Θ(n)
+
+	...just will count 1 repetition because the 'A[i] > key' operation will be false in the first verification.
+
+	Thus, generally insertion-sort is better than bubble-sort.
