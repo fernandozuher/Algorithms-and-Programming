@@ -1,0 +1,52 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Exercise, Chapter 2 - Getting Started
+*/
+
+2-4 Inversions
+Let A[1..n] be an array of n distinct numbers. If i < j and A[i] > A[j], then the pair (i, j) is called an inversion of A.
+
+a. List the five inversions of the array (2, 3, 8, 6, 1).
+	
+	(2, 1), (3, 1), (8, 1), (6, 1), (8, 6)
+
+
+b. What array with elements from the set {1, 2, ..., n} has the most inversions? How many does it have?
+
+	{n, n-1, ..., 2, 1}
+	n(n-1)/2 inversions
+
+
+c. What is the relationship between the running time of insertion sort and the number of inversions in the input array? Justify your answer.
+
+    Both have in common applying a conditional expression between every element of the array compared to every another element without repetition. For example, in the array [1, 2, 3, 4, 5] every element will be compared to another one without repetition:
+    1 compared to -> 2, 3, 4, 5
+    2 compared to -> 3, 4, 5
+    3 compared to -> 4, 5
+    4 compared to -> 5
+
+    A clear difference is that insertion-sort will not go through each another element if the (sub)array is already sorted. That 'inversion' algorithm does, behaving like bubble-sort.
+    Also if an inversion is found, the array can be seen as an unsorted increasing array.
+
+    Both of the algorithms present running time of Θ(n²) in the worst case.
+
+
+***d. Give an algorithm that determines the number of inversions in any permutation on n elements in Θ(n lg n) worst-case time. (Hint: Modify merge sort.)
+
+	inversion = 0
+	INVERSION(A, p, r, inversion)
+
+		if p < r
+			q = floor((p+r)/2)
+			INVERSION(A, p, q, inversion)
+			INVERSION(A, q+1, r, inversion)
+
+			
+			// TO BE CONTINUED...
+			MERGE(A, p, q, r)
+			
+			if A[p] > A[q]
+				inversion++
