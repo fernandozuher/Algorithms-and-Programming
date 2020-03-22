@@ -1,0 +1,42 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 22/03/2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary, Chapter 6 - Introducing Classes
+*/
+
+Declaring Objects
+	The new operator dynamically allocates (that is, allocates at run time) memory for an object and returns a reference to it. This reference is, essentially, the address in memory of the object allocated by new. This reference is then stored in the variable. Thus, in Java, all class objects must be dynamically allocated.
+
+
+Assigning Object Reference Variables
+	REMEMBER When you assign one object reference variable to another object reference variable, you are not creating a copy of the object, you are only making a copy of the reference.
+
+
+Adding a Method That Takes Parameters
+	It is important to keep the two terms parameter and argument straight. A parameter is a variable defined by a method that receives a value when the method is called. For example, in square( ), i is a parameter. An argument is a value that is passed to a method when it is invoked. For example, square(100) passes 100 as an argument. Inside square( ), the parameter i receives that value.
+
+
+Constructors
+	Before moving on, let’s reexamine the new operator. As you know, when you allocate an object, you use the following general form: 
+		class-var = new classname ( );
+	
+	Now you can understand why the parentheses are needed after the class name. What is actually happening is that the constructor for the class is being called.
+
+	When using the default constructor, all non-initialized instance variables will have their default values, which are zero, null, and false, for numeric types, reference types, and boolean, respectively.
+
+
+The this Keyword
+	
+	this ;-)
+
+	Instance Variable Hiding
+		A word of caution: The use of this in such a context can sometimes be confusing, and some programmers are careful not to use local variables and formal parameter names that hide instance variables. Of course, other programmers believe the contrary—that it is a good convention to use the same names for clarity, and use this to overcome the instance variable hiding. It is a matter of taste which approach you adopt.
+
+		In C++ one uses :: to access global variable in a scope where there are variables with the same name.
+
+
+Garbage Collection
+	Garbage collection only occurs sporadically (if at all) during the execution of your program. It will not occur simply because one or more objects exist that are no longer used. Furthermore, different Java run-time implementations will take varying approaches to garbage collection, but for the most part, you should not have to think about it while writing your programs.
+
