@@ -103,7 +103,7 @@ A sessão sobre 6.2.9 Alignment não me parece útil de momento.
 
 
 6.3.1 The Structure of Declarations
-Thus, ∗ is prefix and [] and () are postfix. The postfix declarator operators bind tighter than the prefix ones. Consequently, char∗kings[] is an array of pointers to char , whereas char(∗kings)[] is a pointer to an array of char. We have to use parentheses to express types such as ‘‘pointer to array’’ and ‘‘pointer to function’’; see the examples in §7.2.
+Thus, ∗ is prefix and [] and () are postfix. The postfix declarator operators bind tighter than the prefix ones. Consequently, char∗kings[] is an array of pointers to char, whereas char(∗kings)[] is a pointer to an array of char. We have to use parentheses to express types such as ‘‘pointer to array’’ and ‘‘pointer to function’’; see the examples in §7.2.
 
 
 6.3.2 Declaring Multiple Names
