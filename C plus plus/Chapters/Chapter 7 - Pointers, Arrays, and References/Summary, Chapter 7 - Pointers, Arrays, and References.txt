@@ -6,3 +6,97 @@ Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary, Chapter 7 - Pointers, Arrays, and References
 */
 
+7.2 Pointers
+
+	The fundamental operation on a pointer is dereferencing, that is, referring to the object pointed to by the pointer. This operation is also called indirection. The dereferencing operator is (prefix) unary ∗.
+
+	The ∗ , meaning ‘‘pointer to,’’ is used as a suffix for a type name.
+
+7.2.1 void∗
+	In low-level code, we occasionally need to store or pass along an address of a memory location without actually knowing what type of object is stored there. A void∗ is used for that. You can read void∗ as ‘‘pointer to an object of unknown type.’’
+
+	A pointer to any type of object can be assigned to a variable of type void∗, but a pointer to function (§12.5) or a pointer to member (§20.6) cannot.
+
+	The primary use for void∗ is for passing pointers to functions that are not allowed to make assumptions about the type of the object and for returning untyped objects from functions. To use such an object, we must use explicit type conversion.
+
+	Functions using void∗ pointers typically exist at the very lowest level of the system, where real hardware resources are manipulated. For example:
+		void∗ my_alloc(siz e_t n); // allocate n bytes from my special heap
+		
+	Occurrences of void∗s at higher levels of the system should be viewed with great suspicion because they are likely indicators of design errors.
+
+7.2.2 nullptr
+	The literal nullptr represents the null pointer, that is, a pointer that does not point to an object. It can be assigned to any pointer type, but not to other built-in types:
+		
+		int∗ pi = nullptr;
+		double∗ pd = nullptr;
+		int i = nullptr; // error: i is not a pointer
+
+	There is just one nullptr , which can be used for every pointer type, rather than a null pointer for each pointer type.
+
+	Before nullptr was introduced, zero ( 0 ) was used as a notation for the null pointer. For example:
+		int∗ x = 0; // x gets the value nullptr
+
+	It has been popular to define a macro NULL to represent the null pointer. For example:
+		int∗ p = NULL; // using the macro NULL
+	
+	However, there are differences in the definition of NULL in different implementations; for example, NULL might be 0 or 0L . In C, NULL is typically (void∗)0 , which makes it illegal in C++ (§7.2.1):
+		int∗ p = NULL; // error: can’t assign a void* to an int*
+
+	Using nullptr makes code more readable than alternatives and avoids potential confusion when a function is overloaded to accept either a pointer or an integer (§12.3.1).
+
+
+7.3 Arrays
+	
+	void f()
+	{
+		int aa[10];
+		aa[6] = 9; // assign to aa’s 7th element
+		int x = aa[99]; // undefined behavior
+	}
+
+
+	Access out of the range of an array is undefined and usually disastrous. In particular, run-time range checking is neither guaranteed nor common.
+
+	The number of elements of the array, the array bound, must be a constant expression (§10.4). If you need variable bounds, use a vector (§4.4.1, §31.4). For example:
+		void f(int n)
+		{
+			int v1[n]; // error: array size not a constant expression
+			vector<int> v2(n); // OK: vector with n int elements
+		}
+
+	An array is C++’s fundamental way of representing a sequence of objects in memory. If what you want is a simple fixed-length sequence of objects of a given type in memory, an array is the ideal solution. For every other need, an array has serious problems.
+
+	An array can be allocated OR statically, OR on the stack, OR on the free store (§6.4.2). For example:
+		int a1[10]; // 10 ints in static storage
+		void f()
+		{
+			int a2 [20]; // 20 ints on the stack
+			int∗ p = new int[40]; // 40 ints on the free store
+			// ...
+		} 
+		
+
+	The C++ built-in array is an inherently low-level facility that should primarily be used inside the implementation of higher-level, better-behaved, data structures, such as the standard-library vector or array. There is no array assignment, and the name of an array implicitly converts to a pointer to its first element at the slightest provocation (§7.4). In particular, avoid arrays in interfaces (e.g., as function arguments; §7.4.3, §12.2.2) because the implicit conversion to pointer is the root cause of many common errors in C code and C-style C++ code. If you allocate an array on the free store, be sure to delete[] its pointer once only and only after its last use (§11.2.2). That’s most easily and most reliably done by having the lifetime of the free-store array controlled by a resource handle (e.g., string (§19.3, §36.3), vector (§13.6, §34.2), or unique_ptr (§34.3.1)). If you allocate an array statically or on the stack, be sure never to delete[] it. Obviously, C programmers cannot follow these pieces of advice because C lacks the ability to encapsulate arrays, but that doesn’t make the advice bad in the context of C++.
+
+	One of the most widely used kinds of arrays is a zero-terminated array of char. That’s the way C stores strings, so a zero-terminated array of char is often called a C-style string. C++ string literals follow that convention (§7.3.2), and some standard-library functions (e.g., strcpy() and strcmp(); §43.4) rely on it. Often, a char∗ or a const char∗ is assumed to point to a zero-terminated sequence of characters.
+		***0 ou \0???
+
+
+	7.3.1 Array Initializers
+
+		If the initializer supplies too few elements for an array, 0 is used for the rest. For example:
+			int v5[8] = { 1, 2, 3, 4 };
+			is equivalent to
+			int v5[] = { 1, 2, 3, 4 , 0, 0, 0, 0 };
+
+
+		There is no built-in copy operation for arrays. You cannot initialize one array with another (not even of exactly the same type), and there is no array assignment: 
+			int v6[8] = v5; // error : can’t copy an array (cannot assign an int* to an array)
+			v6 = v5;
+			// error : no array assignment
+		
+		Similarly, you can’t pass arrays by value. See also §7.4.
+		When you need assignment to a collection of objects, use a vector (§4.4.1, §13.6, §34.2), an array (§8.2.4), or a valarray (§40.5) instead.
+		An array of characters can be conveniently initialized by a string literal (§7.3.2).
+
+		
