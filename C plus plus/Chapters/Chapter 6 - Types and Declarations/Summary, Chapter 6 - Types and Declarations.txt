@@ -26,7 +26,7 @@ implementer is not obliged to specify which actually occur.
 	
 	behavior is required by an implementation. Typically, some obvious implementation technique will cause a program using an undefined feature to behave very badly. For example:
 	const int size = 4∗1024;
-	char page[siz e];
+	char page[size];
 	void f()
 	{
 		page[size+size] = 7; // undefined
