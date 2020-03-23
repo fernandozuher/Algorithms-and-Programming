@@ -1,0 +1,8 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 23/03/2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary, Chapter 7 - Pointers, Arrays, and References
+*/
+
