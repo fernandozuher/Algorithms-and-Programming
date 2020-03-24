@@ -1,9 +1,12 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 23/03/2020
+Date: 24/03/2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
-About: Summary, Chapter 7 - Pointers, Arrays, and References
+About: Summary*, Chapter 7 - Pointers, Arrays, and References
+
+* Most of the written is taken literally from the book.
+
 */
 
 7.2 Pointers
@@ -12,37 +15,37 @@ About: Summary, Chapter 7 - Pointers, Arrays, and References
 
 	The ∗ , meaning ‘‘pointer to,’’ is used as a suffix for a type name.
 
-7.2.1 void∗
-	In low-level code, we occasionally need to store or pass along an address of a memory location without actually knowing what type of object is stored there. A void∗ is used for that. You can read void∗ as ‘‘pointer to an object of unknown type.’’
+	7.2.1 void∗
+		In low-level code, we occasionally need to store or pass along an address of a memory location without actually knowing what type of object is stored there. A void∗ is used for that. You can read void∗ as ‘‘pointer to an object of unknown type.’’
 
-	A pointer to any type of object can be assigned to a variable of type void∗, but a pointer to function (§12.5) or a pointer to member (§20.6) cannot.
+		A pointer to any type of object can be assigned to a variable of type void∗, but a pointer to function (§12.5) or a pointer to member (§20.6) cannot.
 
-	The primary use for void∗ is for passing pointers to functions that are not allowed to make assumptions about the type of the object and for returning untyped objects from functions. To use such an object, we must use explicit type conversion.
+		The primary use for void∗ is for passing pointers to functions that are not allowed to make assumptions about the type of the object and for returning untyped objects from functions. To use such an object, we must use explicit type conversion.
 
-	Functions using void∗ pointers typically exist at the very lowest level of the system, where real hardware resources are manipulated. For example:
-		void∗ my_alloc(siz e_t n); // allocate n bytes from my special heap
+		Functions using void∗ pointers typically exist at the very lowest level of the system, where real hardware resources are manipulated. For example:
+			void∗ my_alloc(siz e_t n); // allocate n bytes from my special heap
+			
+		Occurrences of void∗s at higher levels of the system should be viewed with great suspicion because they are likely indicators of design errors.
+
+	7.2.2 nullptr
+		The literal nullptr represents the null pointer, that is, a pointer that does not point to an object. It can be assigned to any pointer type, but not to other built-in types:
+			
+			int∗ pi = nullptr;
+			double∗ pd = nullptr;
+			int i = nullptr; // error: i is not a pointer
+
+		There is just one nullptr , which can be used for every pointer type, rather than a null pointer for each pointer type.
+
+		Before nullptr was introduced, zero ( 0 ) was used as a notation for the null pointer. For example:
+			int∗ x = 0; // x gets the value nullptr
+
+		It has been popular to define a macro NULL to represent the null pointer. For example:
+			int∗ p = NULL; // using the macro NULL
 		
-	Occurrences of void∗s at higher levels of the system should be viewed with great suspicion because they are likely indicators of design errors.
+		However, there are differences in the definition of NULL in different implementations; for example, NULL might be 0 or 0L . In C, NULL is typically (void∗)0 , which makes it illegal in C++ (§7.2.1):
+			int∗ p = NULL; // error: can’t assign a void* to an int*
 
-7.2.2 nullptr
-	The literal nullptr represents the null pointer, that is, a pointer that does not point to an object. It can be assigned to any pointer type, but not to other built-in types:
-		
-		int∗ pi = nullptr;
-		double∗ pd = nullptr;
-		int i = nullptr; // error: i is not a pointer
-
-	There is just one nullptr , which can be used for every pointer type, rather than a null pointer for each pointer type.
-
-	Before nullptr was introduced, zero ( 0 ) was used as a notation for the null pointer. For example:
-		int∗ x = 0; // x gets the value nullptr
-
-	It has been popular to define a macro NULL to represent the null pointer. For example:
-		int∗ p = NULL; // using the macro NULL
-	
-	However, there are differences in the definition of NULL in different implementations; for example, NULL might be 0 or 0L . In C, NULL is typically (void∗)0 , which makes it illegal in C++ (§7.2.1):
-		int∗ p = NULL; // error: can’t assign a void* to an int*
-
-	Using nullptr makes code more readable than alternatives and avoids potential confusion when a function is overloaded to accept either a pointer or an integer (§12.3.1).
+		Using nullptr makes code more readable than alternatives and avoids potential confusion when a function is overloaded to accept either a pointer or an integer (§12.3.1).
 
 
 7.3 Arrays
@@ -53,7 +56,6 @@ About: Summary, Chapter 7 - Pointers, Arrays, and References
 		aa[6] = 9; // assign to aa’s 7th element
 		int x = aa[99]; // undefined behavior
 	}
-
 
 	Access out of the range of an array is undefined and usually disastrous. In particular, run-time range checking is neither guaranteed nor common.
 
@@ -67,6 +69,7 @@ About: Summary, Chapter 7 - Pointers, Arrays, and References
 	An array is C++’s fundamental way of representing a sequence of objects in memory. If what you want is a simple fixed-length sequence of objects of a given type in memory, an array is the ideal solution. For every other need, an array has serious problems.
 
 	An array can be allocated OR statically, OR on the stack, OR on the free store (§6.4.2). For example:
+	
 		int a1[10]; // 10 ints in static storage
 		void f()
 		{
@@ -75,12 +78,9 @@ About: Summary, Chapter 7 - Pointers, Arrays, and References
 			// ...
 		} 
 		
-
 	The C++ built-in array is an inherently low-level facility that should primarily be used inside the implementation of higher-level, better-behaved, data structures, such as the standard-library vector or array. There is no array assignment, and the name of an array implicitly converts to a pointer to its first element at the slightest provocation (§7.4). In particular, avoid arrays in interfaces (e.g., as function arguments; §7.4.3, §12.2.2) because the implicit conversion to pointer is the root cause of many common errors in C code and C-style C++ code. If you allocate an array on the free store, be sure to delete[] its pointer once only and only after its last use (§11.2.2). That’s most easily and most reliably done by having the lifetime of the free-store array controlled by a resource handle (e.g., string (§19.3, §36.3), vector (§13.6, §34.2), or unique_ptr (§34.3.1)). If you allocate an array statically or on the stack, be sure never to delete[] it. Obviously, C programmers cannot follow these pieces of advice because C lacks the ability to encapsulate arrays, but that doesn’t make the advice bad in the context of C++.
 
 	One of the most widely used kinds of arrays is a zero-terminated array of char. That’s the way C stores strings, so a zero-terminated array of char is often called a C-style string. C++ string literals follow that convention (§7.3.2), and some standard-library functions (e.g., strcpy() and strcmp(); §43.4) rely on it. Often, a char∗ or a const char∗ is assumed to point to a zero-terminated sequence of characters.
-		***0 ou \0???
-
 
 	7.3.1 Array Initializers
 
@@ -99,4 +99,182 @@ About: Summary, Chapter 7 - Pointers, Arrays, and References
 		When you need assignment to a collection of objects, use a vector (§4.4.1, §13.6, §34.2), an array (§8.2.4), or a valarray (§40.5) instead.
 		An array of characters can be conveniently initialized by a string literal (§7.3.2).
 
+	7.3.2 String Literals
+
+		In C and in older C++ code, you could assign a string literal to a non- const char∗ :
+			void f()
+			{
+				char∗ p = "Plato"; // error, but accepted in pre-C++11-standard code
+				p[4] = 'e'; // error: assignment to const
+			}
+			
+			
+		It would obviously be unsafe to accept that assignment.
+
+		If we want a string that we are guaranteed to be able to modify, we must place the characters in a non-const array:
+			void f()
+			{
+				char p[] = "Zeno"; // p is an array of 5 char
+				p[0] = 'R'; // OK
+			}
+
+		Long strings can be broken by whitespace to make the program text neater. For example:
+			char alpha[] = "abcdefghijklmnopqrstuvwxyz"
+				"ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+
+		7.3.2.1 Raw Character Strings
+			To represent a backslash ( \ ) or a double quote ( " ) in a string literal, we have to precede it with a backslash. That’s logical and in most cases quite simple. However, if we need a lot of backslashes and a lot of quotes in string literals, this simple technique becomes unmanageable. In particular, in regular expressions a backslash is used both as an escape character and to introduce characters representing character classes (§37.1.1). This is a convention shared by many programming languages, so we can’t just change it. Therefore, when you write regular expressions for use with the standard regex library (Chapter 37), the fact that a backslash is an escape character becomes a notable source of errors.
+
+
+7.4 Pointers into Arrays
+	
+	The implicit conversion of the array argument to a pointer means that the size of the array is lost to the called function. However, the called function must somehow determine the size to perform a meaningful operation. Like other C standard-library functions taking pointers to characters, strlen() relies on zero to indicate end-of-string; strlen(p) returns the number of characters up to and not including the terminating 0 . This is all pretty low-level. The standard-library vector (§4.4.1, §13.6, §31.4), array (§8.2.4, §34.2.1), and string (§4.2) don’t suffer from this problem. These library types give their number of elements as their size() without having to count elements each time.
+
+	7.4.1 Navigating Arrays
+
+		void fi(char v[])
+		{
+			for (int i = 0; v[i]!=0; ++i)
+			use(v[i]);
+		}
+
+		void fp(char v[])
+		{
+			for (char∗ p = v; ∗p!=0; ++p)
+			use(∗p);
+		}
+
+		There is no inherent reason why one version should be faster than the other. With modern compilers, identical code should be (and usually is) generated for both examples. Programmers can choose between the versions on logical and aesthetic grounds.
+
+		Subscripting a built-in array is defined in terms of the pointer operations + and ∗. For every built-in array a and integer j within the range of a , we hav e:
+			a[j] == ∗(&a[0]+j) == ∗(a+j) == ∗(j+a) == j[a]
 		
+		It usually surprises people to find that a[j]==j[a] . For example, 3["Texas"]=="Texas"[3]=='a'. Such cleverness has no place in production code. These equivalences are pretty low-level and do not hold for standard-library containers, such as array and vector.
+
+		Arrays are not self-describing because the number of elements of an array is not guaranteed to be stored with the array. This implies that to traverse an array that does not contain a terminator the way C-style strings do, we must somehow supply the number of elements. For example:
+			
+			void fp(char v[], int size)
+			{
+				for (int i=0; i!=size; ++i) // hope that v has at least size elements
+					use(v[i]);
+				for (int x : v) // error: range-for does not work for pointers
+					use(x);
+				
+				const int N = 7;
+				char v2[N];
+				for (int i=0; i!=N; ++i)
+					use(v2[i]);
+				for (int x : v2) // range-for works for arrays of known size
+					use(x);
+			}
+			
+			
+	7.4.2 Multidimensional Arrays
+
+		Multidimensional arrays are represented as arrays of arrays; a 3-by-5 array is declared like this:
+			int ma[3][5]; // 3 arrays with 5 ints each
+
+	7.4.3 Passing Arrays
+
+		Arrays cannot directly be passed by value. Instead, an array is passed as a pointer to its first element.
+
+		If you must deal directly with multidimensional arrays, consider encapsulating the code relying on it. In that way, you might ease the task of the next programmer to touch the code. Providing a multidimensional array type with a proper subscripting operator saves most users from having to worry about the layout of the data in the array (§29.2.2, §40.5.2).
+
+		The standard vector (§31.4) doesn’t suffer from these problems.
+
+			***This section makes clear the messy one can do easily in passing arrays as argument in a function. It is recommended to use arrays inside of higher-level objects, such as 'array', or 'vector', or...
+
+
+7.5 Pointers and const
+
+	When using a pointer, two objects are involved: the pointer itself and the object pointed to. ‘‘Prefixing’’ a declaration of a pointer with const makes the object, but not the pointer, a constant. To declare a pointer itself, rather than the object pointed to, to be a constant, we use the declarator operator ∗const instead of plain ∗.
+
+	The declarator operator that makes a pointer constant is ∗const . There is no const∗ declarator operator, so a const appearing before the ∗ is taken to be part of the base type. For example:
+		char ∗const cp; // const pointer to char
+		char const∗ pc; // pointer to const char
+		const char∗ pc2; // pointer to const char
+		
+	Some people find it helpful to read such declarations right-to-left, for example, ‘‘cp is a const pointer to a char ’’ and ‘‘ pc2 is a pointer to a char const.’’
+
+
+7.6 Pointers and Ownership
+	
+	A resource is something that has to be acquired and later released (§5.2). Memory acquired by new and released by delete (§11.2) and files opened by fopen() and closed by fclose() (§43.2) are examples of resources where the most direct handle to the resource is a pointer. This can be most confusing because a pointer is easily passed around in a program, and there is nothing in the type system that distinguishes a pointer that owns a resource from one that does not.
+
+		void confused(int∗ p)
+		{
+			// delete p?
+		}
+		int global {7};
+		void f()
+		{
+			X∗ pn = new int{7};
+			int i {7};
+			int q = &i;
+			confused(pn);
+			confused(q);
+			confused(&global);
+		}
+
+	If confused() delete s p the program will seriously misbehave for the second two calls because we may not delete objects not allocated by new (§11.2). If confused() does not delete p the program leaks (§11.2.1). In this case, obviously f() must manage the lifetime of the object it creates on the free store, but in general keeping track of what needs to be delete d in a large program requires a simple and consistent strategy.
+	
+	It is usually a good idea to immediately place a pointer that represents ownership in a resource handle class, such as vector, string, and unique_ptr. That way, we can assume that every pointer that is not within a resource handle is not an owner and must not be delete d. Chapter 13 discusses resource management in greater detail.
+
+	
+7.7 References
+
+	***This section is a bit boring. It may be helpful after some time writing c++ codes, not now.
+
+	...some programmers find f(&x) ugly compared to f(x). Worse, managing pointer variables with varying values and protecting code against the possibility of nullptr can be a significant burden. Finally, when we want to overload an operator, say +, we want to write x+y rather than &x+&y . The language mechanism addressing these problems is called a reference. Like a pointer, a reference is an alias for an object, is usually implemented to hold a machine address of an object, and does not impose performance overhead compared to pointers, but it differs from a pointer in that:
+		• You access a reference with exactly the same syntax as the name of an object.
+		• A reference always refers to the object to which it was initialized.
+		• There is no ‘‘null reference,’’ and we may assume that a reference refers to an object (§7.7.4).
+
+	A reference is an alternative name for an object, an alias. The main use of references is for specifying arguments and return values for functions in general and for overloaded operators (Chapter 18) in particular.
+
+	The idea of passing function arguments by reference is as old as high-level programming languages (the first version of Fortran used that).
+
+	7.7.1 Lvalue References
+
+		In a type name, the notation X& means ‘‘reference to X .’’ It is used for references to lvalues, so it is often called an lvalue reference. For example:
+			void f()
+			{
+				int var = 1;
+				int& r {var}; // r and var now refer to the same int
+				int x = r; // x becomes 1
+				r = 2; // var becomes 2
+			}
+
+		To ensure that a reference is a name for something (that is, that it is bound to an object), we must initialize the reference. For example:
+			int var = 1;
+			int& r1 {var}; // OK: r1 initialized
+			int& r2; // error: initializer missing
+			extern int& r3; // OK: r3 initialized elsewhere
+			
+		Initialization of a reference is something quite different from assignment to it. Despite appearances, no operator operates on a reference. For example:
+			void g()
+			{
+				int var = 0;
+				int& rr {var};
+				++rr; // var is incremented to 1
+				int∗ pp = &rr; // pp points to var
+			}
+
+
+		Here, ++rr does not increment the reference rr ; rather, ++ is applied to the int to which rr refers, that is, to var . Consequently, the value of a reference cannot be changed after initialization; it always refers to the object it was initialized to denote. To get a pointer to the object denoted by a reference rr , we can write &rr. Thus, we cannot have a pointer to a reference. Furthermore, we cannot define an array of references. In that sense, a reference is not an object.
+			
+7.8 Advice
+	[1] Keep use of pointers simple and straightforward; §7.4.1.
+	[2] Avoid nontrivial pointer arithmetic; §7.4.
+	[3] Take care not to write beyond the bounds of an array; §7.4.1.
+	[4] Avoid multidimensional arrays; define suitable containers instead; §7.4.2.
+	[5] Use nullptr rather than 0 or NULL; §7.2.2.
+	[6] Use containers (e.g., vector, array, and valarray) rather than built-in (C-style) arrays; §7.4.1.
+	[7] Use string rather than zero-terminated arrays of char; §7.4.
+	[8] Use raw strings for string literals with complicated uses of backslash; §7.3.2.1.
+	[9] Prefer const reference arguments to plain reference arguments; §7.7.3.
+	[12] Avoid void∗ except in low-level code; §7.2.1.
+	[13] Use const pointers and const references to express immutability in interfaces; §7.5.
+	[14] Prefer references to pointers as arguments, except where ‘‘no object’’ is a reasonable option; §7.7.4.
+
