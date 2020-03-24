@@ -3,7 +3,10 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 05/03/2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
-About: Summary, Chapter 4 - Functions and Program Structure
+About: Summary*, Chapter 4 - Functions and Program Structure
+
+* Most of the written is taken literally from the chapter.
+
 */
 
 4.1 Basics of Functions
