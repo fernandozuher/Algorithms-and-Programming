@@ -5,7 +5,7 @@ Date: 24/03/2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary*, Chapter 7 - Pointers, Arrays, and References
 
-* Most of the written is taken literally from the book.
+* Most of the written is taken literally from the chapter.
 
 */
 
