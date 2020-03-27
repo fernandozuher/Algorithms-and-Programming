@@ -175,15 +175,63 @@ About: Summary*, Chapter 7 - Pointers, Arrays, and References
 		Multidimensional arrays are represented as arrays of arrays; a 3-by-5 array is declared like this:
 			int ma[3][5]; // 3 arrays with 5 ints each
 
+		We can initialize ma like this:
+			void init_ma()
+			{
+				for (int i = 0; i!=3; i++)
+					for (int j = 0; j!=5; j++)
+						ma[i][j] = 10∗i+j;
+			}
+			
+		or graphically:
+			ma: 00 01 02 03 04 10 11 12 13 14 20 21 22 23 24
+
+		The array ma is simply 15 ints that we access as if it were 3 arrays of 5 int s. In particular, there is no single object in memory that is the matrix ma – only the elements are stored. The dimensions 3 and 5 exist in the compiler source only. When we write code, it is our job to remember them somehow and supply the dimensions where needed.
+
+
 	7.4.3 Passing Arrays
 
 		Arrays cannot directly be passed by value. Instead, an array is passed as a pointer to its first element.
 
 		If you must deal directly with multidimensional arrays, consider encapsulating the code relying on it. In that way, you might ease the task of the next programmer to touch the code. Providing a multidimensional array type with a proper subscripting operator saves most users from having to worry about the layout of the data in the array (§29.2.2, §40.5.2).
 
+		Fortunately, the argument declaration m[][] is illegal because the second dimension of a multidimensional array must be known in order to find the location of an element. However, the expression m[i][j] is (correctly) interpreted as ∗(∗(m+i)+j) , although that is unlikely to be what the programmer intended. A correct solution is:
+			
+			void print_mij(int∗ m, int dim1, int dim2)
+			{
+				for (int i = 0; i!=dim1; i++) {
+					for (int j = 0; j!=dim2; j++)
+						cout << m[i∗dim2+j] << '\t'; // obscure
+					cout << '\n';
+				}
+			}
+
+		The expression used for accessing the members in print_mij() is equivalent to the one the compiler generates when it knows the last dimension.
+
+
+		To call this function, we pass a matrix as an ordinary pointer:
+			int test()
+			{
+				int v[3][5] = {
+					{0,1,2,3,4}, {10,11,12,13,14}, {20,21,22,23,24}
+				};
+
+				// void print_m35(int m[3][5])
+				print_m35(v);
+				
+				// void print_mi5(int m[][5], int dim1)
+				print_mi5(v, 3);
+				
+				// void print_mij(int∗ m, int dim1, int dim2)
+				print_mij(&v[0][0], 3, 5); 
+			}
+
 		The standard vector (§31.4) doesn’t suffer from these problems.
 
 			***This section makes clear the messy one can do easily in passing arrays as argument in a function. It is recommended to use arrays inside of higher-level objects, such as 'array', or 'vector', or...
+
+		Note the use of &v[0][0] for the last call; v[0] would do because it is equivalent, but v would be a type error. This kind of subtle and messy code is best hidden. If you must deal directly with multi-dimensional arrays, consider encapsulating the code relying on it. In that way, you might ease the task of the next programmer to touch the code. Providing a multidimensional array type with a proper subscripting operator saves most users from having to worry about the layout of the data in the array (§29.2.2, §40.5.2). 
+		The standard vector (§31.4) doesn’t suffer from these problems.
 
 
 7.5 Pointers and const
