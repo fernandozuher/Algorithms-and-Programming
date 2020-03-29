@@ -1,9 +1,12 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 25/03/2020
+Date: 29/03/2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
-About: Summary, Chapter 5 - Ponteirs and Arrays
+About: Summary*, Chapter 5 - Ponteirs and Arrays
+
+*Most of the written is taken literally from the chapter.
+
 */
 
 5.3 Pointers and Arrays
@@ -16,19 +19,27 @@ About: Summary, Chapter 5 - Ponteirs and Arrays
 	There is one difference between an array name and a pointer that must be kept in mind. A pointer is a variable, so pa=a and pa++ are legal. But an array name is not a variable; constructions like a=pa and a++ are illegal.
 
 	As formal parameters in a function definition,
-	char s[]; 
+		char s[]; 
 	and
-	char *s;
+		char *s;
 	
 	are equivalent; we prefer the latter because it says more explicitly that the parameter is a pointer.
+
 
 5.4 Address Arithmetic
 
 	C guarantees that zero is never a valid address for data, so a return value of zero can be used to signal an abnormal event, in this case, no space.
 
-	Pointers and integers are not interchangeable. Zero is the sole exception: the constant zero may be assigned to a pointer, and a pointer may be compared with the constant zero. The symbolic constant NULL is often used in place of zero, as a mnemonic to indicate more clearly that this is a special value for a pointer. NULL is defined in <stdio. h>. We will use NULL henceforth.
+	Pointers and integers are not interchangeable. Zero is the sole exception: the constant zero may be assigned to a pointer, and a pointer may be compared with the constant zero. The symbolic constant NULL is often used in place of zero, as a mnemonic to indicate more clearly that this is a special value for a pointer. NULL is defined in <stdio.h>. We will use NULL henceforth.
+
+	The valid pointer operations are assignment of pointers of the same type, adding or subtracting a pointer and an integer, subtracting or comparing two pointers to members of the same array, and assigning or comparing to zero. All other pointer arithmetic is illegal. It is not legal to add two pointers, or to multiply or divide or shift or mask them, or to add float or double to them, or even, except for void *, to assign a pointer of one type to a pointer of another type without a cast.
+
 
 5.5 Character Pointers and Functions
+
+	A string constant, written as 
+		"I am a string"
+	is an array of characters.
 
 	Perhaps the most common occurrence of string constants is as arguments to functions, as in 
 		printf( "hello, world\n");
@@ -48,6 +59,41 @@ About: Summary, Chapter 5 - Ponteirs and Arrays
 		char *pmessage = "now is the time"; // a pointer
 		
 	amessaqe is an array, just big enough to hold the sequence of characters and ,\0' that initializes it. Individual characters within the array may be changed but amessaqe will always refer to the same storage. On the other hand, pmessaqe is a pointer, initialized to point to a string constant; the pointer may subsequently be modified to point elsewhere, but the result is undefined if you try to modify the string contents.
+		***C++ warns (g++ compiler) if char* variable is not declared as const when it is initialized with a constant string. For example:
+
+			char* temp = "teste aqui"; // warning in c++ (g++)
+			cout << temp << endl;
+
+		...but it compiles and print the string.
+
+		In C (gcc compiler) there is not warning and it compiles and executes normally.
+
+		Both the languages output "segmentation fault" when one tries to modify a character of the constant string. For example:
+
+			char* temp = "teste aqui"; // warning in c++ (g++), nothing in c (gcc)
+			temp[1] = 'd';
+			cout << temp << endl; // or printf("%s\n", temp); in C
+
+
+5.7 Multi-dimensional Arrays
+	
+	C provides rectangular multi-dimensional arrays, although in practice they are much less used than arrays of pointers. In this section, we will show some of their properties.
+
+	Thus if the array day tab is to be passed to a function f, the declaration of f would be 
+		f(int daytab[2][13]) { ... }
+
+	It could also be
+		f(int daytab[][13]) { ... }
+
+	since the number of rows is irrelevant, or it could be
+		f(int(*daytab)[13]) { ... }
+
+	which says that the parameter is a pointer to an array of 13 integers. The parentheses are necessary since brackets [] have higher precedence than *.
+	
+	Without parentheses, the declaration
+		int *daytab[13]
+
+	is an array of 13 pointers to integers. More generally, only the first dimension (subscript) of an array is free; all the others have to be specified.
 
 
 5.9 Pointers vs. Multi-dimensional Arrays
@@ -57,3 +103,22 @@ About: Summary, Chapter 5 - Ponteirs and Arrays
 		int *b[10];
 
 	then a[3][4] and b[3][4] are both syntactically legal references to a single into But a is a true two-dimensional array: 200 int-sized locations have been set aside, and the conventional rectangular subscript calculation 20*row+col is used to find the element a I[row Hcol]. For b, however, the definition only allocates 10 pointers and does not initialize them; initialization must be done explicitly, either statically or with code. Assuming that each element of b does point to a twenty-element array, then there will be 200 ints set aside, plus ten cells for the pointers. The important advantage of the pointer array is that the rows of the array may be of different lengths. That is, each element of b need not point to a twenty-element vector; some may point to two elements, some to fifty, and some to none at all.
+
+	Although we have phrased this discussion in terms of integers, by far the most frequent use of arrays of pointers is to store character strings of diverse lengths, as in the function month_name.
+
+
+5.10 Command-line Arguments
+
+	Alternatively, we could write the printf statement as
+		printf ((argc > 1) ? "%s " : "%s", *++argv);
+
+	This shows that the format argument of printf can be an expression too.
+
+
+5.11 Pointers to Functions
+
+	int *f(); // f: function returning pointer to int
+	int (*pf)(); //pf: pointer to function returning int
+
+	* is a prefix operator and it has lower precedence than ( ), so parentheses are necessary to force the proper association.
+
