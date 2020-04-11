@@ -1,0 +1,121 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 11/04/2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary*, Chapter 7 - A Closer Look at Methods and Classes
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+--------------------
+Overloading Methods
+
+In Java, it is possible to define two or more methods within the same class that share the same name, as long as their parameter declarations are different. When this is the case, the methods are said to be overloaded, and the process is referred to as method overloading.
+
+In languages that do not support overloading, there are usually three or more versions of this function, each with a slightly different name. For instance, in C, the function abs( ) returns the absolute value of an integer, labs( ) returns the absolute value of a long integer, and fabs( ) returns the absolute value of a floating-point value.
+
+Indeed, Java’s standard class library includes an absolute value method, called abs( ). This method is overloaded by Java’s Math class to handle all numeric types. Java determines which version of abs( ) to call based upon the type of argument.
+
+The value of overloading is that it allows related methods to be accessed by use of a common name. Thus, the name abs represents the general action that is being performed. It is left to the compiler to choose the right specific version for a particular circumstance. You, the programmer, need only remember the general operation being performed. Through the application of polymorphism, several names have been reduced to one. Although this example is fairly simple, if you expand the concept, you can see how overloading can help you manage greater complexity. 
+
+*Overloading Constructors*
+
+------------------
+Returning Objects
+
+The preceding program makes another important point: Since all objects are dynamically allocated using new, you don’t need to worry about an object going out-of-scope because the method in which it was created terminates. The object will continue to exist as long as there is a reference to it somewhere in your program. When there are no references to it, the object will be reclaimed the next time garbage collection takes place.
+
+----------
+RECURSION
+
+Recursive versions of many routines may execute a bit more slowly than the
+iterative equivalent because of the added overhead of the additional method
+calls. A large number of recursive calls to a method could cause a stack overrun.
+Because storage for parameters and local variables is on the stack and each new
+call creates a new copy of these variables, it is possible that the stack could be
+exhausted. If this occurs, the Java run-time system will cause an exception.
+However, this is typically not an issue unless a recursive routine runs wild.
+
+The main advantage to recursive methods is that they can be used to create
+clearer and simpler versions of several algorithms than can their iterative
+relatives. For example, the QuickSort sorting algorithm is quite difficult to
+implement in an iterative way. Also, some types of AI-related algorithms are
+most easily implemented using recursive solutions.
+
+---------------------
+Understanding static
+
+Instance variables declared as static are, essentially, global variables.
+
+Methods declared as static have several restrictions:
+	• They can only directly call other static methods of their class.
+	• They can only directly access static variables of their class.
+	• They cannot refer to this or super in any way. (The keyword super
+	relates to inheritance and is described in the next chapter.)
+
+---------------
+Keyword: final
+
+--------------
+
+arrays.length
+
+---------------------------
+Exploring the String Class
+
+The first thing to understand about strings is that every string you create is actually an object of type String. Even string constants are actually String objects. For example, in the statement
+
+	System.out.println("This is a String, too");
+
+the string "This is a String, too" is a String object.
+
+The second thing to understand about strings is that objects of type String are immutable; once a String object is created, its contents cannot be altered. While this may seem like a serious restriction, it is not, for two reasons:
+	• If you need to change a string, you can always create a new one that contains the modifications.
+	• Java defines peer classes of String, called StringBuffer and StringBuilder, which allow strings to be altered, so all of the normal string manipulations are still available in Java. (StringBuffer and StringBuilder are described in Part II of this book.)
+
+The String class contains several methods that you can use. Here are a few.
+You can test two strings for equality by using equals(). You can obtain the length of a string by calling the length() method. You can obtain the character at a specified index within a string by calling charAt(). The general forms of these three methods are shown here:
+	
+	boolean equals(secondStr)
+	int length( )
+	char charAt(index)
+
+-----------------------------------
+Varargs: Variable-Length Arguments
+
+	void vaTest(int ... v);
+
+The ... syntax simply tells the compiler that a variable number of arguments will be used, and that these arguments will be stored in the array referred to by v.
+
+A method can have “normal” parameters along with a variable-length parameter. However, the variable-length parameter must be the last parameter declared by the method. For example, this method declaration is perfectly acceptable:
+
+	int doIt(int a, int b, double c, int ... vals) {
+
+There is one more restriction to be aware of: there must be only one varargs parameter. For example, this declaration is also invalid:
+	
+	int doIt(int a, int b, double c, int ... vals, double ... morevals) { // Error!
+
+----------------------------------------------------
+Local Variable Type Inference with Reference Types
+
+var myStr = "This is a string";
+
+As explained in Chapter 3, one of the benefits of local variable type inference is its ability to streamline code, and it is with reference types where such streamlining is most apparent. The reason for this is that many class types in Java have rather long names. For example, in Chapter 13, you will learn about the FileInputStream class, which is used to open a file for input operations. In the past, you would declare and initialize a FileInputStream using a traditional declaration like the one shown here:
+
+	FileInputStream fin = new FileInputStream("test.txt");
+
+With the use of var, it can now be written like this:
+	
+	var fin = new FileInputStream("test.txt");
+
+Here, fin is inferred to be of type FileInputStream because that is the type of its initializer. There is no need to explicitly repeat the type name. As a result, this declaration of fin is substantially shorter than writing it the traditional way. Thus, the use of var streamlines the declaration. This benefit becomes even more apparent in more complex declarations, such as those involving generics. In general, the streamlining attribute of local variable type inference helps lessen the tedium of entering long type names into your program.
+
+Of course, the streamlining aspect of local variable type inference must be used carefully to avoid reducing the readability of your program and, thus, obscuring its meaning. For example, consider a declaration such as the one shown here:
+	var x = o.getNext();
+
+In this case, it may not be immediately clear to someone reading your code what the type of x is. In essence, local variable type inference is a feature that you should use wisely.
+
+As you would expect, you can also use local variable type inference with user-defined classes, as the following program illustrates. It creates a class called MyClass and then uses local variable type inference to declare and initialize an object of that class.
+
