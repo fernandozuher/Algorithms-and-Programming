@@ -1,0 +1,12 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 13/04/2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+
