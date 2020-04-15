@@ -1,14 +1,13 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 14/04/2020
+Date: 15/04/2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
 
 * Most of the written is taken literally from the chapter.
 
 */
-
 
 8.1 Introduction
 	The key to effective use of C++ is the definition and use of user-defined types. This chapter introduces the three most primitive variants of the notion of a user-defined type:
@@ -21,7 +20,6 @@ About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
 	−> (struct pointer dereference) operator
 
 	When p is a pointer, p−>m is equivalent to (∗p).m.
-
 
 	8.2.1 struct Layout
 
@@ -80,7 +78,35 @@ About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
 		Here, I added a constructor to ensure that every member was initialized and to allow me to use a string and an int for the postal code, rather than fiddling with individual characters.
 
 
-		8.2.7 Fields
-			Surprisingly, using fields to pack several variables into a single byte does not necessarily save space. It saves data space, but the size of the code needed to manipulate these variables increases on most machines. Programs have been known to shrink significantly when binary variables were converted from bit-fields to characters! Furthermore, it is typically much faster to access a char or an int than to access a field. Fields are simply a convenient shorthand for using bitwise logical operators (§11.1.1) to extract information from and insert information into part of a word.
+	8.2.7 Fields
+		Surprisingly, using fields to pack several variables into a single byte does not necessarily save space. It saves data space, but the size of the code needed to manipulate these variables increases on most machines. Programs have been known to shrink significantly when binary variables were converted from bit-fields to characters! Furthermore, it is typically much faster to access a char or an int than to access a field. Fields are simply a convenient shorthand for using bitwise logical operators (§11.1.1) to extract information from and insert information into part of a word.
 
+
+8.3 Unions
+	A union is a struct in which all members are allocated at the same address so that the union occupies only as much space as its largest member. Naturally, a union can hold a value for only one member at a time.
+
+	Use of unions can be essential for compactness of data and through that for performance. However, most programs don’t improve much from the use of unions and unions are rather error-prone. Consequently, I consider unions an overused feature; avoid them when you can.
+
+
+8.4 Enumerations
+	An enumeration is a type that can hold a set of integer values specified by the user (§iso.7.2). Some of an enumeration’s possible values are named and called enumerators. For example:
+		enum class Color {red, green, blue};
+
+	This defines an enumeration called Color with the enumerators red , green , and blue . ‘‘An enumeration’’ is colloquially shortened to ‘‘an enum .’’
+	
+	There are two kinds of enumerations:
+		[1] enum class es, for which the enumerator names (e.g., red ) are local to the enum and their values do not implicitly convert to other types 
+		[2] ‘‘Plain enum s,’’ for which the enumerator names are in the same scope as the enum and their values implicitly convert to integers
 		
+	In general, prefer the enum classes because they cause fewer surprises.
+
+
+8.5 Advice
+	[1] When compactness of data is important, lay out structure data members with larger members before smaller ones; §8.2.1.
+	[2] Use bit-fields to represent hardware-imposed data layouts; §8.2.7.
+	[3] Don’t naively try to optimize memory consumption by packing several values into a single byte; §8.2.7.
+	[4] Use unions to save space (represent alternatives) and never for type conversion; §8.3.
+	[5] Use enumerations to represent sets of named constants; §8.4.
+	[6] Prefer class enums over ‘‘plain’’ enums to minimize surprises; §8.4.
+	[7] Define operations on enumerations for safe and simple use; §8.4.1.
+
