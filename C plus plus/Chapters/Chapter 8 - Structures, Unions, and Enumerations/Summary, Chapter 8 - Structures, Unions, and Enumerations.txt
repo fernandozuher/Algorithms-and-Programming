@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 13/04/2020
+Date: 14/04/2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
 
@@ -10,3 +10,77 @@ About: Summary*, Chapter 8 - Structures, Unions, and Enumerations
 */
 
 
+8.1 Introduction
+	The key to effective use of C++ is the definition and use of user-defined types. This chapter introduces the three most primitive variants of the notion of a user-defined type:
+		• A struct (a structure) is a sequence of elements (called members) of arbitrary types.
+		• A union is a struct that holds the value of just one of its elements at any one time.
+		• An enum (an enumeration) is a type with a set of named constants (called enumerators).
+		• enum class (a scoped enumeration) is an enum where the enumerators are within the scope of the enumeration and no implicit conversions to other types are provided.
+
+8.2 Structures
+	−> (struct pointer dereference) operator
+
+	When p is a pointer, p−>m is equivalent to (∗p).m.
+
+
+	8.2.1 struct Layout
+
+		Members are allocated in memory in declaration order...
+
+		However, the size of an object of a struct is not necessarily the sum of the sizes of its members. This is because many machines require objects of certain types to be allocated on architecture-dependent boundaries or handle such objects much more efficiently if they are. For example, integers are often allocated on word boundaries. On such machines, objects are said to have to be properly aligned (§6.2.9). This leads to ‘‘holes’’ in the structures.
+
+		You can minimize wasted space by simply ordering members by size (largest member first).
+		For example:
+		struct Readout {
+			int value;
+			char hour;
+			char seq;
+		};
+		This would give us 8 bytes.
+
+
+		struct Readout {
+			char hour;
+			int value;
+			char seq;
+		};
+		In this case, as on many machines, sizeof(Readout) is 12, and not 6 as one would naively expect from simply adding the sizes of the individual members.
+
+		It is usually best to order members for readability and sort them by size only if there is a demonstrated need to optimize.
+
+		Use of multiple access specifiers (i.e., public, private, or protected) can affect layout (§20.5).
+
+
+	8.2.2 struct Names
+		For reasons that reach into the prehistory of C, it is possible to declare a struct and a non- struct with the same name in the same scope. For example:
+			struct stat { /* ... */ };
+			int stat(char∗ name, struct stat∗ buf);
+
+		In that case, the plain name ( stat ) is the name of the non- struct , and the struct must be referred to with the prefix struct. Similarly, the keywords class, union (§8.3), and enum (§8.4) can be used as prefixes for disambiguation. However, it is best not to overload names to make such explicit disambiguation necessary.
+
+
+	8.2.3 Structures and Classes
+		A struct is simply a class where the members are public by default. So, a struct can have member functions (§2.3.2, Chapter 16). In particular, a struct can have constructors.
+
+		You do not need to define a constructor simply to initialize members in order.
+
+		Constructors are needed if you need to reorder arguments, validate arguments, modify arguments, establish invariants (§2.4.3.2, §13.4), etc.
+
+		struct Address {
+			string name; 			// "Jim Dandy"
+			int number; 			// 61
+			string street; 			// "South St"
+			string town; 			// "New Providence"
+			char state[2]; 			// ’N’ ’J’
+			char zip[5]; 			// 07974
+			
+			Address(const string n, int nu, const string& s, const string& t, const string& st, int z);
+		};
+
+		Here, I added a constructor to ensure that every member was initialized and to allow me to use a string and an int for the postal code, rather than fiddling with individual characters.
+
+
+		8.2.7 Fields
+			Surprisingly, using fields to pack several variables into a single byte does not necessarily save space. It saves data space, but the size of the code needed to manipulate these variables increases on most machines. Programs have been known to shrink significantly when binary variables were converted from bit-fields to characters! Furthermore, it is typically much faster to access a char or an int than to access a field. Fields are simply a convenient shorthand for using bitwise logical operators (§11.1.1) to extract information from and insert information into part of a word.
+
+		
