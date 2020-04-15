@@ -3,8 +3,8 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 15/04/2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
-About: A summary* of code explained in the Chapter 7
-                                          - Pointers, Arrays, and References
+About: A summary* of code explained in the
+       Chapter 8 - Structure, Unions, and Enumerations
 
 * Most of the written is taken literally from the chapter.
 
