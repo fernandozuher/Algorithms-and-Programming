@@ -1,11 +1,47 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 15/04/2020
+Date: 16/04/2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, Chapter 6 - Structures
 
-*Most of the written is taken literally from the chapter.
+* Most of the written is taken literally from the chapter.
 
 */
+
+6.1 Basics of Structures
+	The variables named in a structure are called members. A structure member or tag and an ordinary (i.e., non-member) variable can have the same name without conflict, since they can always be distinguished by context. Furthermore, the same member names may occur in different structures, although as a matter of style one would normally use the same names only for closely related objects.
+
+	A struct declaration defines a type. The right brace that terminates the list of members may be followed by a list of variables, just as for any basic type. That is, 
+
+		struct {...} x, y, z;
+
+	is syntactically analogous to
+
+		int x, y, z;
+
+	in the sense that each statement declares x, y and z to be variables of the named type and causes space to be set aside for them.
+
+
+6.2 Structures and Functions
+	Pointers to structures are so frequently used that an alternative notation is provided as a shorthand. If p is a pointer to a structure, then 
+		
+		p->member-of-structure
+
+	refers to the particular member.
+
+	The structure operators . and ->, together with () for function calls and [] for subscripts, are at the top of the precedence hierarchy and thus bind very tightly. For example, given the declaration
+		struct {
+			int len;
+			char *str;
+		} *p;
+	
+	then
+		++p->len
+
+	increments len, not p, because the implied parenthesization is ++(p->len). 		Parentheses can be used to alter the binding: (++p)->len increments p before 		accessing len, and (p++)->1en increments p afterward. (This last set of 		parentheses is unnecessary.)
+
+6.3 Arrays of Structures
+
+	
 
