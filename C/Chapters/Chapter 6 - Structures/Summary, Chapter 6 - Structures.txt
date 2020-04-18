@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 16/04/2020
+Date: 18/04/2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, Chapter 6 - Structures
 
@@ -39,9 +39,62 @@ About: Summary*, Chapter 6 - Structures
 	then
 		++p->len
 
-	increments len, not p, because the implied parenthesization is ++(p->len). 		Parentheses can be used to alter the binding: (++p)->len increments p before 		accessing len, and (p++)->1en increments p afterward. (This last set of 		parentheses is unnecessary.)
+	increments len, not p, because the implied parenthesization is ++(p->len). Parentheses can be used to alter the binding: (++p)->len increments p before accessing len, and (p++)->1en increments p afterward. (This last set of parentheses is unnecessary.)
 
-6.3 Arrays of Structures
 
+6.7 Typedef
+	C provides a facility called typedef for creating new data type names. For example, the declaration
 	
+		typedef int Length;
+	
+	makes the name Length a synonym for into The type Length can be used in declarations, casts, etc., in exactly the same ways that the type int can be:
+		
+		Length len, maxlen;
+		Length *lengths[] ;
+
+	Similarly, the declaration
+		
+		typedef char *String;
+
+	makes String a synonym for char * or character pointer, which may then be used in declarations and casts:
+
+		String p, lineptr[MAXLINES], alloc(int);
+		int strcmp(String, String);
+		p = (String) malloc(100);
+
+	We have used capitalized names for typedefs, to make them stand out.
+
+	It must be emphasized that a typedef declaration does not create a new type in any sense; it merely adds a new name for some existing type. Nor are there any new semantics: variables declared this way have exactly the same properties as variables whose declarations are spelled out explicitly. In effect, typedef is like #define, except that since it is interpreted by the compiler, it can cope with textual substitutions that are beyond the capabilities of the preprocessor. For example,
+	
+		typedef int (*PFI)(char *, char *);
+	
+	creates the type PFI, for "pointer to function (of two char * arguments) returning int," which can be used in contexts like  
+	
+		PFI strcmp, numcmp;
+	
+	in the sort program of Chapter 5.
+
+	Besides purely aesthetic issues, there are two main reasons for using typedefs. The first is to parameterize a program against portability problems. If typedefs are used for data types that may be machine-dependent, only the typedefs need change when the program is moved. One common situation is to' use typedef names for various integer quantities, then make an appropriate set of choices of short, int, and long for each host machine. Types like size_t and ptrdiff_t from the standard library are examples.
+
+	The second purpose of typedefs is to provide better documentation for a program-a type called Treeptr may be easier to understand than one declared only as a pointer to a complicated structure.
+
+6.8 Unions
+	A union is a variable that may hold {at different times> objects of different types and sizes, with the compiler keeping track of size and alignment requirements. Unions provide a way to manipulate different kinds of data in a single area of storage, without embedding any machine-dependent information in the program.
+
+	This is the purpose of a union-a single variable that can legitimately hold anyone of several types. The syntax is based on structures:
+		union u_tag {
+			int ival;
+			float fval;
+			char *sval;
+		} u;
+	
+	The variable u will be large enough to hold the largest of the three types; the specific size is implementation-dependent. Anyone of these types may be assigned to u and then used in expressions, so long as the usage is consistent: the type retrieved must be the type most recently stored. It is the programmer's responsibility to keep track of which type is currently stored in a union; the results are implementation-dependent if something is stored as one type and extracted as another.
+
+	A union may only be initialized with a value of the type of its first member; thus the union u described above can only be initialized with an integer value.
+
+
+6.9 Bit-fields
+	Almost everything about fields is implementation-dependent. Whether a field may overlap a word boundary is implementation-defined. Fields need not be named; unnamed fields (a colon and width only) are used for padding. The special width 0 may be used to force alignment at the next word boundary. 
+	
+	Fields are assigned left to right on some machines and right to left on others. This means that although fields are useful for maintaining internally-defined data structures, the question of which end comes first has to be carefully considered when picking apart externally-defined data; programs that depend on such things are not portable. Fields may be declared only as ints; for portability, specify signed or unsigned explicitly. They are not arrays, and they do not have addresses, so the &. operator cannot be applied to them.
 
