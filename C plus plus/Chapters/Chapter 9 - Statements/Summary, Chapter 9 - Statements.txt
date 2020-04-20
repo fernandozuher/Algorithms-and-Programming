@@ -1,0 +1,186 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 20 April 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 9 - Statements
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+9.4.2 switch Statements
+
+	The meaning is the same, but the first ( switch ) version is preferred because the nature of the operation (testing a single value against a set of constants) is explicit. This makes the switch -statement easier to read for nontrivial examples. It typically also leads to the generation of better code because there is no reason to repeatedly check individual values. Instead, a jump table can be used.
+
+	It is a good idea to comment the (rare) cases in which a fall-through is intentional so that an uncommented fall-through can be assumed to be an error. For example:
+		
+		switch (action) {
+			// handle (action,value) pair
+			case do_and_print:
+				act(value);
+				// no break: fall through to print
+			case print:
+				print(value);
+				break;
+			// ...
+		}
+
+	A break is the most common way of terminating a case, but a return is often useful (§10.2.1).
+
+	When should a switch-statement have a default ? There is no single answer that covers all situations. One use is for the default to handle the most common case. Another common use is the exact opposite: the default : action is simply a way to catch errors; every valid alternative is covered by the case s. However, there is one case where a default should not be used: if a switch is intended to have one case for each enumerator of an enumeration. If so, leaving out the default gives the compiler a chance to warn against a set of case s that almost but not quite match the set of enumerators. For example, this is almost certainly an error:
+
+		enum class Vessel { cup, glass, goblet, chalice };
+		void problematic(Vessel v)
+		{
+			switch (v) {
+				case Vessel::cup: /* ... */ break;
+				case Vessel::glass: /* ... */ break;
+				case Vessel::goblet: /* ... */ break;
+			}
+		}
+		
+	Such a mistake can easily occur when a new enumerator is added during maintenance. Testing for an ‘‘impossible’’ enumerator value is best done separately.
+	
+
+9.4.2.1 Declarations in Cases
+
+	It is possible, and common, to declare variables within the block of a switch -statement. However, it is not possible to bypass an initialization. For example:
+
+		void f(int i)
+		{
+			switch (i) {
+				case 0:
+					int x;		// uninitialized
+					int y = 3;	// error : declaration can be bypassed (explicitly initialized)
+					string s;	// error : declaration can be bypassed (implicitly initialized)
+				case 1:
+					++x;		// error : use of uninitialized object
+					++y;
+				s = "nasty!";
+			}
+		}
+	
+	Here, if i==1, the thread of execution would bypass the initializations of y and s, so f() will not compile. Unfortunately, because an int needn’t be initialized, the declaration of x is not an error. However, its use is an error: we read an uninitialized variable. Unfortunately, compilers often give just a warning for the use of an uninitialized variable and cannot reliably catch all such misuses. As usual, avoid uninitialized variables (§6.3.5.1).
+
+	If we need a variable within a switch-statement, we can limit its scope by enclosing its declaration and its use in a block. For an example, see prim() in §10.2.1.
+
+
+9.4.3 Declarations in Conditions
+	
+	To avoid accidental misuse of a variable, it is usually a good idea to introduce the variable into the smallest scope possible. In particular, it is usually best to delay the definition of a local variable until one can give it an initial value. That way, one cannot get into trouble by using the variable before its initial value is assigned.
+
+	One of the most elegant applications of these two principles is to declare a variable in a condition. Consider:
+
+		if (double d = prim(true)) {
+			left /= d;
+			break;
+		}
+
+	Here, d is declared and initialized and the value of d after initialization is tested as the value of the condition. The scope of d extends from its point of declaration to the end of the statement that the condition controls. For example, had there been an else-branch to the if-statement, d would be in scope on both branches.
+
+	The obvious and traditional alternative is to declare d before the condition. However, this opens the scope (literally) for the use of d before its initialization or after its intended useful life:
+		
+		double d;
+		// ...
+		d2 = d; // oops!
+		// ...
+		if (d = prim(true)) {
+			left /= d;
+			break;
+		}
+		// ...
+		d = 2.0; // two unrelated uses of d
+
+	In addition to the logical benefits of declaring variables in conditions, doing so also yields the most compact source code.
+	A declaration in a condition must declare and initialize a single variable or const.
+
+
+9.5.1 Range-for Statements
+
+	for (int x : v)
+
+	The expression after the colon must denote a sequence (a range); that is, it must yield a value for which we can call v.begin() and v.end() or begin(v) and end(v) to obtain an iterators (§4.5)...
+
+	The compiler uses v and v+N as begin(v) and end(v) for a built-in array T v[N]. The <iterator> header provides begin(c) and end(c) for built-in arrays and for all standard-library containers. For sequences of our own design, we can define begin() and end() in the same way as it is done for standard-library containers (§4.4.5).
+
+	The controlled variable, x in the example, that refers to the current element is equivalent to ∗p when using an equivalent for-statement:
+	
+		int sum2(vector<int>& v)
+		{
+			int s = 0;
+			for (auto p = begin(v); p!=end(v); ++p)
+				s+=∗p;
+			return s;
+		}
+
+	If you need to modify an element in a range-for loop, the element variable should be a reference. For example, we can increment each element of a vector like this:
+	
+		void incr(vector<int>& v)
+		{
+			for (int& x : v)
+			++x;
+		}
+
+	References are also appropriate for elements that might be large, so that copying them to the element value could be costly.
+
+	Note that a range-for loop is a deliberately simple construct. For example, using it you can’t touch two elements at the same time and can’t effectively traverse two ranges simultaneously. For that we need a general for-statement.
+
+
+9.5.2 for Statements
+
+	It is not always obvious what is the right type to use for a controlled variable in a for loop, so auto often comes in handy:
+		
+		for (auto p = begin(c); c!=end(c); ++p) {
+			// ... use iterator p for elements in container c ...
+		}
+	
+	If the final value of an index needs to be known after exit from a for-loop, the index variable must be declared outside the for-loop (e.g., see §9.6).
+
+
+9.6 goto Statements
+	C++ possesses the infamous goto:
+		
+		goto identifier;
+		identifier : statement
+
+	The goto has few uses in general high-level programming, but it can be very useful when C++ code is generated by a program rather than written directly by a person; for example, gotos can be used in a parser generated from a grammar by a parser generator.
+
+	The scope of a label is the function it is in (§6.3.4). This implies that you can use goto to jump both into and out of blocks. The only restriction is that you cannot jump past an initializer or into an exception handler (§13.5).
+	
+	One of the few sensible uses of goto in ordinary code is to break out from a nested loop or switch-statement (a break breaks out of only the innermost enclosing loop or switch -statement). For example:
+		
+		void do_something(int i, int j)
+		// do something to a two-dimensional matrix called mn
+		{
+			for (i = 0; i!=n; ++i)
+				for (j = 0; j!=m; ++j)
+					if (nm[i][j] == a)
+						goto found;
+			// not found
+			// ...
+		found:
+			// nm[i][j] == a
+		}
+
+	Note that this goto just jumps forward to exit its loop. It does not introduce a new loop or enter a new scope. That makes it the least troublesome and least confusing use of a goto.
+
+
+9.7 Comments and Indentation
+	
+	A well-chosen and well-written set of comments is an essential part of a good program. Writing good comments can be as difficult as writing the program itself. It is an art well worth cultivating.
+
+
+9.8 Advice
+	
+	[1] Don’t declare a variable until you have a value to initialize it with; §9.3, §9.4.3, §9.5.2.
+	[2] Prefer a switch-statement to an if-statement when there is a choice; §9.4.2.
+	[3] Prefer a range-for-statement to a for-statement when there is a choice; §9.5.1.
+	[4] Prefer a for-statement to a while-statement when there is an obvious loop variable; §9.5.2.
+	[5] Prefer a while-statement to a for-statement when there is no obvious loop variable; §9.5.3.
+	[6] Avoid do-statements; §9.5.
+	[7] Avoid goto; §9.6.
+	[8] Keep comments crisp; §9.7.
+	[9] Don’t say in comments what can be clearly stated in code; §9.7.
+	[10] State intent in comments; §9.7.
+	[11] Maintain a consistent indentation style; §9.7.
