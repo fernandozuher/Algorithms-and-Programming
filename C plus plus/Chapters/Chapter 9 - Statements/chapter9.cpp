@@ -4,7 +4,6 @@ Place: Brazil
 Date: 20 April 2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: A summary of code explained in the Chapter 9 - Statements
-
 */
 
 #include <iostream>
