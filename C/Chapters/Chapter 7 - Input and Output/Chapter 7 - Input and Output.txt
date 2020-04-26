@@ -1,0 +1,72 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 24 April 2020
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
+About: Summary*, Chapter 7 - Input and Output
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+The simplest input mechanism is to read one character at a time from the standard input, normally the keyboard, with getchar:
+
+	int getchar(void)
+
+getchar returns the next input character each time it is called, or EOF when it encounters end of file. The symbolic constant EOF is defined in <stdio.h>. The value is typically -1, but tests should be written in terms of EOF so as to be independent of the specific value.
+
+In many environments, a file may be substituted for the keyboard by using the < convention for input redirection: if a program prog uses getchar, then the command line 
+
+	prog <infile
+
+causes prog to read characters from infile instead. The switching of the input is done in such a way that prog itself is obliviousto the change; in particular, the string" <infile" is not included in the command-line arguments in argv. Input switching is also invisible if the input comes from another program via a pipe mechanism: on some systems, the command line
+
+	otherprog | prog
+
+runs the two programs otherprog and prog, and pipes the standard output of otherprog into the standard input for prog.
+
+prog >outfile
+
+
+As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and tolower in <ctype.h> are often macros, thus avoiding the overhead of a function call per character.
+
+
+7.2 Formatted Output-Printf
+
+	Between the % and the conversioncharacter there may be, in order:
+
+		• A minus sign, which specifies left adjustment of the converted argument.
+		• A number that specifies the minimum field width. The converted argument will be printed in a field at least this wide. If necessary it will be padded on the left (or right, if left adjustment is called for) to make up the field width.
+		• A period, which separates the field width from the precision.
+		• A number, the precision, that specifies the maximum number of characters to be printed from a string, or the number of digits after the decimal point of a floating-point value, or the minimum number of digits for an integer.
+		• An h if the integer is to be printed as a short, or l (letter ell) if as a long.
+
+
+	A width or precision may be specified as *, in which case the value is computed by converting the next argument (which must be an int). For example, to print at most max characters from a string s,
+		
+		printf("%.*s", max, s);
+
+	The function sprintf does the same conversions as printf stores the output in a string:
+		
+		int sprintf (char *string, char *format, arg1, arg2, ... )
+
+	sprintf formats the arguments in arg1, arg2, etc., according to format as before, but places the result in string instead of on the standard output; string must be big enough to receive the result.
+
+
+7.3 Variable-length Argument Lists
+
+	void minprintf(char *fmt, ...);
+	<stdarg.h>
+
+	va_list ap; // points to each unnamed arg in turn
+	va_start(ap, fmt); // make ap point to 1st unnamed arg
+
+	int ival = va_arg(ap, int);
+	float fval = va_arg(ap, float);
+	double dval = va_arg(ap, double);
+
+	int cval = va_arg(ap, int); // char
+	char *sval = va_arg(ap, char*);
+
+	va_end(ap); // clean up when done
+	
