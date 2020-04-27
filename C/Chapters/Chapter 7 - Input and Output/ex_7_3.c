@@ -32,7 +32,7 @@ void minprintf(char *fmt, ...);
 
 int main()
 {
-// SAMPLE /////////////////////////////////////////////////////
+// INPUT TEST /////////////////////////////////////////////////////
 	minprintf("int integer = %i", 010); printf("\n");
 	minprintf("int decimal = %-3d", 10); printf("\n");
 	minprintf("float real = %-5.2f.", 9.87654); printf("\n");
