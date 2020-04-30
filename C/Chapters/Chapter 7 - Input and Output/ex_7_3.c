@@ -130,7 +130,7 @@ void minprintf(char *fmt, ...)
 				
 				if (width2)
 					for (int i = 0; i < width2-num; i++)
-						printf("0");
+						putchar('0');
 	
 				*p == 'd' ? printf("%d", ival) : printf("%i", ival);
 				if (width1 && left_adjustment)
@@ -167,7 +167,7 @@ void minprintf(char *fmt, ...)
 				
 				if (width2)
 					for (int i = 0; i < width2-u_num; i++)
-						printf("0");
+						putchar('0');
 
 				printf("%u", u_ival);
 				if (width1 && left_adjustment)
