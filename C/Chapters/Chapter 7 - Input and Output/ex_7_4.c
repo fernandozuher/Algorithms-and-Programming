@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 29 April 2020
+Date: 30 April 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE
 About: Exercise, Chapter 7 - Input and Output
 */
@@ -25,16 +25,21 @@ to control conversionof input. The format string may contain:
 #include <stdio.h>
 #include <ctype.h> // isspace()
 #include <string.h> // strcat()
+#include <stdlib.h> // exit()
 
 #define MAX 50
 
-void minscanf(char *fmt, ...);
+int minscanf(char *fmt, ...);
 
 int main()
 {
 // TEST INPUT /////////////////////////////////////////////////////
-// Ctrl C + Ctrl V in the input:
+
+// Ctrl C + Ctrl V in the input 1:
 // 1 2 3 075 075 0xfe 7 8 9.98765 10.98765 11.5 f zuher fernando
+
+// Ctrl C + Ctrl V in the input 2:
+// day/month/year
 	
 	short hd;
 	int d, i;
@@ -47,41 +52,54 @@ int main()
 	char c;
 	char s[MAX], s3[MAX];
 
-	printf("\n%%hd %%d %%*d %%i %%o %%x %%u %%ld %%f %%*f %%lf %%c %%s %%3s");
-	printf("\n: ");
-	minscanf("%hd %d %*d %i %o %x %u %ld %f %*f %lf %c %s %3s", &hd, &d, &d, &i, &o, &x, &u, &ld, &f, &f, &lf, &c, &s, &s3);
+	printf("\nreading: %%hd %%d %%*d %%i %%o %%x %%u %%ld %%f %%*f %%lf %%c %%s %%3s");
+	printf("\ninput: ");
+	int num;
+	num = minscanf("%hd %d %*d %i %o %x %u %ld %f %*f %lf %c %s %3s", &hd, &d, &d, &i, &o, &x, &u, &ld, &f, &f, &lf, &c, &s, &s3);
 
-	printf("\n%%hd = %hd", hd);
-	printf("\n%%d = %d", d);
-	printf("\n%%i = %i", i);
-	printf("\n%%o = %o", o);
-	printf("\n%%x = %x", x);
-	printf("\n%%u = %u", u);
-	printf("\n%%ld = %ld", ld);
-	printf("\n%%f = %f", f);
-	printf("\n%%lf = %lf", lf);
-	printf("\n%%c = %c", c);
-	printf("\n%%s = %s", s);
-	printf("\n%%3s = %s", s3);
+	printf("Read items = %d", num);
+	printf("\n\t%%hd = %hd", hd);
+	printf("\n\t%%d = %d", d);
+	printf("\n\t%%i = %i", i);
+	printf("\n\t%%o = %o", o);
+	printf("\n\t%%x = %x", x);
+	printf("\n\t%%u = %u", u);
+	printf("\n\t%%ld = %ld", ld);
+	printf("\n\t%%f = %f", f);
+	printf("\n\t%%lf = %lf", lf);
+	printf("\n\t%%c = %c", c);
+	printf("\n\t%%s = %s", s);
+	printf("\n\t%%3s = %s", s3);
+
+	while(getchar() != '\n');
+	int day, month, year;
+
+	printf("\n\nreading: %%d/%%d/%%d");
+	printf("\ninput: ");
+	num = minscanf("%d/%ad/%d", &day, &month, &year);
+
+	printf("Read items = %d", num);
+	printf("\n\t%d/%d/%d", day, month, year);
 
 	printf("\n\n");
 	return 0;
 }
 
 #include <stdarg.h>
-void minscanf(char *fmt, ...)
+#define FORMAT_LIM 20
+void int_to_str_then_strcat(int num, char *concatenate);
+
+int minscanf(char *fmt, ...)
 {
 	va_list ap; // points to each unnamed arg in turn
-	
+	int read_items = 0;
+
 	char *p;
 	int width = 0, width_flag = 0;
 
-	char buffer[MAX];
-	int size_buffer = 0;
+	char temp[FORMAT_LIM] = {""}, c_temp[2] = {""};
 
-	char temp[10] = {""}, temp_width[10], c_temp[2] = {""};
-
-	int skip = 0, h = 0, l = 0; // skip -> *, h -> short, l -> long
+	int skip = 0, h = 0, l = 0, conversion = 0; // skip -> *, h -> short, l -> long
 	
 // Variables receive addresses from va_arf() /////////////////
 	char *cval, *sval;
@@ -97,27 +115,36 @@ void minscanf(char *fmt, ...)
 	double *l_fval;
 ///////////////////////////////////////////////////
 
-	printf("\n");
 	va_start(ap, fmt); // make ap point to 1st unnamed arg
 	for (p = fmt; *p; p++) {
 
 		// Blanks or tabs, which are ignored.
-		if (isspace(*p))
+		if (isspace(*p)) continue;
+
+		// else '%' is not activate, so character is just a literal to be matched in the input.
+		// Herein, '%' is a literal not considered to be used out of conversion scope
+		else if (*p != '%' && !conversion) {
+			c_temp[0] = p[0], strcat(temp, c_temp);
 			continue;
+		}
 
 		// Conversion specifications, consisting of the character %, an optional assignment
 		// suppression character *, an optional number specifying a maximum field width, an
 		// optional h, l, or L indicating the width of the target, and a conversion character.
 		switch (*p) {
 
-			case '*':
+			case '%':
+				strcat(temp, "%");
+				conversion = 1;
+				break;
 
+			case '*':
+				strcat(temp, "*");
 				skip = 1;
 				break;
 
 			case '0': case '1': case '2': case '3': case '4':
 			case '5': case '6': case '7': case '8': case '9':
-
 				width = width * 10 + (*p - '0');
 				width_flag = 1;
 				break;
@@ -132,60 +159,50 @@ void minscanf(char *fmt, ...)
 
 			case 'd': case 'i': case 'o': case 'x': case 'X': case 'u':
 
-				strcat(temp, "%");
+				width_flag ? int_to_str_then_strcat(width, temp) : 0;
 
-				if (skip)
-					strcat(temp, "*");
-
-				if (width_flag) {
-					sprintf(temp_width, "%d", width);
-					strcat(temp, temp_width);
-				}
-
-				if (h) // 'h' has higher priority than 'l'
-					strcat(temp, "h");
-				if (l) 
-					strcat(temp, "l");
-				
-				c_temp[0] = p[0];
-				strcat(temp, c_temp);
+				// Current case
+				c_temp[0] = p[0], strcat(temp, c_temp);
 
 				if (*p == 'd' || *p == 'i') {
 					if (h) {
 						h_ival = va_arg(ap, short*);
-						scanf(temp, h_ival);
+						if (scanf(temp, h_ival))
+							read_items++;
 					}
 					else if (l) {
 						l_ival = va_arg(ap, long int*);
-						scanf(temp, l_ival);
+						if (scanf(temp, l_ival))
+							read_items++;
 					}
 					else {
 						ival = va_arg(ap, int*);
-						scanf(temp, ival);
+						if (scanf(temp, ival))
+							read_items++;
 					}
 				}
 				else {
 					if (h) {
 						u_h_ival = va_arg(ap, unsigned short int*);
-						scanf(temp, u_h_ival);
+						if (scanf(temp, u_h_ival))
+							read_items++;
 					}
 					else if (l) {
 						u_l_ival = va_arg(ap, unsigned long int*);
-						scanf(temp, u_l_ival);
+						if (scanf(temp, u_l_ival))
+							read_items++;
 					}
 					else {
 						u_ival = va_arg(ap, unsigned int*);
-						scanf(temp, u_ival);
+						if (scanf(temp, u_ival))
+							read_items++;
 					}
 				}
 
-				strcpy(temp, "");
-				skip = h = l = 0;
-				width = width_flag = 0;
+				strcpy(temp, ""), skip = h = l = width = width_flag = conversion = 0;
 				break;
 
 			case 'c':
-
 				if (skip) {
 					while (isspace(getchar()));
 					skip = 0;
@@ -193,67 +210,49 @@ void minscanf(char *fmt, ...)
 				else {
 					cval = va_arg(ap, char*);
 					while (isspace(*cval = getchar()));
+					read_items++;
 				}
 
+				strcpy(temp, ""), conversion = 0;
 				break;
 
 			case 's':
+				width_flag ? int_to_str_then_strcat(width, temp) : 0;
 
-				strcat(temp, "%");
-
-				if (skip)
-					strcat(temp, "*");
-
-				if (width_flag) {
-					sprintf(temp_width, "%d", width);
-					strcat(temp, temp_width);
-				}
-
-				c_temp[0] = p[0];
-				strcat(temp, c_temp);
+				c_temp[0] = p[0], strcat(temp, c_temp);
 
 				// To remove potential white space added by previous inputs
 				while (isspace(*cval = getchar()));
 				ungetc(*cval, stdin);
 
 				sval = va_arg(ap, char*);
-				scanf(temp, sval);
+				if (scanf(temp, sval))
+					read_items++;
 
-				strcpy(temp, "");
-				skip = width = width_flag = 0;
+				strcpy(temp, ""), skip = width = width_flag = conversion = 0;
 				break;
 
 			case 'e': case 'E': case 'f':
-
-				strcat(temp, "%");
-
-				if (skip)
-					strcat(temp, "*");
-
-				if (width_flag) {
-					sprintf(temp_width, "%d", width);
-					strcat(temp, temp_width);
-				}
+				width_flag ? int_to_str_then_strcat(width, temp) : 0;
 
 				if (l) {
 					strcat(temp, "l");
 					
-					c_temp[0] = p[0];
-					strcat(temp, c_temp);
+					c_temp[0] = p[0], strcat(temp, c_temp);
 
 					l_fval = va_arg(ap, double*);
-					scanf(temp, l_fval);
+					if (scanf(temp, l_fval))
+						read_items++;
 				}
 				else {
-					c_temp[0] = p[0];
-					strcat(temp, c_temp);
+					c_temp[0] = p[0], strcat(temp, c_temp);
 					
 					fval = va_arg(ap, float*);
-					scanf(temp, fval);
+					if (scanf(temp, fval))
+						read_items++;
 				}
 
-				skip = l = 0;
-				strcpy(temp, "");
+				strcpy(temp, ""), skip = l = conversion = 0;
 				break;
 
 			//case 'g':
@@ -262,12 +261,20 @@ void minscanf(char *fmt, ...)
 			//	printf ("%g", dval);
 			//	break;
 
-			// default:
-			// 	Ordinary characters (not %), which are expected to match
-			// 	the next non-white space character of the input stream.
-			// 	buffer[size_buffer++] = *p;
-			// 	break;
+			default:
+				printf("\nError:\n Not expected character '%c'"
+				"\n  into argument 'format' of minscanf(char *format, ...)"
+				"\n   =/\n", *p);
+			 	exit(1);
 		}
 	}
 	va_end(ap); // clean up when done
+	return read_items;
+}
+
+void int_to_str_then_strcat(int num, char *concatenate) {
+	
+	char str[50];
+	sprintf(str, "%d", num);
+	strcat(concatenate, str);
 }
