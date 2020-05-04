@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 30 April 2020
+Date: 04 May 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE
 About: Exercise, Chapter 7 - Input and Output
 */
@@ -76,7 +76,7 @@ int main()
 
 	printf("\n\nreading: %%d/%%d/%%d");
 	printf("\ninput: ");
-	num = minscanf("%d/%ad/%d", &day, &month, &year);
+	num = minscanf("%d/%d/%d", &day, &month, &year);
 
 	printf("Read items = %d", num);
 	printf("\n\t%d/%d/%d", day, month, year);
@@ -119,7 +119,8 @@ int minscanf(char *fmt, ...)
 	for (p = fmt; *p; p++) {
 
 		// Blanks or tabs, which are ignored.
-		if (isspace(*p)) continue;
+		// !conversion is here to avoid going on in formats like "% d", instead "%d"
+		if (isspace(*p) && !conversion) continue;
 
 		// else '%' is not activate, so character is just a literal to be matched in the input.
 		// Herein, '%' is a literal not considered to be used out of conversion scope
@@ -160,9 +161,8 @@ int minscanf(char *fmt, ...)
 			case 'd': case 'i': case 'o': case 'x': case 'X': case 'u':
 
 				width_flag ? int_to_str_then_strcat(width, temp) : 0;
-
-				// Current case
-				c_temp[0] = p[0], strcat(temp, c_temp);
+				h ? strcat(temp, "h") : (l ? strcat(temp, "l") : 0);
+				c_temp[0] = p[0], strcat(temp, c_temp); // Current case
 
 				if (*p == 'd' || *p == 'i') {
 					if (h) {
@@ -218,8 +218,7 @@ int minscanf(char *fmt, ...)
 
 			case 's':
 				width_flag ? int_to_str_then_strcat(width, temp) : 0;
-
-				c_temp[0] = p[0], strcat(temp, c_temp);
+				c_temp[0] = p[0], strcat(temp, c_temp); // Current case
 
 				// To remove potential white space added by previous inputs
 				while (isspace(*cval = getchar()));
@@ -236,16 +235,15 @@ int minscanf(char *fmt, ...)
 				width_flag ? int_to_str_then_strcat(width, temp) : 0;
 
 				if (l) {
-					strcat(temp, "l");
-					
-					c_temp[0] = p[0], strcat(temp, c_temp);
+					strcat(temp, "l");					
+					c_temp[0] = p[0], strcat(temp, c_temp); // Current case
 
 					l_fval = va_arg(ap, double*);
 					if (scanf(temp, l_fval))
 						read_items++;
 				}
 				else {
-					c_temp[0] = p[0], strcat(temp, c_temp);
+					c_temp[0] = p[0], strcat(temp, c_temp); // Current case
 					
 					fval = va_arg(ap, float*);
 					if (scanf(temp, fval))
@@ -263,7 +261,7 @@ int minscanf(char *fmt, ...)
 
 			default:
 				printf("\nError:\n Not expected character '%c'"
-				"\n  into argument 'format' of minscanf(char *format, ...)"
+				"\n  into format specifier of minscanf(char *format, ...)"
 				"\n   =/\n", *p);
 			 	exit(1);
 		}

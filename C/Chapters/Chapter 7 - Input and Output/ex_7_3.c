@@ -1,12 +1,14 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 25 April 2020
+Date: 04 May 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE
 About: Exercise, Chapter 7 - Input and Output
 */
 
 /*
+OBS: The code can be simplified.
+
 PDF 170, Page 156
 
 Exercise 7-3. Revise minprintf to handle more of the other facilities of printf.
@@ -26,13 +28,13 @@ I wrote down:
 #include <stdio.h>
 #include <string.h> // strlen
 
-#define SPACE(LEN) {for (int i = 0; i < (LEN); i++) putchar(' ');}
+#define PUT_SPACE(LEN) {for (int i = 0; i < (LEN); i++) putchar(' ');}
 
 void minprintf(char *fmt, ...);
 
 int main()
 {
-// INPUT TEST /////////////////////////////////////////////////////
+// TEST INPUT /////////////////////////////////////////////////////
 	minprintf("int integer = %i", 010); printf("\n");
 	minprintf("int decimal = %-3d", 10); printf("\n");
 	minprintf("float real = %-5.2f.", 9.87654); printf("\n");
@@ -40,7 +42,7 @@ int main()
 	minprintf("int hexadecimal = %x", 0xaf); printf("\n");
 	minprintf("unsigned int = %-3u.", 7); printf("\n");
 	minprintf("double real = %e", 12e5); printf("\n");
-	minprintf("char character = %-1c", 'f'); printf("\n");
+	minprintf("char character = %2c", 'f'); printf("\n");
 	minprintf("char string = %5.3s.", "fernando"); printf("\n");
 	int pointer_int;
 	minprintf("void *address = %p", &pointer_int); printf("\n");
@@ -53,25 +55,26 @@ void minprintf(char *fmt, ...)
 {
 	va_list ap; // points to each unnamed arg in turn
 	
+	void *pval;
 	char *p, *sval, temp[51];
 	int ival, cval, width1 = 0, width2 = 0, num;
-	unsigned int u_ival, u_num, left_adjustment = 0, dot = 0;
+	unsigned int u_ival, u_num, left_adjustment = 0, dot = 0, conversion = 0;
 	double dval;
-	void *pval;
 	
 	va_start(ap, fmt); // make ap point to 1st unnamed arg
 	for (p = fmt; *p; p++) {
 
-		if (*p != '%' && !left_adjustment && !width1 && !dot && !width2) {
+		if (*p != '%' && !conversion) {
 			putchar(*p);
 			fflush(stdout);
 			continue;
 		}
 
-		if (width1 || left_adjustment || dot)
-			--p;
+		switch (*p) {
 
-		switch (*++p) {
+			case '%':
+				conversion = 1;
+				break;
 
 			case '-':
 				left_adjustment = 1;
@@ -83,9 +86,8 @@ void minprintf(char *fmt, ...)
 
 			case '0': case '1': case '2': case '3': case '4':
 			case '5': case '6': case '7': case '8': case '9':
-				
-				if (!dot) { // if it is width (before dot)
 
+				if (!dot) { // if it is width1 (before dot)
 					width1 = width1 * 10 + (*p - '0');
 					// To handle the potential case user inputs '0', e.g., %0d
 					width1 += (width1 == 0 ? -1 : 0);
@@ -103,20 +105,20 @@ void minprintf(char *fmt, ...)
 				cval = va_arg(ap, int);
 
 				if (width1 && !left_adjustment)
-					SPACE(width1-1);
+					PUT_SPACE(width1-1);
 
 				putchar(cval);
 				if (width1 && left_adjustment)
-					SPACE(width1-1);
+					PUT_SPACE(width1-1);
 					
-				width1 = left_adjustment = 0;
+				width1 = left_adjustment = conversion = 0;
 				break;
 
-			case 'd':
-			case 'i':
+			case 'd': case 'i':
 				ival = va_arg(ap, int);
 				int ival2 = ival;
 
+				// Counting the number of digits of ival
 				for (num = 0; ival2; ival2/=10)
 					num++;
 
@@ -125,7 +127,7 @@ void minprintf(char *fmt, ...)
 					tam = width1 - ((width2 >= num) ? width2 : num);
 					
 					if (!left_adjustment)
-						SPACE(tam);
+						PUT_SPACE(tam);
 				}
 				
 				if (width2)
@@ -134,20 +136,22 @@ void minprintf(char *fmt, ...)
 	
 				*p == 'd' ? printf("%d", ival) : printf("%i", ival);
 				if (width1 && left_adjustment)
-					SPACE(tam);
+					PUT_SPACE(tam);
 
-				dot = width2 = width1 = left_adjustment = 0;
+				dot = width2 = width1 = left_adjustment = conversion = 0;
 				break;
 
 			case 'o':
 				ival = va_arg(ap, unsigned int);
 				printf("%o", ival);
+				conversion = 0;
 				break;
 
 			case 'x':
 			case 'X':
 				ival = va_arg(ap, unsigned int);
 				printf("%x", ival);
+				conversion = 0;
 				break;
 
 			case 'u':
@@ -162,7 +166,7 @@ void minprintf(char *fmt, ...)
 					u_tam = width1 - ((width2 >= u_num) ? width2 : u_num);
 
 					if (!left_adjustment)
-						SPACE(u_tam);
+						PUT_SPACE(u_tam);
 				}
 				
 				if (width2)
@@ -171,9 +175,9 @@ void minprintf(char *fmt, ...)
 
 				printf("%u", u_ival);
 				if (width1 && left_adjustment)
-					SPACE(u_tam);
+					PUT_SPACE(u_tam);
 
-				dot = width2 = width1 = left_adjustment = 0;
+				dot = width2 = width1 = left_adjustment = conversion = 0;
 				break;
 
 			case 'f':
@@ -200,7 +204,7 @@ void minprintf(char *fmt, ...)
 						f_tam = width1 - (size_float - fract);
 
 						if (!left_adjustment)
-							SPACE(f_tam);
+							PUT_SPACE(f_tam);
 					}
 
 					i = 0;
@@ -213,16 +217,16 @@ void minprintf(char *fmt, ...)
 							putchar(temp[j]);
 					
 					if (width1 && left_adjustment)
-						SPACE(f_tam);
+						PUT_SPACE(f_tam);
 
-					dot = width2 = width1 = left_adjustment = 0;
+					dot = width2 = width1 = left_adjustment = conversion = 0;
 				}
 				break;
 
-			case 'e':
-			case 'E':
+			case 'e': case 'E':
 				dval = va_arg(ap, double);
-				printf ("%e", dval);
+				printf("%e", dval);
+				conversion = 0;
 				break;
 
 			//case 'g':
@@ -233,7 +237,8 @@ void minprintf(char *fmt, ...)
 
 			case 'p':
 				pval = va_arg(ap, void*);
-				printf ("%p", pval);
+				printf("%p", pval);
+				conversion = 0;
 				break;
 
 			case 's':
@@ -255,7 +260,7 @@ void minprintf(char *fmt, ...)
 						s_tam = width1 - len_sval;
 
 					if (!left_adjustment)
-						SPACE(s_tam);
+						PUT_SPACE(s_tam);
 				}
 
 				int i;
@@ -263,9 +268,9 @@ void minprintf(char *fmt, ...)
 					putchar(*sval);
 				
 				if (width1 && left_adjustment)
-					SPACE(s_tam);
+					PUT_SPACE(s_tam);
 				
-				dot = width2 = width1 = left_adjustment = 0;
+				dot = width2 = width1 = left_adjustment = conversion = 0;
 				break;
 
 			default:
