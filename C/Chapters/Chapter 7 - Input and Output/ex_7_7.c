@@ -12,6 +12,10 @@ PDF 179, Page 165
 Exercise 7-7. Modify the pattern finding program of Chapter 5 to take its input
 from a set of named files or, if no files are named as arguments, from the stand-
 ard input. Should the file name be printed when a matching line is found?
+
+	--> Should the file name be printed when a matching line is found?
+		Yep.
+
 */
 
 #include <stdio.h>
@@ -38,15 +42,21 @@ int main(int argc, char *argv[])
 	}
 
 	else {
-		int i = 2;
+		int i = 2, flag;
 		while (--argc > 1) {
-
+			
 			FILE *fp;
 			if (fp = fopen(argv[i++], "r")) {
-				
-				printf("\nFile: %s\n", argv[i-1]);
+			
+				flag = 0;
 				while (fgets(line, MAXLINE, fp))
 					if (strstr(line, argv[1]) != NULL) {
+						
+						if (!flag) {
+							printf("\nFile: %s\n", argv[i-1]);
+							flag = 1;
+						}
+
 						printf("\t- %s", line);
 						found++;
 					}
