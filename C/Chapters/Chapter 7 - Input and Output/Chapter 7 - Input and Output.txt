@@ -69,4 +69,49 @@ As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and t
 	char *sval = va_arg(ap, char*);
 
 	va_end(ap); // clean up when done
+
+
+7.4 Formatted Input-Scanf
+
+	int scanf(char *format, ...)
+	int sscanf(char *string, char *format, arg1, arg2, ...)
+
+	The format string usually contains conversion specifications, which are used to control conversionof input. The format string may contain:
+		• Blanks or tabs, which are ignored.
+		• Ordinary characters (not %), which are expected to match the next non-white space character of the input stream.
+		• Conversion specifications, consisting of the character %, an optional assignment suppression character *, an optional number specifying a maximum field width, an optional h, l, or L indicating the width of the target, and a conversioncharacter.
+
+	Literal characters can appear in the scanf format string; they must match the same characters in the input. So we could read dates of the form mml dd/yy with this scanf statement:
+
+		int day, month, year;
+		scanf("%d/%d/%d", &month, &day, &year);
+		
+	scanf ignores blanks and tabs in its format string. Furthermore, it skips over white space (blanks, tabs, newlines, etc.) as it looks for input values. To read input whose format is not fixed, it is often best to read a line at a time, then pick it apart with sscanf.
+
+7.5 File Access
 	
+	FILE *fp;
+	FILE *fopen(char *name, char *mode);
+	fp = fopen(name, mode);
+		mode = r | w | a | b
+
+	int getc(FILE *fp)
+	int putc(int c, FILE *fp)
+
+	When a C program is started, the operating system environment is responsible for opening three files and providing file pointers for them. These files are the standard input, the standard output, and the standard error; the corresponding file pointers are called stdin, stdout, and stderr, and are declared in <stdio.h>. Normally stdin is connected to the keyboard and stdout and stderr are connected to the screen, but stdin and stdout may be redirected to files or pipes as described in Section 7.1.
+
+	getchar and putchar can be defined in terms of getc, putc, stdin, and stdout as follows:
+		#define getchar() getc(stdin)
+		#define putchar(c) putc((c), stdout)
+
+	For formatted input or output of files, the functions fscanf and fprintf may be used. These are identical to scanf and printf, except that the first argument is a file pointer that specifies the file to be read or written; the format string is the second argument.
+		int fscanf(FILE *fp, char *format, ...)
+		int fprintf(FILE *fp, char *format, ...)
+
+	The file pointers stdin and stdout are objects of type FILE *. They are constants, however, not variables, so it is not possible to assign to them.
+
+	The function int fclose(FILE *fp) is the inverse of f open; it breaks the connection between the file pointer and the external name that was established by fopen, freeing the file pointer for another file. Since most operating systems have some limit on the number of files that a program may have open simultaneously, it's a good idea to free file pointers when they are no longer needed, as we did in cat. There is also another reason for f close on an output file-it flushes the buffer in which putc is collecting output. fclose is called automatically for each open file when a program terminates normally. (You can close stdin and stdout if they are not needed. They can also be reassigned by the library function freopen.)
+		
+	Within main, return expr is equivalent to exit(expr). exit has the advantage that it can be called from other functions, and that calls to it can be found with a pattern-searching program like those in Chapter 5.
+
+
