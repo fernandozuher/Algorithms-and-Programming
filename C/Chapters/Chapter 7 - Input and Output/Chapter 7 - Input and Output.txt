@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 24 April 2020
+Date: 06 May 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, Chapter 7 - Input and Output
 
@@ -9,26 +9,27 @@ About: Summary*, Chapter 7 - Input and Output
 
 */
 
-The simplest input mechanism is to read one character at a time from the standard input, normally the keyboard, with getchar:
+7.1 Standard Input and Output
 
-	int getchar(void)
+	The simplest input mechanism is to read one character at a time from the standard input, normally the keyboard, with getchar:
 
-getchar returns the next input character each time it is called, or EOF when it encounters end of file. The symbolic constant EOF is defined in <stdio.h>. The value is typically -1, but tests should be written in terms of EOF so as to be independent of the specific value.
+		int getchar(void)
 
-In many environments, a file may be substituted for the keyboard by using the < convention for input redirection: if a program prog uses getchar, then the command line 
+	getchar returns the next input character each time it is called, or EOF when it encounters end of file. The symbolic constant EOF is defined in <stdio.h>. The value is typically -1, but tests should be written in terms of EOF so as to be independent of the specific value.
 
-	prog <infile
+	In many environments, a file may be substituted for the keyboard by using the < convention for input redirection: if a program prog uses getchar, then the command line 
 
-causes prog to read characters from infile instead. The switching of the input is done in such a way that prog itself is obliviousto the change; in particular, the string" <infile" is not included in the command-line arguments in argv. Input switching is also invisible if the input comes from another program via a pipe mechanism: on some systems, the command line
+		prog <infile
 
-	otherprog | prog
+	causes prog to read characters from infile instead. The switching of the input is done in such a way that prog itself is obliviousto the change; in particular, the string" <infile" is not included in the command-line arguments in argv. Input switching is also invisible if the input comes from another program via a pipe mechanism: on some systems, the command line
 
-runs the two programs otherprog and prog, and pipes the standard output of otherprog into the standard input for prog.
+		otherprog | prog
 
-prog >outfile
+	runs the two programs otherprog and prog, and pipes the standard output of otherprog into the standard input for prog.
 
+		prog >outfile
 
-As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and tolower in <ctype.h> are often macros, thus avoiding the overhead of a function call per character.
+	As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and tolower in <ctype.h> are often macros, thus avoiding the overhead of a function call per character.
 
 
 7.2 Formatted Output-Printf
@@ -88,6 +89,7 @@ As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and t
 		
 	scanf ignores blanks and tabs in its format string. Furthermore, it skips over white space (blanks, tabs, newlines, etc.) as it looks for input values. To read input whose format is not fixed, it is often best to read a line at a time, then pick it apart with sscanf.
 
+
 7.5 File Access
 	
 	FILE *fp;
@@ -110,8 +112,109 @@ As we mentioned earlier, "functions" like getchar and putchar in <stdio.h> and t
 
 	The file pointers stdin and stdout are objects of type FILE *. They are constants, however, not variables, so it is not possible to assign to them.
 
-	The function int fclose(FILE *fp) is the inverse of f open; it breaks the connection between the file pointer and the external name that was established by fopen, freeing the file pointer for another file. Since most operating systems have some limit on the number of files that a program may have open simultaneously, it's a good idea to free file pointers when they are no longer needed, as we did in cat. There is also another reason for f close on an output file-it flushes the buffer in which putc is collecting output. fclose is called automatically for each open file when a program terminates normally. (You can close stdin and stdout if they are not needed. They can also be reassigned by the library function freopen.)
+	The function int fclose(FILE *fp) is the inverse of fopen; it breaks the connection between the file pointer and the external name that was established by fopen, freeing the file pointer for another file. Since most operating systems have some limit on the number of files that a program may have open simultaneously, it's a good idea to free file pointers when they are no longer needed, as we did in cat. There is also another reason for f close on an output file-it flushes the buffer in which putc is collecting output. fclose is called automatically for each open file when a program terminates normally. (You can close stdin and stdout if they are not needed. They can also be reassigned by the library function freopen.)
 		
+
+7.6 Error Handling - Stderr and Exit
+
+	Output written on stderr normally appears on the screen even if the standard output is redirected.
+		char *prog = argv[O];
+		fprintf(stderr, "%s: can't open %s\n", prog, *argv);
+
+	The argument of exit is available to whatever process called this one, so the success or failure of the program can be tested by another program that uses this one as a sub-process.
+
 	Within main, return expr is equivalent to exit(expr). exit has the advantage that it can be called from other functions, and that calls to it can be found with a pattern-searching program like those in Chapter 5.
 
+	The function ferror returns non-zero if an error occurred on the stream fp.
 
+		int ferror(FILE *fp)
+	
+	Although output errors are rare, they do occur (for example, if a disk fills up), so a production program should check this as well. 
+	The function f eof (FILE *) is analogous to f error; it returns non-zero if end of file has occurred on the specified file.
+
+		int feof(FILE *fp)
+
+	We have generally not worried about exit status in our small illustrative programs, but any serious program should take care to return sensible, useful status values.
+
+
+7.7 Line Input and Output
+	The library functions gets and puts are similar to fgets and fputs, but operate on stdin and stdout. Confusingly, gets deletes the terminal '\n', and puts adds it.
+
+
+7.8 Miscellaneous Functions
+
+	7.8.1 String Operations, <string.h>
+		In the following, s and t are char *'s, and c and n are ints.
+			strcat(s, t), strncat(s, t, n)
+			strcmp(s, t), strncmp(s, t, n)
+			strcpy(s, t), strncpy(s, t, n)
+			strlen(s)
+			strchr(s, c), strrchr(s, c)
+
+
+	7.8.2 Character Class Testing and Conversion, <ctype.h>
+		In the following, c is an int that can be represented as an unsigned char, or EOF. The functions return int.
+			isalpha(c)
+			isupper(c)
+			islower(c)
+			isdigit(c)
+			isalnum(c)
+			isspace(c)
+			toupper(c)
+			tolower(c)
+
+	7.8.3 Ungetc, <stdio.h>
+		int ungetc(int c, FILE *fp)
+
+	7.8.4 Command Execution, <stdlib.h>
+		The function system(char *s) executes the command contained in the character string s, then resumes execution of the current program. The contents of s depend strongly on the local operating system.
+
+		system returns a system-dependent integer status from the command executed. In the UNIX system, the status return is the value returned by exit.
+
+	7.8.5 Storage Management, <stdlib.h>
+		void *malloc(size_t n)
+		void *calloc(size_t n, size_t size)
+
+	7.8.6 Mathematical Functions, <math.h>
+		pow(x, y)
+		sqrt(x)
+		fabs(x)
+
+	7.8.7 Random Number Generation, <stdlib.h>
+		The function rand() computes a sequence of pseudo-random integers in the range zero to RAND_MAX, which is defined in <stdlib.h>.
+		
+		The function srand(unsigned) sets the seed for rand.
+
+
+-----------------------------------
+Summaring i/o functions:
+
+	INPUT:
+		getc()
+		getchar()
+
+		gets()
+		getline()
+		fgets()
+
+		scanf()
+		fscanf()
+		sscanf()
+	-----------
+
+	OUTPUT:
+		putc()
+		putchar()
+
+		puts()
+		int fputs(char *line, FILE *fp)
+
+		printf
+		fprintf
+		sprintf
+	-----------
+	
+	FILE *fp = fopen(char *file_name, char *mode);
+	fclose(FILE *fp);
+
+	strlen()
