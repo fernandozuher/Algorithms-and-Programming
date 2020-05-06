@@ -16,7 +16,7 @@ where they differ.
 
 char* compare_files(char *file1_name, char *file2_name, int *lines);
 
-int main(int argc, char const *argv[])
+int main()
 {	
 	int line;
 	char file1_name[] = "file1.txt";
