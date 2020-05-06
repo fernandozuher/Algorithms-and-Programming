@@ -7,6 +7,8 @@ About: Exercise, Chapter 7 - Input and Output
 */
 
 /*
+PDF 179, Page 165
+
 Exercise 7-6. Write a program to compare two files, printing the first line
 where they differ.
 */
