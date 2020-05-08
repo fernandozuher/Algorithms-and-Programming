@@ -1,0 +1,145 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 07 May 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary*, Chapter 9 - Classes
+
+# Most of the text was drawn literally from the chapter.
+
+
+By convention, capitalized names refer to classes in Python.
+
+A function that’s part of a class is a method.
+
+	class Someclass:
+		"""Docstring about class"""
+		...
+
+
+The __init__() Method
+	
+	The __init__() method at w is a special method that Python runs automatically whenever we create a new instance based on the Dog class. This method has two leading underscores and two trailing underscores, a convention that helps prevent Python’s default method names from conflicting with your method names. Make sure to use two underscores on each side of __init__(). If you use just one on each side, the method won’t be called automatically when you use your class, which can result in errors that are difficult to identify.
+
+	We define the __init__() method to have three parameters: self, name, and age. The self parameter is required in the method definition, and it must come first before the other parameters. It must be included in the definition because when Python calls this method later (to create an instance of Dog), the method call will automatically pass the self argument. Every method call associated with an instance automatically passes self, which is a reference to the instance itself; it gives the individual instance access to the attributes and methods in the class. When we make an instance of Dog, Python will call the __init__() method from the Dog class. We’ll pass Dog() a name and an age as arguments; self is passed automatically, so we don’t need to pass it. Whenever we want to make an instance from the Dog class, we’ll provide values for only the last two parameters, name and age. 
+
+	The two variables defined at x each have the prefix self. Any variable prefixed with self is available to every method in the class, and we’ll also be able to access these variables through any instance created from the class. The line self.name = name takes the value associated with the parameter name and assigns it to the variable name , which is then attached to the instance being created. The same process happens with self.age = age. Variables that are accessible through instances like this are called attributes.
+
+
+Setting a Default Value for an Attribute
+
+	def __init__(self, make, model, year):
+		"""Initialize attributes to describe a car."""
+		self.make = make
+		self.model = model
+		self.year = year
+		self.odometer_reading = 0
+
+
+Inheritance
+
+	class Father:
+		...
+
+	class Child(Father):
+		def __init__(self, init_parameters_of_father_class, ...):
+			super().__init__(self, init_parameters_of_father_class)
+			...
+
+
+	The __init__() Method for a Child Class
+
+		The super() function at x is a special function that allows you to call a method from the parent class. This line tells Python to call the __init__() method from Car , which gives an ElectricCar instance all the attributes defined in that method. The name super comes from a convention of calling the parent class a superclass and the child class a subclass.
+
+			def __init__(self, make, model, year):
+				"""Initialize attributes of the parent class."""
+				super().__init__(make, model, year)
+
+
+Importing Classes			
+	
+	Importing a Single Class
+		At 1 we include a module-level docstring that briefly describes the contents of this module. You should write a docstring for each module you create.
+
+		Importing classes is an effective way to program. Picture how long this program file would be if the entire Car class were included. When you instead move the class to a module and import the module, you still get all the same functionality, but you keep your main program file clean and easy to read. You also store most of the logic in separate files; once your classes work as you want them to, you can leave those files alone and focus on the higher-level logic of your main program.
+
+	Storing Multiple Classes in a Module
+		You can store as many classes as you need in a single module, although each class in a module should be related somehow.
+
+	Importing Multiple Classes from a Module
+		You can import as many classes as you need into a program file. If we want to make a regular car and an electric car in the same file, we need to import both classes, Car and ElectricCar:
+			
+			from car import Car, ElectricCar
+			
+			my_beetle = Car('volkswagen', 'beetle', 2019)
+			print(my_beetle.get_descriptive_name())
+			
+			my_tesla = ElectricCar('tesla', 'roadster', 2019)
+			print(my_tesla.get_descriptive_name())
+
+
+	Importing an Entire Module
+		You can also import an entire module and then access the classes you need using dot notation. This approach is simple and results in code that is easy to read. Because every call that creates an instance of a class includes the module name, you won’t have naming conflicts with any names used in the current file.
+
+			import car
+			
+			my_beetle = car.Car('volkswagen', 'beetle', 2019)
+
+	Importing All Classes from a Module
+		
+		from module_name import *
+
+		This method is not recommended for two reasons. First, it’s helpful to be able to read the import statements at the top of a file and get a clear sense of which classes a program uses. With this approach it’s unclear which classes you’re using from the module. This approach can also lead to confusion with names in the file. If you accidentally import a class with the same name as something else in your program file, you can create errors that are hard to diagnose. I show this here because even though it’s not a recommended approach, you’re likely to see it in other people’s code at some point.
+
+		If you need to import many classes from a module, you’re better off importing the entire module and using the module_name.ClassName syntax. You won’t see all the classes used at the top of the file, but you’ll see clearly where the module is used in the program. You’ll also avoid the potential naming conflicts that can arise when you import every class in a module.
+
+	Importing a Module into a Module
+		Sometimes you’ll want to spread out your classes over several modules to keep any one file from growing too large and avoid storing unrelated classes in the same module. When you store your classes in several modules, you may find that a class in one module depends on a class in another module. When this happens, you can import the required class into the first module.
+
+	Using Aliases
+		As you saw in Chapter 8, aliases can be quite helpful when using modules to organize your projects’ code. You can use aliases when importing classes as well.
+		
+		As an example, consider a program where you want to make a bunch of electric cars. It might get tedious to type (and read) ElectricCar over and over again. You can give ElectricCar an alias in the import statement:
+		
+			from electric_car import ElectricCar as EC
+		
+		Now you can use this alias whenever you want to make an electric car:
+			
+			my_tesla = EC('tesla', 'roadster', 2019)
+
+	Finding Your Own Workflow
+		As you can see, Python gives you many options for how to structure code in a large project. It’s important to know all these possibilities so you can determine the best ways to organize your projects as well as understand other people’s projects.
+
+		When you’re starting out, keep your code structure simple. Try doing everything in one file and moving your classes to separate modules once everything is working. If you like how modules and files interact, try storing your classes in modules when you start a project. Find an approach that lets you write code that works, and go from there.
+
+
+The Python Standard Library
+
+	The Python standard library is a set of modules included with every Python installation. You can use any function or class in the standard library by including a simple import statement at the top of your file.
+
+		from random import randint
+
+		randint(1, 6) # returns a randomly selected integer between (and including) those numbers
+		
+		# This function takes in a list or tuple and returns a randomly chosen element
+		from random import choice
+		choice(lista ou tupla)
+
+		>>> players = ['charles', 'martina', 'michael', 'florence', 'eli']
+		>>> first_up = choice(players)
+		>>> first_up
+		'florence'
+
+	The random module shouldn’t be used when building security-related applications, but it’s good enough for many fun and interesting projects.
+
+---------------------------------------
+9-16. Python Module of the Week: One excellent resource for exploring the Python standard library is a site called Python Module of the Week. Go to https://pymotw.com/ and look at the table of contents. Find a module that looks interesting to you and read about it, perhaps starting with the random module.
+---------------------------------------
+
+Styling Classes
+
+	Class names should be written in CamelCase. To do this, capitalize the first letter of each word in the name, and don’t use underscores. Instance and module names should be written in lowercase with underscores between words.
+
+	Every class should have a docstring immediately following the class definition. The docstring should be a brief description of what the class does, and you should follow the same formatting conventions you used for writing docstrings in functions. Each module should also have a docstring describing what the classes in a module can be used for.
+
+	If you need to import a module from the standard library and a module that you wrote, place the import statement for the standard library module first. Then add a blank line and the import statement for the module you wrote. In programs with multiple import statements, this convention makes it easier to see where the different modules used in the program come from.
+
