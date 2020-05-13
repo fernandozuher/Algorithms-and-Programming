@@ -1,11 +1,12 @@
 # Author: Fernando Zuher
 # Place: Brazil
-# Date: 08 May 2020
+# Date: 13 May 2020
 # Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
 # About: Summary*, Chapter 10 - Files and Exceptions
 
 # Most of the text was drawn literally from the chapter.
 
+--------------------
 Reading from a File
 	For example, you can write a program that reads in the contents of a text file and rewrites the file with formatting that allows a browser to display it.
 
@@ -21,7 +22,6 @@ Reading from a File
 
 		Once we have a file object representing pi_digits.txt, we use the read() method in the second line of our program to read the entire contents of the file and store it as one long string in contents. When we print the value of contents, we get the entire text file back.
 
-
 	File Paths
 
 		Relative file path.			
@@ -36,14 +36,12 @@ Reading from a File
 
 		Note: If you try to use backslashes in a file path, you’ll get an error because the backslash is used to escape characters in strings. For example, in the path "C:\path\to\file.txt", the sequence \t is interpreted as a tab. If you need to use backslashes, you can escape each one in the path, like this: "C:\\path\\to\\file.txt".
 
-
 	Reading Line by Line
 
 		filename = 'pi_digits.txt'
 		with open(filename) as file_object:
 			for line in file_object:
 				print(line.rstrip())
-
 
 	Making a List of Lines from a File
 
@@ -55,7 +53,6 @@ Reading from a File
 			
 			for line in lines:
 				print(line.rstrip())
-
 
 	Working with a File’s Contents
 		Note: When Python reads from a text file, it interprets all text in the file as a string. If you read in a number and want to work with that value in a numerical context, you’ll have to convert it to an integer using the int() function or convert it to a float using the float() function.
@@ -74,7 +71,7 @@ Reading from a File
 		print(f"{pi_string[:52]}...")
 		print(len(pi_string))
 
-
+------------------
 Writing to a File
 
 	filename = 'programming.txt'
@@ -95,7 +92,7 @@ Writing to a File
 	Appending to a File
 		with open(filename, 'a') as file_object:
 
-
+-----------
 Exceptions
 
 	Python uses special objects called exceptions to manage errors that arise during a program’s execution. Whenever an error occurs that makes Python unsure what to do next, it creates an exception object. If you write code that handles the exception, the program will continue running. If you don’t handle the exception, the program will halt and show a traceback, which includes a report of the exception that was raised.
@@ -111,7 +108,6 @@ Exceptions
 
 	The error reported at u in the traceback, ZeroDivisionError , is an exception object. Python creates this kind of object in response to a situation where it can’t do what we ask it to. When this happens, Python stops the program and tells us the kind of exception that was raised. We can use this information to modify our program. We’ll tell Python what to do when this kind of exception occurs; that way, if it happens again, we’re prepared.
 
-
 	Using try-except Blocks
 
 		When you think an error may occur, you can write a try - except block to handle the exception that might be raised. You tell Python to try running some code, and you tell it what to do if the code results in a particular kind of exception. Here’s what a try - except block for handling the ZeroDivisionError exception looks like:
@@ -122,13 +118,11 @@ Exceptions
 
 		We put print(5/0), the line that caused the error, inside a try block. If the code in a try block works, Python skips over the except block. If the code in the try block causes an error, Python looks for an except block whose error matches the one that was raised and runs the code in that block.
 
-
 	Using Exceptions to Prevent Crashes
 
 		Handling errors correctly is especially important when the program has more work to do after the error occurs. This happens often in programs that prompt users for input. If the program responds to invalid input appropriately, it can prompt for more valid input instead of crashing.
 
 		It’s bad that the program crashed, but it’s also not a good idea to let users see tracebacks. Nontechnical users will be confused by them, and in a malicious setting, attackers will learn more than you want them to know from a traceback. For example, they’ll know the name of your program file, and they’ll see a part of your code that isn’t working properly. A skilled attacker can sometimes use this information to determine which kind of attacks to use against your code.
-
 
 	The else Block
 
@@ -136,11 +130,83 @@ Exceptions
 
 		By anticipating likely sources of errors, you can write robust programs that continue to run even when they encounter invalid data and missing resources. Your code will be resistant to innocent user mistakes and malicious attacks.
 
-		
+--------------------
+Exceptions
 
+	try-except-else
+
+	"The only code that should go in a try block is code
+	that might cause an exception to be raised. Sometimes you’ll have addi-
+	tional code that should run only if the try block was successful; this code
+	goes in the else block. The except block tells Python what to do in case a
+	certain exception arises when it tries to run the code in the try block."
+
+	Exceptions:
+	ZeroDivisionError
+	FileNotFoundError
+	ValueError
+
+	lista_de_palavras_da_string = string.split()
+
+
+	...you don’t need to report every exception you catch.
+	Sometimes you’ll want the program to fail silently when an exception occurs
+	and continue on as if nothing happened. To make a program fail silently, you
+	write a try block as usual, but you explicitly tell Python to do nothing in the
+	except block. Python has a pass statement that tells it to do nothing in a block...
+
+	except FileNotFoundError:
+		pass
+
+	The pass statement also acts as a placeholder. It’s a reminder that you’re
+	choosing to do nothing at a specific point in your program’s execution
+	and that you might want to do something there later. For example, in this
+	program we might decide to write any missing filenames to a file called
+	missing_files.txt. Our users wouldn’t see this file, but we’d be able to read
+	the file and deal with any missing texts.
+
+	Giving users information they aren’t looking for can decrease the
+	usability of your program. Python’s error-handling structures give you fine-
+	grained control over how much to share with users when things go wrong;
+	it’s up to you to decide how much information to share.
+
+	Well-written, properly tested code is not very prone to internal errors,
+	such as syntax or logical errors. But every time your program depends on
+	something external, such as user input, the existence of a file, or the avail-
+	ability of a network connection, there is a possibility of an exception being
+	raised. A little experience will help you know where to include exception
+	handling blocks in your program and how much to report to users about
+	errors that arise.
+	
+	quantidade = linha.count('palavra')
+
+------------------------------
+Storing Data
+
+	The json module allows you to dump simple Python data structures into a file and load the data from that file the next time the program runs. You can also use json to share data between different Python programs. Even better, the JSON data format is not specific to Python, so you can share data you store in the JSON format with people who work in many other programming languages. It’s a useful and portable format, and it’s easy to learn.
+
+	Note: The JSON (JavaScript Object Notation) format was originally developed for JavaScript. However, it has since become a common format used by many languages, including Python.
+
+	import json
+
+	json.dump(data, file_object)
+	content = json.load(file_object)
+
+------------------------------
+Refactoring
+
+	Often, you’ll come to a point where your code will work, but you’ll recognize that you could improve the code by breaking it up into a series of functions that have specific jobs. This process is called refactoring. Refactoring makes your code cleaner, easier to understand, and easier to extend.
+
+	...This compartmentalization of work is an essential part of writing clear code that will be easy to maintain and extend.
+
+	This is good practice: a function should either return the value you’re expecting, or it should return None.
+
+
+----------
+Commands:
 
 with open('file.txt') as file_object:
-	content = file_object.read()
+	all_content = file_object.read()
 
 	lines = file_object.readlines()
 
@@ -153,78 +219,3 @@ with open('output.txt', 'w') as file_object:
 	file_object.write("I love programming.")
 
 read mode ('r'), write mode ('w'), append mode ('a'), read and write to the file ('r+')
-
---------------------
-Exceptions
-
-try-except-else
-
-"The only code that should go in a try block is code
-that might cause an exception to be raised. Sometimes you’ll have addi-
-tional code that should run only if the try block was successful; this code
-goes in the else block. The except block tells Python what to do in case a
-certain exception arises when it tries to run the code in the try block."
-
-Exceptions:
-ZeroDivisionError
-FileNotFoundError
-ValueError
-
-lista_de_palavras_da_string = string.split()
-
-
-"...you don’t need to report every exception you catch.
-Sometimes you’ll want the program to fail silently when an exception occurs
-and continue on as if nothing happened. To make a program fail silently, you
-write a try block as usual, but you explicitly tell Python to do nothing in the
-except block. Python has a pass statement that tells it to do nothing in a block..."
-
-except FileNotFoundError:
-	pass
-
-"The pass statement also acts as a placeholder. It’s a reminder that you’re
-choosing to do nothing at a specific point in your program’s execution
-and that you might want to do something there later. For example, in this
-program we might decide to write any missing filenames to a file called
-missing_files.txt. Our users wouldn’t see this file, but we’d be able to read
-the file and deal with any missing texts."
-
-"Giving users information they aren’t looking for can decrease the
-usability of your program. Python’s error-handling structures give you fine-
-grained control over how much to share with users when things go wrong;
-it’s up to you to decide how much information to share.
-
-Well-written, properly tested code is not very prone to internal errors,
-such as syntax or logical errors. But every time your program depends on
-something external, such as user input, the existence of a file, or the avail-
-ability of a network connection, there is a possibility of an exception being
-raised. A little experience will help you know where to include exception
-handling blocks in your program and how much to report to users about
-errors that arise.
-"
-
-quantidade = linha.count('palavra')
-
-------------------------------
-Storing Data
-
-The json module allows you to dump simple Python data structures into a file and load the data from that file the next time the program runs. You can also use json to share data between different Python programs. Even better, the JSON data format is not specific to Python, so you can share data you store in the JSON format with people who work in many other programming languages. It’s a useful and portable format, and it’s easy to learn.
-
-Note: The JSON (JavaScript Object Notation) format was originally developed for JavaScript. However, it has since become a common format used by many languages, including Python.
-
-
-import json
-
-json.dump(data-structure, file_object)
-content = json.load(file_object)
-
-------------------------------
-Refactoring
-
-Often, you’ll come to a point where your code will work, but you’ll recognize that you could improve the code by breaking it up into a series of functions that have specific jobs. This process is called refactoring. Refactoring makes your code cleaner, easier to understand, and easier to extend.
-
-...This compartmentalization of work is an essential part of writing clear code that will be easy to maintain and extend.
-
-This is good practice: a function should either return the value you’re expecting, or it should return None.
-
-
