@@ -172,8 +172,22 @@ ValueError
 
 lista_de_palavras_da_string = string.split()
 
+
+"...you don’t need to report every exception you catch.
+Sometimes you’ll want the program to fail silently when an exception occurs
+and continue on as if nothing happened. To make a program fail silently, you
+write a try block as usual, but you explicitly tell Python to do nothing in the
+except block. Python has a pass statement that tells it to do nothing in a block..."
+
 except FileNotFoundError:
 	pass
+
+"The pass statement also acts as a placeholder. It’s a reminder that you’re
+choosing to do nothing at a specific point in your program’s execution
+and that you might want to do something there later. For example, in this
+program we might decide to write any missing filenames to a file called
+missing_files.txt. Our users wouldn’t see this file, but we’d be able to read
+the file and deal with any missing texts."
 
 "Giving users information they aren’t looking for can decrease the
 usability of your program. Python’s error-handling structures give you fine-
@@ -192,15 +206,25 @@ errors that arise.
 quantidade = linha.count('palavra')
 
 ------------------------------
-STORE DATA
+Storing Data
+
+The json module allows you to dump simple Python data structures into a file and load the data from that file the next time the program runs. You can also use json to share data between different Python programs. Even better, the JSON data format is not specific to Python, so you can share data you store in the JSON format with people who work in many other programming languages. It’s a useful and portable format, and it’s easy to learn.
+
+Note: The JSON (JavaScript Object Notation) format was originally developed for JavaScript. However, it has since become a common format used by many languages, including Python.
+
 
 import json
 
 json.dump(data-structure, file_object)
 content = json.load(file_object)
 
+------------------------------
+Refactoring
 
-REFACTORING
-"...This compartmentalization of work is an essential part of writing
-clear code that will be easy to maintain and extend."
+Often, you’ll come to a point where your code will work, but you’ll recognize that you could improve the code by breaking it up into a series of functions that have specific jobs. This process is called refactoring. Refactoring makes your code cleaner, easier to understand, and easier to extend.
+
+...This compartmentalization of work is an essential part of writing clear code that will be easy to maintain and extend.
+
+This is good practice: a function should either return the value you’re expecting, or it should return None.
+
 
