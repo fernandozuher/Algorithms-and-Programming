@@ -1,0 +1,109 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 15 May 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary*, Chapter 11 - Testing your code
+
+# Most of the text was drawn literally from the chapter.
+
+--------------------
+Testing a Function
+    
+    Unit Tests and Test Cases
+
+        The module unittest from the Python standard library provides tools for     testing your code. A unit test verifies that one specific aspect of a function’s     behavior is correct. A test case is a collection of unit tests that together prove     that a function behaves as it’s supposed to, within the full range of situations you expect it to handle. A good test case considers all the possible kinds of input a function could receive and includes tests to represent each of these situations. A test case with full coverage includes a full range of unit tests covering all the possible ways you can use a function. Achieving full coverage on a large project can be daunting. It’s often good enough to write tests for your code’s critical behaviors and then aim for full coverage only if the project starts to see widespread use.
+
+    A Passing Test
+
+        To write a test case for a function, import the unittest module and the function you want to test. Then create a class that inherits from unittest.TestCase , and write a series of methods to test different aspects of your function’s behavior.
+
+            import unittest
+            from name_function import get_formatted_name
+            
+            class NamesTestCase(unittest.TestCase):
+                """Tests for 'name_function.py'."""
+                
+                def test_first_last_name(self):
+                    """Do names like 'Janis Joplin' work?"""
+                    formatted_name = get_formatted_name('janis', 'joplin')
+                    self.assertEqual(formatted_name, 'Janis Joplin')
+
+            if __name__ == '__main__':
+                unittest.main()
+
+
+        You can name the class anything you want, but it’s best to call it something related to the function you’re about to test and to use the word Test in the class name. This class must inherit from the class unittest.
+
+        NamesTestCase contains a single method that tests one aspect of get_formatted_name() . We call this method test_first_last_name() because we’re verifying that names with only a first and last name are formatted correctly. Any method that starts with test_ will be run automatically when we run test_name_function.py. Within this test method, we call the function we want to test.
+
+        Assert methods verify that a result you received matches the result you expected to receive.
+
+        We’re going to run this file directly, but it’s important to note that many testing frameworks import your test files before running them. When a file is imported, the interpreter executes the file as it’s being imported. The if block at  looks at a special variable, __name__ , which is set when the program is executed. If this file is being run as the main program, the value of __name__ is set to '__main__' . In this case, we call unittest.main(), which runs the test case. When a testing framework imports this file, the value of __name__ won’t be '__main__' and this block will not be executed.
+
+        When we run test_name_function.py, we get the following output:
+            .
+            ----------------------------------------------------------------------
+            Ran 1 test in 0.000s
+            OK
+
+        The dot on the first line of output tells us that a single test passed. The next line tells us that Python ran one test, and it took less than 0.001 seconds to run. The final OK tells us that all unit tests in the test case passed.
+
+        The method name must start with test_ so the method runs automatically when we run test_name_function.py.
+
+----------------
+Testing a Class
+    
+    A Variety of Assert Methods
+
+        Python provides a number of assert methods in the unittest.TestCase class. As mentioned earlier, assert methods test whether a condition you believe is true at a specific point in your code is indeed true. If the condition is true as expected, your assumption about how that part of your program behaves is confirmed; you can be confident that no errors exist. If the condition you assume is true is actually not true, Python raises an exception.
+
+        Table 11-1: Assert Methods Available from the unittest Module 
+            Method                    Use
+            assertEqual(a, b)         Verify that a == b
+            assertNotEqual(a, b)      Verify that a != b
+            assertTrue(x)             Verify that x is True
+            assertFalse(x)            Verify that x is False
+            assertIn(item, list)      Verify that item is in list
+            assertNotIn(item, list)   Verify that item is not in list
+
+
+    Testing the AnonymousSurvey Class
+
+        To test the behavior of a class, we need to make an instance of the class.
+
+    The setUp() Method
+
+    	In test_survey.py we created a new instance of AnonymousSurvey in each test method, and we created new responses in each method. The unittest.TestCase class has a setUp() method that allows you to create these objects once and then use them in each of your test methods. When you include a setUp() method in a TestCase class, Python runs the setUp() method before running each method starting with test_. Any objects created in the setUp() method are then available in each test method you write.
+
+    	When you’re testing your own classes, the setUp() method can make your test methods easier to write. You make one set of instances and attributes in setUp() and then use these instances in all your test methods. This is much easier than making a new set of instances and attributes in each test method.
+
+    	Note: When a test case is running, Python prints one character for each unit test as it is completed. A passing test prints a dot, a test that results in an error prints an E, and a test that results in a failed assertion prints an F. This is why you’ll see a different number of dots and characters on the first line of output when you run your test cases. If a test case takes a long time to run because it contains many unit tests, you can watch these results to get a sense of how many tests are passing.
+
+--------
+Summary
+
+	Other programmers respect your projects more if you include some initial tests. They’ll feel more comfortable experimenting with your code and be more willing to work with you on projects. If you want to contribute to a project that other programmers are working on, you’ll be expected to show that your code passes existing tests and you’ll usually be expected to write tests for new behavior you introduce to the project.
+
+	Write tests for the most critical behaviors of your functions and classes, but don’t aim for full coverage in early projects unless you have a specific reason to do so.
+
+------
+Codes
+
+import unittest
+from any_module import function_to_be_tested (or class_to_be_tested)
+
+class TestFunctionName(unittest.TestCase):
+    """..."""
+    def test_function_to_be_tested(self):
+        """..."""
+        variable = function_to_be_tested(......)
+        self.assertEqual(variable, 'Expected result')
+
+if __name__ == __main__:
+    unittest.main()
+
+.assertEqual()
+.assertIn()
+
+def setUp(self):
+    ...
