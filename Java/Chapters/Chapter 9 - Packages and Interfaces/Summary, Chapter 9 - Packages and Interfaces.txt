@@ -1,0 +1,290 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 17 May 2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary*, Chapter 9 - Packages and Interfaces
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+Packages and Interfaces
+	
+	Packages are containers for classes.
+
+	Although they [interfaces] are similar to abstract classes, interfaces have an additional capability: A class can implement more than one interface. By contrast, a class can only inherit a single superclass (abstract or otherwise).
+
+	Packages
+
+		The package is both a naming and a visibility control mechanism. You can define classes inside a package that are not accessible by code outside that package. You can also defineclass members that are exposed only to other members of the same package. This allows your classes to have intimate knowledge of each other, but not expose that knowledge to the rest of the world.
+
+		Defining a Package
+
+			To create a package is quite easy: simply include a package command as the first statement in a Java source file. Any classes declared within that file will belong to the specified package. The package statement defines a name space in which classes are stored. If you omit the package statement, the class names are put into the default package, which has no name. (This is why you haven’t had to worry about packages before now.) While the default package is fine for short, sample programs, it is inadequate for real applications. Most of the time, you will define a package for your code. This is the general form of the package statement:
+				
+				package mypackage;
+
+		Finding Packages and CLASSPATH
+
+			First, by default, the Java run-time system uses the current working directory as its starting point. Thus, if your package is in a subdirectory of the current directory, it will be found. Second, you can specify a directory path or paths by setting the CLASSPATH environmental variable. Third, you can use the -classpath option with java and javac to specify the path to your classes.
+
+			For example, consider the following package specification:
+		
+				package mypack;
+
+			In order for a program to find mypack, the program can be executed from a directory immediately above mypack, or the CLASSPATH must be set to include the path to mypack, or the -classpath option must specify the path to mypack when the program is run via java.
+
+			When the second two options are used, the class path must not include mypack, itself. It must simply specify the path to mypack. For example, in a Windows environment, if the path to mypack is
+				C:\MyPrograms\Java\mypack
+
+			then the class path to mypack is 
+				C:\MyPrograms\Java
+
+			java mypack.AccountBalance
+
+			Remember, you will need to be in the directory above mypack when you execute this command. (Alternatively, you can use one of the other two options described in the preceding section to specify the path mypack.)
+
+			As explained, AccountBalance is now part of the package mypack. This means that it cannot be executed by itself. That is, you cannot use this command line:
+				java AccountBalance
+			
+			AccountBalance must be qualified with its package name.
+
+
+		Packages and Member Access
+
+			Anything declared public can be accessed from different classes and different packages. Anything declared private cannot be seen outside of its class. When a member does not have an explicit access specification, it is visible to subclasses as well as to other classes in the same package. This is the default access. If you want to allow an element to be seen outside your current package, but only to classes that subclass your class directly, then declare that element protected.
+
+			A non-nested class has only two possible access levels: default and public. When a class is declared as public, it is accessible outside its package. If a class has default access, then it can only be accessed by other code within its same package. When a class is public, it must be the only public class declared in the file, and the file must have the same name as the class.
+
+
+	Importing Packages
+
+		Java includes the import statement to bring certain classes, or entire packages, into visibility. Once imported, a class can be referred to directly, using only its name. The import statement is a convenience to the programmer and is not technically needed to write a complete Java program. If you are going to refer to a few dozen classes in your application, however, the import statement will save a lot of typing. In a Java source file, import statements occur immediately following the package statement (if it exists) and before any class definitions. This is the general form of the import statement:
+			
+			import pkg1 [.pkg2].(classname | *);
+			import java.util.Date;
+			import java.io.*;
+				
+		All of the standard Java SE classes included with Java begin with the name java. The basic language functions are stored in a package called java.lang. Normally, you have to import every package or class that you want to use, but since Java is useless without much of the functionality in java.lang, it is implicitly imported by the compiler for all programs. This is equivalent to the following line being at the top of all of your programs: import java.lang.*;
+
+		It must be emphasized that the import statement is optional. Any place you use a class name, you can use its "fully qualified name", which includes its full package hierarchy. For example, this fragment uses an import statement:
+			import java.util.*;
+			class MyDate extends Date {
+			}
+		
+		The same example without the import statement looks like this:
+			class MyDate extends java.util.Date {
+			}
+
+		In this version, Date is fully-qualified.
+
+
+-----------
+Interfaces
+	
+	Using the keyword interface, you can fully abstract a class’ interface from its implementation. That is, using interface, you can specify what a class must do, but not how it does it. Interfaces are syntactically similar to classes, but they lack instance variables, and, as a general rule, their methods are declared without any body. In practice, this means that you can define interfaces that don’t make assumptions about how they are implemented. Once it is defined, any number of classes can implement an interface. Also, one class can implement any number of interfaces.
+
+	To implement an interface, a class must provide the complete set of methods required by the interface. However, each class is free to determine the details of its own implementation. By providing the interface keyword, Java allows you to fully utilize the “one interface, multiple methods” aspect of polymorphism.
+
+	Since interfaces are in a different hierarchy from classes, it is possible for classes that are unrelated in terms of the class hierarchy to implement the same interface. This is where the real power of interfaces is realized.
+
+	Defining an Interface
+
+		An interface is defined much like a class.
+
+		When no access modifier is included, then default access results, and the interface is only available to other members of the package in which it is declared. When it is declared as public, the interface can be used by code outside its package. In this case, the interface must be the only public interface declared in the file, and the file must have the same name as the interface. name is the name of the interface, and can be any valid identifier. Notice that the methods that are declared have no bodies. They end with a semicolon after the parameter list. They are, essentially, abstract methods. Each class that includes such an interface must implement all of the methods.
+
+		...variables can be declared inside interface declarations. They are implicitly final and static, meaning they cannot be changed by the implementing class. They must also be initialized. All methods and variables are implicitly public.
+
+			interface Callback {
+				void callback(int param);
+			}
+
+	Implementing Interfaces
+
+		Class Clients implements Callback {
+			public void callback(int p) {
+				...
+			}
+		}
+
+		If a class implements more than one interface, the interfaces are separated with a comma. If a class implements two interfaces that declare the same method, then the same method will be used by clients of either interface. The methods that implement an interface must be declared public. Also, the type signature of the implementing method must match exactly the type signature specified in the interface definition.
+
+		REMEMBER: When you implement an interface method, it must be declared as public.
+
+		It is both permissible and common for classes that implement interfaces to define additional members of their own.
+
+	Accessing Implementations Through Interface References
+		
+		You can declare variables as object references that use an interface rather than a class type. Any instance of any class that implements the declared interface can be referred to by such a variable. When you call a method through one of these references, the correct version will be called based on the actual instance of the interface being referred to. This is one of the key features of interfaces. The method to be executed is looked up dynamically at run time, allowing classes to be created later than the code which calls methods on them. The calling code can dispatch through an interface without having to know anything about the “callee.” This process is similar to using a superclass reference to access a subclass object, as described in Chapter 8.
+
+			class TestIface {
+				public static void main(String[] args) {
+					Callback c = new Client();
+					c.callback(42);
+				}
+			}
+
+		Notice that variable c is declared to be of the interface type Callback, yet it was assigned an instance of Client. Although c can be used to access the callback() method, it cannot access any other members of the Client class. An interface reference variable has knowledge only of the methods declared by its interface declaration. Thus, c could not be used to access nonIfaceMeth( ) since it is defined by Client but not Callback.
+
+	Partial Implementations
+
+		If a class includes an interface but does not fully implement the methods required by that interface, then that class must be declared as abstract. For example:
+
+			abstract class Incomplete implements Callback {
+				int a, b;
+
+				void show() {
+					System.out.println(a + " " + + b);
+				}
+			}	
+
+
+		Here, the class Incomplete does not implement callback() and must be declared as abstract. Any class that inherits Incomplete must implement callback() or be declared abstract itself.
+
+	Nested Interfaces
+
+		An interface can be declared a member of a class or another interface. Such an interface is called a member interface or a nested interface. A nested interface can be declared as public, private, or protected. This differs from a top-level interface, which must either be declared as public or use the default access level, as previously described. When a nested interface is used outside of its enclosing scope, it must be qualified by the name of the class or interface of which it is a member.
+		
+		Thus, outside of the class or interface in which a nested interface is declared, its name must be fully qualified. Here is an example that demonstrates a nested interface:
+
+			class A {
+				public interface NestedIF {
+					boolean isNotNegative(int x);
+				}
+			}
+
+			class B implements A.NestedIF {
+				public boolean isNotNegative(int x) {
+					return x < 0 ? false : true;
+				}
+			}
+
+			class NestedIFDemo {
+				public static void main(String[] args) {
+					A.NestedIF nif = new B();
+
+					if (nif.isNotNegative(10))
+						System.out.println("10 is not negative");
+					if (nif.isNotNegative(-12))
+						System.out.println("this won't be displayed");
+				}
+			}
+
+
+		Notice that A defines a member interface called NestedIF and that it is declared public. Next, B implements the nested interface by specifying
+			
+			implements A.NestedIF
+
+		Notice that the name is fully qualified by the enclosing class’ name.
+
+	Applying Interfaces
+
+		To understand the power of interfaces, let’s look at a more practical example. In earlier chapters, you developed a class called Stack that implemented a simple fixed-size stack. However, there are many ways to implement a stack. For example, the stack can be of a fixed size or it can be “growable.” The stack can also be held in an array, a linked list, a binary tree, and so on. No matter how the stack is implemented, the interface to the stack remains the same. That is, the methods push() and pop() define the interface to the stack independently of the details of the implementation. Because the interface to a stack is separate from its implementation, it is easy to define a stack interface, leaving it to each implementation to define the specifics.
+
+		In this program, mystack is a reference to the IntStack interface. Thus, when itrefers to ds, it uses the versions of push() and pop() defined by the DynStack implementation. When it refers to fs, it uses the versions of push() and pop() defined by FixedStack. As explained, these determinations are made at run time. Accessing multiple implementations of an interface through an interface reference variable is the most powerful way that Java achieves run-time polymorphism.
+
+	Variables in Interfaces
+
+		You can use interfaces to import shared constants into multiple classes by simply declaring an interface that contains variables that are initialized to the desired values. When you include that interface in a class (that is, when you “implement” the interface), all of those variable names will be in scope as constants. If an interface contains no methods, then any class that includes such an interface doesn’t actually implement anything. It is as if that class were importing the constant fields into the class name space as final variables.
+
+		NOTE: The technique of using an interface to define shared constants, as just described, is controversial. It is described here for completeness.
+
+	Interfaces Can Be Extended
+
+		One interface can inherit another by use of the keyword extends. The syntax is the same as for inheriting classes. When a class implements an interface that inherits another interface, it must provide implementations for all methods required by the interface inheritance chain.
+
+		...any class that implements an interface must implement all methods required by thatinterface, including any that are inherited from other interfaces.
+
+	Default Interface Methods
+
+		The release of JDK 8 changed this by adding a new capability to interface called the default method. A default method lets you define a default implementation for an interface method. In other words, by use of a default method, it is possible for an interface method to provide a body, rather than being abstract. During its development, the default method was also referred to as an extension method, and you will likely see both terms used.
+
+		A primary motivation for the default method was to provide a means by which interfaces could be expanded without breaking existing code. Recall that there must be implementations for all methods defined by an interface. In the past, if a new method were added to a popular, widely used interface, then the addition of that method would break existing code because no implementation would be found for that new method. The default method solves this problem by supplying an implementation that will be used if no other implementation is explicitly provided. Thus, the addition of a default method will not cause preexisting code to break.
+
+		Another motivation for the default method was the desire to specify methods in an interface that are, essentially, optional, depending on how the interface is used. For example, an interface might define a group of methods that act on a sequence of elements. One of these methods might be called remove( ), and its purpose is to remove an element from the sequence. However, if the interface is intended to support both modifiable and nonmodifiable sequences, then remove( ) is essentially optional because it won’t be used by nonmodifiable sequences. In the past, a class that implemented a nonmodifiable sequence would have had to define an empty implementation of remove( ), even though it was not needed. Today, a default implementation for remove( ) can be specified in the interface that does nothing (or throws an exception). Providing this default prevents a class used for nonmodifiable sequences from having to define its own, placeholder version of remove( ). Thus, by providing a default, the interface makes the implementation of remove( ) by a class optional.
+
+		It is important to point out that the addition of default methods does not change a key aspect of interface: its inability to maintain state information. An interface still cannot have instance variables, for example. Thus, the defining difference between an interface and a class is that a class can maintain state information, but an interface cannot. Furthermore, it is still not possible to create an instance of an interface by itself. It must be implemented by a class. Therefore, even though, beginning with JDK 8, an interface can define default methods, the interface must still be implemented by a class if an instance is to be created.
+
+		One last point: As a general rule, default methods constitute a special-purpose feature. Interfaces that you create will still be used primarily to specify what and not how. However, the inclusion of the default method gives you added flexibility.
+
+	Default Method Fundamentals
+
+		public interface MyIF {
+
+			int getNumber();
+
+			default String getString() {
+				return "Default String";
+			}
+		}
+
+	A More Practical Example
+
+		...the default method gives you
+			• a way to gracefully evolve interfaces over time, and
+			• a way to provide optional functionality without requiring that a class provide a placeholder implementation when that functionality is not needed.
+
+		One other point: In real-world code, clear() would have thrown an exception, rather than displaying an error message. Exceptions are described in the next chapter. After working through that material, you might want to try modifying clear() so that its default implementation throws an UnsupportedOperationException.
+
+	Multiple Inheritance Issues
+
+		As explained earlier in this book, Java does not support the multiple inheritance of classes. Now that an interface can include default methods, you might be wondering if an interface can provide a way around this restriction. The answer is, essentially, no. Recall that there is still a key difference between a class and an interface: a class can maintain state information (especially through the use of instance variables), but an interface cannot. The preceding notwithstanding, default methods do offer a bit of what one would normally associate with the concept of multiple inheritance. For example, you might have a class that implements two interfaces. If each of these interfaces provides default methods, then some behavior is inherited from both. Thus, to a limited extent, default methods do support multiple inheritance of behavior. As you might guess, in such a situation, it is possible that a name conflict will occur.
+
+		For example, assume that two interfaces called Alpha and Beta are implemented by a class called MyClass. What happens if both Alpha and Beta provide a method called reset( ) for which both declare a default implementation? Is the version by Alpha or the version by Beta used by MyClass? Or, consider a situation in which Beta extends Alpha. Which version of the default method is used? Or, what if MyClass provides its own implementation of the method? To handle these and other similar types of situations, Java defines a set of rules that resolves such conflicts.
+
+		First, in all cases, a class implementation takes priority over an interface default implementation.
+
+		Second, in cases in which a class implements two interfaces that both have the same default method, but the class does not override that method, then an error will result.
+
+		In cases in which one interface inherits another, with both defining a common default method, the inheriting interface’s version of the method takes precedence. Therefore, continuing the example, if Beta extends Alpha, then Beta’s version of reset( ) will be used.
+
+		It is possible to explicitly refer to a default implementation in an inherited interface by using this form of super. Its general form is shown here:
+			
+			InterfaceName.super.methodName( )
+
+		For example, if Beta wants to refer to Alpha’s default for reset( ), it can use this statement:
+			Alpha.super.reset();
+
+	Use static Methods in an Interface
+
+		Like static methods in a class, a static method defined by an interface can be called independently of any object. Thus, no implementation of the interface is necessary, and no instance of the interface is required, in order to call a static method. Instead, a static method is called by specifying the interface name, followed by a period, followed by the method name. Here is the general form:
+
+			InterfaceName.staticMethodName
+
+		Notice that this is similar to the way that a static method in a class is called.
+
+			public interface MyIF {
+				int getNumber();
+
+				default String getString() {
+					return "Default String";
+				}
+
+				static int getDefaultNumber() {
+					return 0;
+				}
+			}
+
+		The getDefaultNumber() method can be called, as shown here:
+			
+			int defNum = MyIF.getDefaultNumber();
+
+		As mentioned, no implementation or instance of MyIF is required to call getDefaultNumber( ) because it is static.
+		One last point: static interface methods are not inherited by either an implementing class or a subinterface.
+
+	Private Interface Methods
+
+		Beginning with JDK 9, an interface can include a private method. A private interface method can be called only by a default method or another private method defined by the same interface. Because a private interface method is specified private, it cannot be used by code outside the interface in which it is defined. This restriction includes subinterfaces because a private interface method is not inherited by a subinterface.
+
+		The key benefit of a private interface method is that it lets two or more default methods use a common piece of code, thus avoiding code duplication.
+
+		Although the private interface method is a feature that you will seldom need, in those cases in which you do need it, you will find it quite useful.
+
+------------------------------------------
+Final Thoughts on Packages and Interfaces
+
+	Although the examples we’ve included in this book do not make frequent use of packages or interfaces, both of these tools are an important part of the Java programming environment. Virtually all real programs that you write in Java will be contained within packages. A number will probably implement interfaces as well. It is important, therefore, that you be comfortable with their usage.
+
+
