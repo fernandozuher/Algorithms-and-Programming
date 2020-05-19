@@ -1,0 +1,130 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 18 May 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 10 - Expressions
+
+* Most of the written is taken literally from the chapter.
+
+*/
+
+Conventionally, main() returns zero if the program terminates normally and nonzero otherwise.
+
+10.2.7 Command-Line Arguments
+
+	A program starts by calling main() (§2.2.1, §15.4). When this is done, main() is given two arguments specifying the number of arguments, conventionally called argc, and an array of arguments, conventionally called argv. The arguments are C-style character strings (§2.2.5, §7.3), so the type of argv is char∗[argc+1]. The name of the program (as it occurs on the command line) is passed as argv[0], so argc is always at least 1. The list of arguments is zero-terminated; that is, argv[argc]==0.
+
+10.2.8 A Note on Style
+
+	The standard library and other libraries are meant to be used. Often, a library has received more care in its design and implementation than a programmer could afford for a handcrafted piece of code to be used in just one program.
+
+	Note the relative scarcity of loops, arithmetic, and assignments. This is the way things ought to be in code that doesn’t manipulate hardware directly or implement low-level abstractions.
+
+10.3 Operator Summary
+
+	Unary operators and assignment operators are right-associative; all others are left-associative. For example, a=b=c means a=(b=c) whereas a+b+c means (a+b)+c.
+
+	10.3.1 Results
+
+		Operands that are smaller than an int (such as bool and char ) are converted to int before the operator is applied.
+
+	10.3.2 Order of Evaluation
+
+		The order of evaluation of subexpressions within an expression is undefined. In particular, you cannot assume that the expression is evaluated left-to-right. For example:
+			int x = f(2)+g(3); // undefined whether f() or g() is called first
+
+		Better code can be generated in the absence of restrictions on expression evaluation order. However, the absence of restrictions on evaluation order can lead to undefined results. For example:
+			int i = 1;
+			v[i] = i++; // undefined result
+
+		The assignment may be evaluated as either v[1]=1 or v[2]=1 or may cause some even stranger behavior. Compilers can warn about such ambiguities. Unfortunately, most do not, so be careful not to write an expression that reads or writes an object more than once, unless it does so using a single operator that makes it well defined, such as ++ and +=, or explicitly express sequencing using, (comma), &&, or ||.
+
+		The operators, (comma), && (logical and), and || (logical or) guarantee that their left-hand operand is evaluated before their right-hand operand. For example, b=(a=2,a+1) assigns 3 to b . Examples of the use of || and && can be found in §10.3.3. For built-in types, the second operand of && is evaluated only if its first operand is true, and the second operand of || is evaluated only if its first operand is false ; this is sometimes called short-circuit evaluation. Note that the sequencing operator, (comma) is logically different from the comma used to separate arguments in a function call. For example:
+			f1(v[i],i++); // two arguments
+			f2( (v[i],i++) ); // one argument
+			
+		The call of f1 has two arguments, v[i] and i++, and the order of evaluation of the argument expressions is undefined. So it should be avoided. Order dependence of argument expressions is very poor style and has undefined behavior. The call of f2 has only one argument, the comma expression (v[i],i++), which is equivalent to i++. That is confusing, so that too should be avoided.
+
+		Parentheses can be used to force grouping. For example, a∗b/c means (a∗b)/c, so parentheses must be used to get a∗(b/c) ; a∗(b/c) may be evaluated as (a∗b)/c only if the user cannot tell the difference. In particular, for many floating-point computations a∗(b/c) and (a∗b)/c are significantly different, so a compiler will evaluate such expressions exactly as written.
+
+10.4 Constant Expressions
+
+	10.4.1 Symbolic Constants
+		
+		The most important single use of constants ( constexpr or const values) is simply to provide symbolic names for values. Symbolic names should be used systematically to avoid ‘‘magic numbers’’ in code. Literal values scattered freely around in code is one of the nastiest maintenance hazards. If a numeric constant, such as an array bound, is repeated in code, it becomes hard to revise that code because every occurrence of that constant must be changed to update the code correctly. Using a symbolic name instead localizes information. Usually, a numeric constant represents an assumption about the program. For example, 4 may represent the number of bytes in an integer, 128 the number of characters needed to buffer input, and 6.24 the exchange factor between Danish kroner and U.S. dollars. Left as numeric constants in the code, these values are hard for a maintainer to spot and understand. Also, many such values need to change over time. Often, such numeric values go unnoticed and become errors when a program is ported or when some other change violates the assumptions they represent. Representing assumptions as well-commented named (symbolic) constants minimizes such maintenance problems.
+
+	10.4.2 const s in Constant Expressions
+		
+		A const is primarily used to express interfaces (§7.5). However, const can also be used to express constant values. For example:
+
+			const int x = 7;
+			const string s = "asdf";
+			const int y = sqrt(x);
+
+		Usually, constexpr is a better choice than const for defining simple constants, but constexpr is new in C++11, so older code tends to use const. In many cases, enumerators (§8.4) are another alternative to const s.
+
+10.5 Implicit Type Conversion
+
+	10.5.1 Promotions
+
+		The implicit conversions that preserve values are commonly referred to as promotions. Before an arithmetic operation is performed, integral promotion is used to create int s out of shorter integer types. Similarly, floating-point promotion is used to create double s out of float s. Note that these promotions will not promote to long (unless the operand is a char16_t, char32_t, wchar_t, or a plain enumeration that is already larger than an int ) or long double . This reflects the original purpose of these promotions in C: to bring operands to the ‘‘natural’’ size for arithmetic operations. 
+
+		The integral promotions are:
+			• A char, signed char, unsigned char, short int, or unsigned short int is converted to an int if int can represent all the values of the source type; otherwise, it is converted to an unsigned int.
+			• ...
+			• A bool is converted to an int; false becomes 0 and true becomes 1.
+
+	10.5.2 Conversions
+		
+		The fundamental types can be implicitly converted into each other in a bewildering number of ways (§iso.4).In my opinion, too many conversions are allowed. For example:
+			void f(double d)
+			{
+				char c = d; // beware: double-precision floating-point to char conversion
+			}
+			
+		When writing code, you should always aim to avoid undefined behavior and conversions that quietly throw away information (‘‘narrowing conversions’’).
+
+		A compiler can warn about many questionable conversions. Fortunately, many compilers do. The {} -initializer syntax prevents narrowing (§6.3.5). For example:
+			void f(double d)
+			{
+				char c {d}; // error: double-precision floating-point to char conversion
+			}
+
+		If potentially narrowing conversions are unavoidable, consider using some form of run-time checked conversion function, such as narrow_cast<>() (§11.5).
+
+		10.5.2.5 Boolean Conversions
+			
+			Pointer, integral, and floating-point values can be implicitly converted to value converts to true; a zero value converts to false. For example:
+				void f(int∗ p, int i)
+				{
+					bool is_not_zero = p;
+					bool b2 = i;
+					// ...
+				}
+
+		10.5.2.6 Floating-Integral Conversions
+
+			When a floating-point value is converted to an integer value, the fractional part is discarded. In other words, conversion from a floating-point type to an integer type truncates. For example, the value of int(1.6) is 1 . The behavior is undefined if the truncated value cannot be represented in the destination type. For example:
+				
+				int i = 2.7; // i becomes 2
+				char b = 2000.7; // undefined for 8-bit chars: 2000 cannot be represented as an 8-bit char
+				
+			Clearly, it is best to avoid potentially value-destroying implicit conversions. In fact, compilers can detect and warn against some obviously dangerous conversions, such as floating to integral and long int to char . Howev er, general compile-time detection is impractical, so the programmer must be careful. When ‘‘being careful’’ isn’t enough, the programmer can insert explicit checks. For example:
+
+				...code...
+
+			A more general technique for expressing checked conversions is presented in §25.2.5.1. To truncate in a way that is guaranteed to be portable requires the use of numeric_limits (§40.2). In initializations, truncation can be avoided by using the {}-initializer notation (§6.3.5).
+
+10.6 Advice
+	[1] Prefer the standard library to other libraries and to ‘‘handcrafted code’’; §10.2.8.
+	[2] Use character-level input only when you have to; §10.2.3.
+	[3] When reading, always consider ill-formed input; §10.2.3.
+	[4] Prefer suitable abstractions (classes, algorithms, etc.) to direct use of language features (e.g., int s, statements); §10.2.8.
+	[5] Avoid complicated expressions; §10.3.3.
+	[6] If in doubt about operator precedence, parenthesize; §10.3.3.
+	[7] Avoid expressions with undefined order of evaluation; §10.3.2.
+*	[8] Avoid narrowing conversions; §10.5.2.
+	[9] Define symbolic constants to avoid ‘‘magic constants’’; §10.4.1.
+*	[10] Avoid narrowing conversions; §10.5.2.
+
