@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 20 May 2020
+Date: 22 May 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, Chapter 8 - The UNIX System Interface
 
@@ -11,4 +11,71 @@ PAGES 169 - 190
 PDF 183 - 204
 
 */
+
+The UNIX operating system provides its services through a set of system calls, which are in effect functions within the operating system that may be called by user programs. This chapter describes how to use some of the most important system calls from C programs. If you use UNIX, this should be directly helpful, for it is sometimes necessary to employ system calls for maximum efficiency, or to access some facility that is not in the library.
+
+The chapter is divided into three major parts: input/output, file system, and storage allocation. The first two parts assume a modest familiarity with the external characteristics of UNIX systems.
+
+8.1 File Descriptor
+
+	Since input and output involvingkeyboard and screen is so common, special arrangements exist to make this convenient. When the command interpreter (the "shell") runs a program, three files are open, with file descriptors 0, 1, and 2, called the standard input, the standard output, and the standard error. If a program reads 0 and writes 1 and 2, it can do input and output without worrying about opening files.
+	
+	The user of a program can redirect 1/0 to and from files with < and >:
+		prog <infile >outfile
+	
+	In this case, the shell changes the default assignments for file descriptors 0 and 1 to the named files. Normally file descriptor 2 remains attached to the screen, so error messages can go there. Similar observations hold for input or output associated with a pipe. In all cases, the file assignments are changed by the shell, not by the program. The program does not know where its input comes from nor where its output goes, so long as it uses file 0 for input and 1 and 2 for output.
+
+8.2 Low Level I/O--Read and Write
+
+	Input and output uses the read and write system calls, which are accessed from C programs through two functions called read and write. For both, the first argument is a file descriptor. The second argument is a character array in your program where the data is to go to or come from. The third argument is the number of bytes to be transferred.
+
+		int n_read = read(int fd, char *buf, int n);
+		int n_written = write(int fd, char *buf, int n);
+
+			read(0, &c, 1);
+			write(1, buf, n);
+	
+	Each call returns a count of the number of bytes transferred.
+	A return value of zero bytes implies end of file, and -1 indicates an error of some sort. For writing, the return value is the number of bytes written; an error has occurred if this isn't equal to the number requested.
+
+8.3 Open, Creat, Close, Unlink
+
+	Other than the default standard input, output and error, you must explicitly open files in order to read or write them. There are two system calls for this, open and creat [sic].
+	
+	open is rather like the fopen discussed in Chapter 7, except that instead of returning a file pointer, it returns a file descriptor, which is just an into open returns -1 if any error occurs.
+
+		#include <fcntl.h>
+
+		int fd;
+		int open(char *name, int flags, int perms);
+		fd = open(name, flags, perms);
+
+	As with fopen, the name argument is a character string containing the filename. The second argument, flags, is an int that specifies how the file is to be opened; the main values are
+		O_RDONLY     open for reading only
+		O_WRONLY     open for writing only
+		O_RDWR       open for both reading and writing
+
+	These constants are defined in <fcntl.h> on System V UNIX system...
+
+	To open an existing file for reading,
+		fd = open(name, O_RDONLY, 0);
+
+	The perms argument is always zero for the uses of open that we will discuss. It is an error to try to open a file that does not exist. The system call creat is provided to create new files, or to re-write old ones.
+		int creat(char *name, int perms);
+		fd = creat(name, perms);
+
+	returns a file descriptor if it was able to create the file, and -1 if not. If the file already exists, ere at will truncate it to zero length, thereby discarding its previous contents; it is not an error to erea t a file that already exists.
+	If the file does not already exist, ereat creates it with the permissions specified by the perms argument.
+
+		if (write(f2, buf, n) != n)
+			error("cp: write error on file %s", argv[2]);
+
+	The standard library function vprintf is like printf except that the variable argument list is replaced by a single argument that has been initialized by calling the va_start macro. Similarly, vfprintf and vsprintf match fprintf and sprintf.
+
+	There is a limit (often about 20) on the number of files that a program may have open simuitaneously. Accordingly, any program that intends to process many files must be prepared to re-use file descriptors.
+
+	Termination of a program via exi t or return from the main program closes all open files.
+
+	The function unlink (char *name) removes the file name from the file system. It corresponds to the standard library function remove.
+
 
