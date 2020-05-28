@@ -1,0 +1,18 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 28 May 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary*, Chapter 12 - A Ship that Fires Bullets
+
+# Most of the text was drawn literally from the chapter.
+
+--------------------
+
+The object we assigned to self.screen is called a surface. A surface in Pygame is a part of the screen where a game element can be displayed. Each element in the game, like an alien or a ship, is its own surface. The surface returned by display.set_mode() represents the entire game window. When we activate the game’s animation loop, this surface will be redrawn on every pass through the loop...
+
+Refactoring: The _check_events() and _update_screen() Methods
+    
+    In large projects, you’ll often refactor code you’ve written before adding more code. Refactoring simplifies the structure of the code you’ve already written, making it easier to build on. In this section, we’ll break the run_game() method, which is getting lengthy, into two helper methods. A helper method does work inside a class but isn’t meant to be called through an instance. In Python, a single leading underscore indicates a helper method.
+
+    If you’ve already built a number of games, you’ll probably start out by breaking your code into methods like these. But if you’ve never tackled a project like this, you probably won’t know how to structure your code. This approach of writing code that works and then restructuring it as it grows more complex gives you an idea of a realistic development process: you start out writing your code as simply as possible, and then refactor it as your project becomes more complex.
+

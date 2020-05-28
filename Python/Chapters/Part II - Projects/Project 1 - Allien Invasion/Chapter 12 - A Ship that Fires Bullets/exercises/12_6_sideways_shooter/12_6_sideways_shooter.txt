@@ -1,0 +1,12 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 28 May 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Exercise, Chapter 12 - A Ship that Fires Bullets
+
+# 12-6. Sideways Shooter: Write a game that places a ship on the left side of the
+# screen and allows the player to move the ship up and down. Make the ship fire
+# a bullet that travels right across the screen when the player presses the space-
+# bar. Make sure bullets are deleted once they disappear off the screen.
+
+# The exercise is done in this folder.

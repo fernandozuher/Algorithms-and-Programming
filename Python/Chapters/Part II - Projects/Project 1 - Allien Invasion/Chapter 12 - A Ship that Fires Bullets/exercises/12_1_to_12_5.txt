@@ -1,0 +1,31 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 28 May 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Exercise, Chapter 12 - A Ship that Fires Bullets
+# 
+# These exercises were written into the development of the project of chapter 12.
+# 
+# 12-1. Blue Sky: Make a Pygame window with a blue background.
+# 
+# 12-2. Game Character: Find a bitmap image of a game character you like or
+# convert an image to a bitmap. Make a class that draws the character at the
+# center of the screen and match the background color of the image to the back-
+# ground color of the screen, or vice versa.
+# 
+# 12-3. Pygame Documentation: We’re far enough into the game now that you
+# might want to look at some of the Pygame documentation. The Pygame home
+# page is at https://www.pygame.org/, and the home page for the documenta-
+# tion is at https://www.pygame.org/docs/. Just skim the documentation for now.
+# You won’t need it to complete this project, but it will help if you want to modify
+# Alien Invasion or make your own game afterward.
+# 
+# 12-4. Rocket: Make a game that begins with a rocket in the center of the
+# screen. Allow the player to move the rocket up, down, left, or right using the
+# four arrow keys. Make sure the rocket never moves beyond any edge of the
+# screen.
+# 
+# 12-5. Keys: Make a Pygame file that creates an empty screen. In the event
+# loop, print the event.key attribute whenever a pygame.KEYDOWN event is detected.
+# Run the program and press various keys to see how Pygame responds.
+# 
