@@ -1,6 +1,6 @@
 # Author: Fernando Zuher
 # Place: Brazil
-# Date: 29 May 2020
+# Date: 31 May 2020
 # Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
 # About: Summary*, Chapter 13 - Aliens
 
@@ -8,3 +8,4 @@
 
 --------------------
 
+The chapter was didactic about the development of the project. Nothing special to be added here.
