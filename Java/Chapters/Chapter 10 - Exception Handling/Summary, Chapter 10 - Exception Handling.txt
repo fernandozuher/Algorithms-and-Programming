@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 01 June 2020
+Date: 02 June 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
 About: Summary*, Chapter 10 - Exception Handling
 
@@ -93,7 +93,8 @@ throws
 
 	If a method is capable of causing an exception that it does not handle, it must specify this behavior so that callers of the method can guard themselves against that exception. You do this by including a throws clause in the method’s declaration. A throws clause lists the types of exceptions that a method might throw. This is necessary for all exceptions, except those of type Error or RuntimeException, or any of their subclasses. All other exceptions that a method can throw must be declared in the throws clause. If they are not, a compile-time error will result. 
 
-		***I did like lke above and it compiled in the same way. So?
+		***I did like the above and it compiled in the same way. So?
+			It works just with non checked Exception classes. With new ones it is necessary the above statement.
 
 		void aFunction() throws SomeException {
 			...
@@ -103,10 +104,47 @@ throws
 -------
 finally
 	
-	
+	finally creates a block of code that will be executed after a try /catch block has completed and before the code following the try/catch block. The finally block will execute whether or not an exception is thrown. If an exception is thrown, the finally block will execute even if no catch statement matches the exception. Any time a method is about to return to the caller from inside a try/catch block, via an uncaught exception or an explicit return statement, the finally clause is also executed just before the method returns. This can be useful for closing file handles and freeing up any other resources that might have been allocated at the beginning of a method with the intent of disposing of them before returning. The finally clause is optional. However, each try statement requires at least one catch or a finally clause.
 
+Java’s Built-in Exceptions
 
+	Inside the standard package java.lang, Java defines several exception classes. A few have been used by the preceding examples. The most general of these exceptions are subclasses of the standard type RuntimeException. As previously explained, these exceptions need not be included in any method’s throws list. In the language of Java, these are called unchecked exceptions because the compiler does not check to see if a method handles or throws these exceptions. The unchecked exceptions defined in java.lang are listed in Table 10-1. Table 10-2 lists those exceptions defined by java.lang that must be included in a method’s throws list if that method can generate one of these exceptions and does not handle it itself. These are called checked exceptions. In addition to the exceptions in java .lang, Java defines several more that relate to its other standard packages.
 
+---------------------------------------
+Creating Your Own Exception Subclasses
+
+	Although Java’s built-in exceptions handle most common errors, you will probably want to create your own exception types to handle situations specific to your applications. This is quite easy to do: just define a subclass of Exception (which is, of course, a subclass of Throwable). Your subclasses don’t need to actually implement anything—it is their existence in the type system that allows you to use them as exceptions.
+
+	The Exception class does not define any methods of its own. It does, of course, inherit those methods provided by Throwable. Thus, all exceptions, including those that you create, have the methods defined by Throwable available to them. They are shown in Table 10-3. You may also wish to override one or more of these methods in exception classes that you create.
+
+	Exception defines four public constructors. Two support chained exceptions, described in the next section. The other two are shown here:
+		Exception()
+		Exception(String msg)
+
+	The first form creates an exception that has no description. The second form lets you specify a description of the exception.
+
+	Although specifying a description when an exception is created is often useful, sometimes it is better to override toString(). Here’s why: The version of toString() defined by Throwable (and inherited by Exception) first displays the name of the exception followed by a colon, which is then followed by your description. By overriding toString(), you can prevent the exception name and colon from being displayed. This makes for a cleaner output, which is desirable in some cases.
+
+	The following example declares a new subclass of Exception and then uses that subclass to signal an error condition in a method. It overrides the toString() method, allowing a carefully tailored description of the exception to be displayed.
+
+------------------
+Chained Exceptions
+
+	The chained exception feature allows you to associate another exception with an exception. This second exception describes the cause of the first exception.
+
+-----------------------------------
+Three Additional Exception Features
+
+	The multi-catch feature allows two or more exceptions to be caught by the same catch clause.
+
+	To use a multi-catch, separate each exception type in the catch clause with the OR operator. Each multi-catch parameter is implicitly final. (You can explicitly specify final, if desired, but it is not necessary.) Because each multicatch parameter is implicitly final, it can’t be assigned a new value.
+
+		catch(ArithmeticException | ArrayIndexOutOfBoundsException e)
+
+---------------------
+Using Exceptions
+
+	Exception handling provides a powerful mechanism for controlling complex programs that have many dynamic run-time characteristics. It is important to think of try, throw, and catch as clean ways to handle errors and unusual boundary conditions in your program’s logic. Instead of using error return codes to indicate failure, use Java’s exception handling capabilities. Thus, when a method can fail, have it throw an exception. This is a cleaner way to handle failure modes.
 
 
 EXCEPTIONS:
