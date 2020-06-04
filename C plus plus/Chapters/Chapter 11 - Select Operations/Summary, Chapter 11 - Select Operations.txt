@@ -1,0 +1,308 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 03 June 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 11 - Select Operations
+Pages: 273 - 303
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+11.1 Etc. Operators
+
+	11.1.4 Increment and Decrement
+
+		The most efficient way of copying a zero-terminated character string is typically the standard C-style string copy function:
+			char∗ strcpy(char∗, const char∗); // from <string.h>
+
+		For more general copying, the standard copy algorithm (§4.5, §32.5) can be used. Whenever possible, use standard-library facilities in preference to fiddling with pointers and bytes. Standard-library functions may be inlined (§12.1.3) or even implemented using specialized machine instructions. Therefore, you should measure carefully before believing that some piece of handcrafted code outperforms library functions. Even if it does, the advantage may not exist on some other handware+compiler combination, and your alternative may give a maintainer a headache.
+
+11.2 Free Store
+	
+	The operator 'new' creates such objects, and the operator 'delete' can be used to destroy them. Objects allocated by new are said to be ‘‘on the free store’’ (also, ‘‘on the heap’’ or ‘‘in dynamic memory’’).
+
+	An object created by new exists until it is explicitly destroyed by delete. Then, the space it occupied can be reused by new . A C++ implementation does not guarantee the presence of a ‘‘garbage collector’’ that looks out for unreferenced objects and makes them available to new for reuse. Consequently, I will assume that objects created by new are manually freed using delete.
+
+	The delete operator may be applied only to a pointer returned by new or to the nullptr. Applying delete to the nullptr has no effect.
+	If the deleted object is of a class with a destructor (§3.2.1.2, §17.2), that destructor is called by delete before the object’s memory is released for reuse.
+
+	11.2.1 Memory Management
+
+		The main problems with free store are:
+			• Leaked objects: People use new and then forget to delete the allocated object.
+			• Premature deletion: People delete an object that they have some other pointer to and later use that other pointer.
+			• Double deletion: An object is deleted twice, invoking its destructor (if any) twice.
+		
+		Leaked objects are potentially a bad problem because they can cause a program to run out of space. Premature deletion is almost always a nasty problem because the pointer to the ‘‘deleted object’’ no longer points to a valid object (so reading it may give bad results) and may indeed point to memory that has been reused for another object (so writing to it may corrupt an unrelated object).
+
+		In general, a double deletion is undefined behavior and the results are unpredictable and usually disastrous.
+
+		The reason people make these mistakes is typically not maliciousness and often not even simple sloppiness; it is genuinely hard to consistently deallocate every allocated object in a large program (once and at exactly the right point in a computation). For starters, analysis of a localized part of a program will not detect these problems because an error usually involves several separate parts.
+
+		As alternatives to using ‘‘naked’’ new s and delete s, I can recommend two general approaches to resource management that avoid such problems:
+			[1] Don’t put objects on the free store if you don’t hav e to; prefer scoped variables.
+			[2] When you construct an object on the free store, place its pointer into a manager object (sometimes called a handle) with a destructor that will destroy it. Examples are string, vector and all the other standard-library containers, unique_ptr (§5.2.1, §34.3.1), and shared_ptr (§5.2.1, §34.3.2). Wherever possible, have that manager object be a scoped variable. Many classical uses of free store can be eliminated by using move semantics (§3.3, §17.5.2) to return large objects represented as manager objects from functions.
+		
+		This rule [2] is often referred to as RAII (‘‘Resource Acquisition Is Initialization’’; §5.2, §13.3) and is the basic technique for avoiding resource leaks and making error handling using exceptions simple and safe.
+
+		The standard-library vector is an example of these techniques:
+			void f(const string& s)
+			{
+				vector<char> v;
+				for (auto c : s)
+				v.push_back(c);
+				// ...
+			}
+		The vector keeps its elements on the free store, but it handles all allocations and deallocations itself. In this example, push_back() does 'new's to acquire space for its elements and 'delete's to free space that it no longer needs. However, the users of vector need not know about those implementation details and will just rely on vector not leaking.
+
+		We do not need to use the free store just to get a large object out of a function. For example:
+			string reverse(const string& s)
+			{
+				string ss;
+				for (int i=s.size()−1; 0<=i; −−i)
+					ss.push_back(s[i]);
+				return ss;
+			}
+		Like vector, a string is really a handle to its elements. So, we simply move the ss out of reverse() rather than copying any elements (§3.3.2).
+
+		The resource management ‘‘smart pointers’’ (e.g., unique_ptr and smart_ptr ) are a further example of these ideas (§5.2.1, §34.3.1). For example:
+			void f(int n)
+			{
+				int∗ p1 = new int[n];	// potential trouble
+				unique_ptr<int[]> p2 {new int[n]};
+
+				// ...
+				if (n%2) throw runtime_error("odd");
+				delete[] p1; // we may never get here
+			}
+
+		For f(3) the memory pointed to by p1 is leaked, but the memory pointed to by p2 is correctly and implicitly deallocated.
+		
+		My rule of thumb for the use of new and delete is ‘‘no naked new s’’; that is, new belongs in constructors and similar operations, delete belongs in destructors, and together they provide a coherent memory management strategy. In addition, new is often used in arguments to resource handles.
+
+		If everything else fails (e.g., if someone has a lot of old code with lots of undisciplined use of new), C++ offers a standard interface to a garbage collector (§34.5).
+
+	11.2.2 Arrays
+
+		Arrays of objects can also be created using new . For example:
+			char∗ save_string(const char∗ p)
+			{
+				char∗ s = new char[strlen(p)+1];
+				strcpy(s,p); // copy from p to s
+				return s;
+			}
+
+			int main(int argc, char∗ argv[])
+			{
+				if (argc < 2) exit(1);
+				char∗ p = save_string(argv[1]);
+				// ...
+				delete[] p;
+			}
+
+		The ‘‘plain’’ operator delete is used to delete individual objects; delete[] is used to delete arrays.
+
+		Unless you really must use a char∗ directly, the standard-library string can be used to simplify the save_string() :
+			string save_string(const char∗ p)
+			{
+				return string{p};
+			}
+			int main(int argc, char∗ argv[])
+			{
+				if (argc < 2) exit(1);
+				string s = save_string(argv[1]);
+				// ...
+			}
+		In particular, the new[] and the delete[] vanished.
+
+		To deallocate space allocated by new , delete and delete[] must be able to determine the size of the object allocated. This implies that an object allocated using the standard implementation of new will occupy slightly more space than a static object. At a minimum, space is needed to hold the object’s size. Usually two or more words per allocation are used for free-store management. Most modern machines use 8-byte words. This overhead is not significant when we allocate many objects or large objects, but it can matter if we allocate lots of small objects (e.g., ints or Points) on the free store.
+		
+		Note that a vector (§4.4.1, §31.4) is a proper object and can therefore be allocated and deallocated using plain new and delete. For example:
+			void f(int n)
+			{
+				vector<int>∗ p = new vector<int>(n); // individual object
+				int∗ q = new int[n]; // array
+				// ...
+				delete p;
+				delete[] q;
+			}
+		The delete[] operator may be applied only to a pointer to an array returned by new of an array or to the null pointer (§7.2.2). Applying delete[] to the null pointer has no effect.
+		However, do not use new to create local objects. For example:
+			void f1()
+			{
+				X∗ p =new X;
+				// ... use *p ...
+				delete p;
+			}
+		That’s verbose, inefficient, and error-prone (§13.3). In particular, a return or an exception thrown before the delete will cause a memory leak (unless even more code is added). Instead, use a local variable:
+			void f2()
+			{
+				X x;
+				// ... use x ...
+			}
+		The local variable x is implicitly destroyed upon exit from f2.
+
+	11.2.3 Getting Memory Space
+
+		The standard implementations of operator new() and operator new[]() do not initialize the memory returned.
+		The allocation and deallocation functions deal in untyped and uninitialized memory (often called ‘‘raw memory’’), as opposed to typed objects.
+
+
+	11.2.4.1 nothrow new
+
+		In programs where exceptions must be avoided (§13.1.5), we can use nothrow versions of new and delete. For example:
+
+			void f(int n)
+			{
+				int∗ p = new(nothrow) int[n]; // allocate n ints on the free store
+				if (p==nullptr) { // no memory available
+					// ... handle allocation error ...
+				}
+				// ...
+				operator delete(nothrow,p); // deallocate *p
+			}
+		That nothrow is the name of an object of the standard-library type nothrow_t that is used for disambiguation; nothrow and nothrow_t are declared in <new>.
+
+		These operator new functions return nullptr, rather than throwing bad_alloc, if there is not sufficient memory to allocate.
+
+11.3 Lists
+
+	In addition to their use for initializing named variables (§6.3.5.2), {} -lists can be used as expressions in many (but not all) places. They can appear in two forms:
+		[1] Qualified by a type, T{...}, meaning ‘‘create an object of type T initialized by T{...}’’; §11.3.2
+		[2] Unqualified {...}, for which the the type must be determined from the context of use; §11.3.3
+		For example:
+			
+			struct S { int a, b; };
+			struct SS { double a, b; };
+
+			void f(S); // f() takes an S
+			
+			void g(S);
+			void g(SS); // g() is overloaded
+			
+			void h()
+			{
+				f({1,2}); // OK: call f(S{1,2})
+
+				g({1,2}); // error: ambiguous
+				g(S{1,2}); // OK: call g(S)
+				g(SS{1,2}); // OK: call g(SS)
+			}
+
+	11.3.2 Qualified Lists
+		The basic idea of initializer lists as expressions is that if you can initialize a variable x using the notation 
+			T x {v};
+		then you can create an object with the same value as an expression using T{v} or new T{v}. Using 'new' places the object on the free store and returns a pointer to it, whereas ‘‘plain T{v} ’’ makes a temporary object in the local scope (§6.4.2). For example:
+
+			struct S { int a, b; };
+
+			void f()
+			{
+				S v {7,8}; // direct initialization of a variable
+				v = S{7,8}; // assign using qualified list
+				S∗ p = new S{7,8}; // construct on free store using qualified list
+			}
+
+	11.3.3 Unqualified Lists
+		A unqualified list is used where an expected type is unambiguously known. It can be used as an expression only as:
+			• A function argument
+			• A return value
+			• The right-hand operand of an assignment operator ( = , += , ∗= , etc.)
+			• A subscript
+		
+		For example:
+			int f(double d, Matrix& m)
+			{
+				int v {7}; // initializer (direct initialization)
+				int v2 = {7}; // initializer (copy initialization)
+				int v3 = m[{2,3}]; // assume m takes value pairs as subscripts
+				
+				v = {8}; // right-hand operand of assignment
+				v += {88}; // right-hand operand of assignment
+				{v} = 9; // error: not left-hand operand of assignment
+				v = 7+{10}; // error: not an operand of a non-assignment operator
+				f({10.0}); // function argument
+				return {11}; // return value
+			}
+
+		When used as the initializer for a named object without the use of a = (as for v above), an unqualified {}-list performs direct initialization (§16.2.6). In all other cases, it performs copy initialization (§16.2.6). In particular, the otherwise redundant = in an initializer restricts the set of initializations that can be performed with a given {}-list.
+
+11.4 Lambda Expressions
+
+	A lambda expression, sometimes also referred to as a lambda function or (strictly speaking incorrectly, but colloquially) as a lambda, is a simplified notation for defining and using an anonymous function object. Instead of defining a named class with an operator(), later making an object of that class, and finally invoking it, we can use a shorthand. This is particularly useful when we want to pass an operation as an argument to an algorithm. In the context of graphical user interfaces (and elsewhere), such operations are often referred to as callbacks. This section focuses on technical aspects of lambdas; examples and techniques for the use of lambdas can be found elsewhere (§3.4.3, §32.4, §33.5.2).
+
+	...This implies that a lambda can act as a local function even though a function cannot.
+
+	11.4.3 Capture
+		
+		The main use of lambdas is for specifying code to be passed as arguments. Lambdas allow that to be done ‘‘inline’’ without having to name a function (or function object) and use it elsewhere.
+
+		The first character of a lambda expression is always [.
+
+11.5 Explicit Type Conversion
+
+	Sometimes, we have to convert a value of one type into a value of another. Many (arguably too many) such conversions are done implicitly according to the language rules (§2.2.2, §10.5). For example:
+		double d = 1234567890; // integer to floating-point
+		int i = d; // floating-point to integer
+	
+	In other cases, we have to be explicit.
+	For logical and historical reasons, C++ offers explicit type conversion operations of varying convenience and safety:
+		
+		• Construction, using the {} notation, providing type-safe construction of new values (§11.5.1)
+		
+		• Named conversions, providing conversions of various degrees of nastiness:
+			• const_cast for getting write access to something declared const (§7.5)
+			• static_cast for reversing a well-defined implicit conversion (§11.5.2)
+			• reinterpret_cast for changing the meaning of bit patterns (§11.5.2)
+			• dynamic_cast for dynamically checked class hierarchy navigation (§22.2.1)
+		
+		• C-style casts, providing any of the named conversions and some combinations of those (§11.5.3)
+		• Functional notation, providing a different notation for C-style casts (§11.5.4)
+
+	I have ordered these conversions in my order of preference and safety of use.
+
+	11.5.2 Named Casts
+		The fundamental idea behind the named casts is to make type conversion more visible and to allow the programmer to express the intent of a cast: static_cast, reinterpret_cast, const_cast, dynamic_cast...
+
+	11.5.3 C-Style Cast
+		From C, C++ inherited the notation (T)e , which performs any conversion that can be expressed as a combination of static_cast s, reinterpret_cast s, const_cast s to make a value of type T from the expression e (§44.2.3). Unfortunately, the C-style cast can also cast from a pointer to a class to a pointer to a private base of that class. Never do that, and hope for a warning from the compiler if you do it by mistake. This C-style cast is far more dangerous than the named conversion operators because the notation is harder to spot in a large program and the kind of conversion intended by the programmer is not explicit. That is, (T)e might be doing a portable conversion between related types, a nonportable conversion between unrelated types, or removing the const modifier from a pointer type. Without knowing the exact types of T and e , you cannot tell.
+
+	11.5.4 Function-Style Cast
+		The construction of a value of type T from a value e can be expressed by the functional notation T(e). For example:
+			
+			void f(double d)
+			{
+				int i = int(d); // truncate d
+				complex z = complex(d); // make a complex from d
+				// ...
+			}
+		
+		The T(e) construct is sometimes referred to as a function-style cast. Unfortunately, for a built-in type T, T(e) is equivalent to (T)e (§11.5.3). This implies that for many built-in types T(e) is not safe.
+			void f(double d, char∗ p)
+			{
+				int a = int(d); // truncates
+				int b = int(p); // not portable
+				// ...
+			}
+
+		Even explicit conversion of a longer integer type to a shorter (such as long to char) can result in nonportable implementation-defined behavior.
+
+		--->>> Prefer T{v} conversions for well-behaved construction and the named casts (e.g., static_cast) for other conversions. <<<---
+
+11.6 Advice
+	[1] Prefer prefix ++ over suffix ++ ; §11.1.4.
+	[2] Use resource handles to avoid leaks, premature deletion, and double deletion; §11.2.1.
+	[3] Don’t put objects on the free store if you don’t hav e to; prefer scoped variables; §11.2.1.
+	[4] Avoid ‘‘naked new ’’ and ‘‘naked delete ’’; §11.2.1.
+	[5] Use RAII; §11.2.1.
+	[6] Prefer a named function object to a lambda if the operation requires comments; §11.4.2.
+	[7] Prefer a named function object to a lambda if the operation is generally useful; §11.4.2.
+	[8] Keep lambdas short; §11.4.2.
+	[9] For maintainability and correctness, be careful about capture by reference; §11.4.3.1.
+	[10] Let the compiler deduce the return type of a lambda; §11.4.4.
+	[11] Use the T{e} notation for construction; §11.5.1.
+	[12] Avoid explicit type conversion (casts); §11.5.
+	[13] When explicit type conversion is necessary, prefer a named cast; §11.5.
+	[14] Consider using a run-time checked cast, such as narrow_cast<>(), for conversion between numeric types; §11.5.
