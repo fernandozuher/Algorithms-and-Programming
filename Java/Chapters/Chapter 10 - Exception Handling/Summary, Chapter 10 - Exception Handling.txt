@@ -5,7 +5,7 @@ Date: 02 June 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
 About: Summary*, Chapter 10 - Exception Handling
 
-* Most of the written is taken literally from the chapter.
+* Most of the text was drawn literally from the chapter.
 
 */
 
