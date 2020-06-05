@@ -1,0 +1,127 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 07 June 2020
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
+About: Summary*, APPENDIX A: Reference Manual
+
+* Most of the written is taken literally from the chapter.
+
+PAGES 191 - 
+PDF 205 - 
+
+*/
+
+A2.4 Keywords
+
+	enum, extern, register, static, union, volatile
+		keywords to think about...
+
+A2.5 Constants
+
+	A2.5.1 Integer Constants
+
+		An integer constant may be suffixed by the letter u or U, to specify that it is unsigned. It may also be suffixed by the letter l or L to specify that it is long.
+
+	A2.5.2 Character Constant
+
+		In some implementations, there is an extended set of characters that cannot be represented in the char type. A constant in this extended set is written with a preceding L, for example L'x' and is called a wide character constant. Such a constant has type wchar_t, an integral type defined in the standard header <stddef.h>. As with ordinary character constants, octal or hexadecimal escapes may be used; the effect is undefined if the specified value exceeds that representable with wchar_t.
+
+		The character sets commonly used in the Americas and western Europe can be encoded to fit in the char type; the main intent in adding wchar _ t was to accommodate Asian languages.
+
+	A2.5.3 Floating Constants
+
+		Either the integer part or the fraction part (not both) may be missing;
+
+			float a = .123; // = 0.123
+
+		As with character constants, string literals in an extended character set are written with a preceding L, as in L"•••". Wide-character string literals have type "array of wchar_t." Concatenation of ordinary and wide string literals is undefined.
+
+A4. Meaning of Identifiers
+
+	A4.1 Storage Class
+
+		There are two storage classes: automatic and static. Several keywords, together with the context of an object's declaration, specify its storage class. Automatic objects are local to a block (§A9.3), and are discarded on exit from the block. Declarations within a block create automatic objects if no storage class specification is mentioned, or if the auto specifier is used. Objects declared register are automatic, and are (if possible) stored in fast registers of the machine.
+
+		Static objects may be local to a block or external to all blocks, but. in either case retain their values across exit from and reentry to functions' and blocks. Within a block, including a block that provides the code for a function, static objects are declared with the keyword static. The objects declared outside all blocks, atthe same level as function definitions, are always static. They may be made local to a particular translation unit by useofthe static keyword; this gives them internal linkage, they become glo- bal to an entire program by omitting an explicit storage class, or by using the keyword extern; this gives them external linkage.
+			???
+
+	A4.2 Basic Types
+		
+		There are several fundamental types. The standard header <limits.h> described in Appendix B defines the largest and smallest values of each type in the local implementation. The numbers given in Appendix B show the smallest acceptable magnitudes.
+
+		Types char, and int of all sizes, each with or without sign, and also enumeration types, will collectively be called integral types. The types float, double, and long double will be called floating types.
+
+	A4.4 Type Qualifiers
+		
+		An object's type may have additional qualifiers. Declaring an object const announces that its value will not be changed; declaring it volatile announces that it has special properties relevant to optimization. Neither qualifier affects the range of values or arithmetic properties of the object. Qualifiers are discussed in §A8.2
+
+A5. Objects and Lvalues
+	An object is a named region of storage; an lvalue is an expression referring to an object. An obvious example of an lvalue expression is an identifier with suitable type and storage class. There are operators that yield lvalues: for example, if E is an expression of pointer type, then *E is an lvalue expression referring to the object to which E points. The name "lvalue" comes from the assignment expression E1 = E2 in which the left operand E1 must be an lvalue expression. The discussion of each operator specifies whether it expects lvalue operands and whether it yields an lvalue.
+		???
+
+A6. Conversions
+
+	A6.1 Integral Promotion
+		
+		A character, a short integer, or an integer bit-field, all either signed or not, or an object of enumeration type, may be used in an expression wherever an integer may be used. If an int can represent all the values of the original type, then the value is converted to int; otherwise the value is converted to unsigned int. This process is called integral promotion.
+
+	A6.3 Integer and Floating
+		
+		When a value of floating type is converted to integral type, the fractional part is discarded; if the resulting value cannot be represented in the integral type, the behavior is undefined. In particular, the result of converting negative floating values to unsigned integral types is not specified.
+		
+		When a value of integral type is converted to floating, and .the value is in the representable range but is not exactly representable, then the result may be either the next higher or next lower representable value. If the result is out of range, the behavior is undefined.
+
+	A6.5 Arithmetic Conversions
+		
+		Many operators cause conversions and yield result types in a similar way. The effect is to bring operands into a common type, which is also the type of the result. This pattern is called the usual arithmetic conversions.
+
+A7. Expressions
+
+	The precedence and associativity of operators is fully specified, but the order of evaluation of expressions is, with certain exceptions, undefined, even if the subexpressions involve side effects. That is, unless the definition of an operator guarantees that its operands are evaluated in a particular order, the implementation is free to evaluate operands in any order, or even to interleave their evaluation. However, each operator combines the values produced by its operands in a way compatible with the parsing of the expressionin which it appears.
+
+	The handling of overflow,divide check, and other exceptions in expression evaluation is not defined by the language. Most existing implementations of C ignore overflow in evaluation of signed integral expressions and assignments, but this behavior is not guaranteed. Treatment of division by 0, and all floating-point exceptions,varies among implementations; sometimes it is adjustable by a non-standard library function.
+
+	A7.1 Pointer Generation
+		
+		If the type ofan expression or subexpressionis "array of T," for some type T, then the value of the expression is a pointer to the first object in the array, and the type of the expression is altered to "pointer to T."
+
+	A7.3 Postfix Expressions
+		A7.3.2 Function Call
+
+			In the first edition, the type was restricted to "function," and an explicit * operator was required to call through pointers to functions. The ANSI standard blesses the practice of some existing compilers by permitting the same syntax for calls to functions and to functions specified by pointers. The older syntax is still usable.
+
+			There are two styles in which functions may be declared. In the new style, the types of parameters are explicit and are part of the type of the function; such a declaration is also called a function prototype. In the old style, parameter types are not specified.
+
+			The order of evaluation of arguments is unspecified; take note that various compilers differ. However, the arguments and the function designator are completely evaluated, including all side effects, before the function is entered. Recursive calls to any function are permitted.
+
+	A7.4 Unary Operators
+
+		A7.4.3 Indirection Operator
+			
+			The unary * operator denotes indirection, and returns the object or function to which its operand points. It is an lvalue if the operand is a pointer to an object of arithmetic, structure, union, or pointer type. If the type of the expressionis "pointer to T," the type of the result is T.
+
+		A7.4.4 Unary Plus Operator
+			
+			The operand of the unary + operator must have arithmetic type, and the result is the value of the operand. An integral operand undergoes integral promotion. The type of the result is the type of the promoted operand.
+				The unary + is new with the ANSI standard. It was added for symmetry with unary -.
+
+		A7.4.6 Unary Minus Operator
+
+			The operand of the unary - operator must have arithmetic type, and the result is the negative of its operand. An integral operand undergoes integral promotion. The negative of an unsigned quantity is computed by subtracting the promoted value from the largest value of the promoted type and adding one; but negative zero is zero. The type of the result is the type of the promoted operand.
+
+		A7.4.8 One's Complement Operator
+
+			The operand of the - operator must have integral type, and the result is the one's complement of its operand. The integral promotions are performed. If the operand is unsigned, the result is computed by subtracting the value from the largest value of the promoted type. If the operand is signed, the result is computed by converting the promoted operand to the corresponding unsigned type, applying -, and converting back to the signed type. The type of the result is the type of the promoted operand.
+
+	A7.8 Shift Operators
+
+		The shift operators «and» group left-to-right. For both operators, each operand must be integral, and is subject to the integral promotions. The type of the result is that of the promoted left operand. The result is undefined if the right operand is negative, or greater than or equal to the number of bits in the left expression's type.
+
+		The value of E1<<E2 is E 1 (interpreted as a bit pattern) left-shifted E2 bits; in the absence of overflow, this is equivalent to multiplication by 2E2. The value of E1>>E2 is E1 right-shifted E2 bit positions. The right shift is equivalent to division by 2^E2 if E1 is unsigned or if it has a non-negative value; otherwise the result is implementation-defined.
+
+	A7.9 Relational Operators
+
+		The operators < (less), > (greater), <= (less or equal) and >= (greater or equal) all yield 0 if the specified relation is false and 1 if it is true. The type of the result is into The usual arithmetic conversions are performed on arithmetic operands. Pointers to objects of the same type (ignoring any qualifiers) may be compared; the result depends on the relative locations in the address space of the pointed-to objects. Pointer comparison is defined only for parts of the same object: if two pointers point to the same simple object,· they compare equal; if the pointers are to members of the same structure, pointers to objects declared later in the structure compare higher; if the pointers are to members of the same union, they compare equal; if the pointers refer to members of an array, the comparison is equivalent to comparison of the corresponding subscripts. If P points to the last member of an array, then P+ 1 compares higher than P, even though P + 1 points outside the array. Otherwise, pointer comparison is undefined. 
+
+			These rules slightly liberalize the restrictions stated in the first edition, by permitting comparison of pointers to different members of a structure or union. They also legalize comparison with a pointer just off the end of an array.
