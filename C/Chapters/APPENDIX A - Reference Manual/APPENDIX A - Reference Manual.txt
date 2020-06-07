@@ -5,10 +5,10 @@ Date: 07 June 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, APPENDIX A: Reference Manual
 
-* Most of the written is taken literally from the chapter.
+* Most of the text was drawn literally from the chapter.
 
-PAGES 191 - 
-PDF 205 - 
+PAGES 191 - 239
+PDF 205 - 253
 
 */
 
@@ -70,7 +70,7 @@ A6. Conversions
 		
 		When a value of floating type is converted to integral type, the fractional part is discarded; if the resulting value cannot be represented in the integral type, the behavior is undefined. In particular, the result of converting negative floating values to unsigned integral types is not specified.
 		
-		When a value of integral type is converted to floating, and .the value is in the representable range but is not exactly representable, then the result may be either the next higher or next lower representable value. If the result is out of range, the behavior is undefined.
+		When a value of integral type is converted to floating, and the value is in the representable range but is not exactly representable, then the result may be either the next higher or next lower representable value. If the result is out of range, the behavior is undefined.
 
 	A6.5 Arithmetic Conversions
 		
@@ -125,3 +125,87 @@ A7. Expressions
 		The operators < (less), > (greater), <= (less or equal) and >= (greater or equal) all yield 0 if the specified relation is false and 1 if it is true. The type of the result is into The usual arithmetic conversions are performed on arithmetic operands. Pointers to objects of the same type (ignoring any qualifiers) may be compared; the result depends on the relative locations in the address space of the pointed-to objects. Pointer comparison is defined only for parts of the same object: if two pointers point to the same simple object,· they compare equal; if the pointers are to members of the same structure, pointers to objects declared later in the structure compare higher; if the pointers are to members of the same union, they compare equal; if the pointers refer to members of an array, the comparison is equivalent to comparison of the corresponding subscripts. If P points to the last member of an array, then P+ 1 compares higher than P, even though P + 1 points outside the array. Otherwise, pointer comparison is undefined. 
 
 			These rules slightly liberalize the restrictions stated in the first edition, by permitting comparison of pointers to different members of a structure or union. They also legalize comparison with a pointer just off the end of an array.
+
+	A7.18 Comma Operator
+
+		A pair of expressions separated by a comma is evaluated left-to-right, and the value of the left expression is discarded. The type and value of the result are the type and value of the right operand.
+
+			f(a, (t=3, t+2), c)
+		has three arguments, the second of which has the value 5.
+
+A8. Declarations
+	
+	Declarations specify the interpretation given to each identifier; they do not necessarily reserve storage associated with the identifier. Declarations that reserve storage are called definitions.
+
+	A8.1 Storage Class Specifiers
+		
+		The storage class specifiers are: auto, register, static, extern, typedef
+		The auto and register specifiers give the declared objects automatic storage class, and may be used only within functions. Such declarations also serve as definitions and cause storage to be reserved. A register declaration is equivalent to an auto declaration, but hints that the declared objects will be accessed frequently. Only a few objects are actually placed into registers, and only certain types are eligible; the restrictions are implementation-dependent.
+
+		The static specifier gives the declared objects static storage class. and may be used either inside or outside functions. Inside a function, this specifier causes storage to be allocated, and serves as a definition;
+
+		A declaration with extern, used inside a function, specifies that the storage for the declared objects is defined elsewhere;
+
+		The typedef specifier does not reserve storage and is called a storage class specifier only for syntactic convenience;
+
+		At most one storage class specifier may be given in a declaration. If none is given, these rules are used: objects declared inside a function are taken to be auto; functions declared within a function are taken to be extern; objects and functions declared outside a function are taken to be static, with external linkage.
+
+	A8.2 Type Specifiers
+
+		The type-specifiers are: void, char, short, int, long, float, double, signed, unsigned, struct-or-union-specifier, enum-specifier, typedef-name
+
+		...at most one type-specifier may be given in a declaration. If the type-specifier is missing from a declaration, it is taken to be int. 
+
+		Types may also be qualified, to indicate special properties of the objects being declared.
+
+		type-qualifier: const, volatile
+		
+		The const and volatile properties are new with the ANSI standard. The purpose of const is to announce objects that may be placed in read-only memory, and perhaps to increase opportunities for optimization. The purpose of volatile is to force an implementation to suppress optimization that could otherwise occur. For example, for a machine with memory-mapped input/output, a pointer to a device register might be declared as a pointer to volatile, in order to prevent the compiler from removing apparently redundant references through the pointer. Except that it should diagnose explicit attempts to change const objects, a compiler may ignore these qualifiers.
+
+	A8.3 Structure and Union Declarations
+		
+		A structure is an object consisting of a sequence of named members of various types. A union is an object that contains, at different times, anyone of several members of various types.
+
+	A8.7 Initialization
+
+		A static object not explicitly initialized is initialized as if it (or its members) were assigned the constant O. The initial value of an automatic object not explicitly initialized is undefined.
+
+		The initializer for an array is a brace-enclosedlist of initializers for its members. If the array has unknown size, the number of initializers determines the size of the array, and its type becomes complete. If the array has fixed size, the number of initializers may not exceed the number of members of the array; if there are fewer, the trailing members are initialized with 0.
+
+A10. External Declarations
+
+	A10.1 Function Definitions
+
+		The only storage-class specifiers allowed among the declaration specifiers are extern or static; see §A11.2 for the distinction between them.
+		A function may return an arithmetic type, a structure, a union, a pointer, or void, but not a function or an array.
+
+		If the parameter type list ends with ", ••• " then the function may be called with more arguments than parameters; the va_arg macro mechanism defined in the standard header <stdarg.h> and described in Appendix B must be used to refer to the extra arguments. Variadic functions must have at least one named parameter.
+
+		If a parameter is declared to have type "array of type," the declaration is adjusted to read "pointer to type;" similarly, if a parameter is declared to have type "function returning type," the declaration is adjusted to read "pointer to function returning type."
+
+	A10.2 External Declarations
+		
+		External declarations specify the characteristics of objects, functions and other identifiers. The term "external" refers to their location outside functions, and is not directly connected with the extern keyword; the storage class for an externally-declared object may be left empty, or it may be specified as extern or static.
+
+		If the first external declaration for a function or object includes the static specifier, the identifier has internal linkage; otherwise it has external linkage. Linkage is discussed in §A11.2.
+		
+		An external declaration for an object is a definition if it has an iriitializer. An external object declaration that does not have an initializer, and does not contain the extern specifier, is a tentative definition. If a definition for an object appears in a translation unit, any tentative definitions are treated merely as redundant declarations, If no definition for the object appears in the translation unit, all its tentative definitions become a single definition with initializer 0.
+
+A12. Preprocessing
+
+	A12.2 Line Splicing
+		
+		Lines that end with the backslash character \ are folded by deleting the backslash and the following newline character. This occurs before division into tokens.
+
+	A12.4 File Inclusion
+		
+		A control line of the form
+			# include «filename»
+		causes the replacement of that line by the entire contents of the file filename.
+
+	A12.5 Conditional Compilation
+		
+		Parts of a program may be compiled conditionally, according to the following schematic syntax.
+
+		preprocessor-conditional:
+			if-line text elif-parts else-part_opt #endif
