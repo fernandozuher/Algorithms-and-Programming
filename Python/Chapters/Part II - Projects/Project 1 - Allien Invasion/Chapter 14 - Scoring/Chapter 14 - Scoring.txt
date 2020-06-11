@@ -1,0 +1,11 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 11 June 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary*, Chapter 14 - Scoring
+
+# Most of the text was drawn literally from the chapter.
+
+--------------------
+
+The chapter was didactic about the development of the project. Nothing special to be added here.
