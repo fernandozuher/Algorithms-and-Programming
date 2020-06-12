@@ -4,9 +4,10 @@
 # Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
 # About: Exercise, Chapter 14 - Scoring
 
-# 14-3. Challenging Target Practice: Start with your work from Exercise 14-2
-# (page 285). Make the target move faster as the game progresses, and restart
-# the target at the original speed when the player clicks Play.
+# 14-4. Difficulty Levels: Make a set of buttons for Alien Invasion that allows the
+# player to select an appropriate starting difficulty level for the game. Each but-
+# ton should assign the appropriate values for the attributes in Settings needed
+# to create different difficulty levels.
 
 import sys
 from time import sleep
@@ -45,7 +46,9 @@ class AlienInvasion:
 		self._create_rectangle()
 
 		# Make the Play button.
-		self.play_button = Button(self, "Play")
+		self.play_button_easy = Button(self, "Easy", 0)
+		self.play_button_moderate = Button(self, "Moderate", 1)
+		self.play_button_hard = Button(self, "Hard", 2)
 
 	def _check_keydown_events(self, event):
 		"""Respond to keypresses."""
@@ -88,10 +91,21 @@ class AlienInvasion:
 
 	def _check_play_button(self, mouse_pos):
 		"""Start a new game when the player clicks Play."""
-		button_clicked = self.play_button.rect.collidepoint(mouse_pos)
+		button_clicked_easy = self.play_button_easy.rect.collidepoint(mouse_pos)
+		button_clicked_moderate = self.play_button_moderate.rect.collidepoint(mouse_pos)
+		button_clicked_hard = self.play_button_hard.rect.collidepoint(mouse_pos)
+
+		button_clicked = button_clicked_easy or button_clicked_moderate or \
+							button_clicked_hard
+
 		if button_clicked and not self.stats.game_active:
 			# Reset the game settings.
-			self.settings.initialize_dynamic_settings()
+			if button_clicked_easy:
+				self.settings.initialize_dynamic_settings(0)
+			elif button_clicked_moderate:
+				self.settings.initialize_dynamic_settings(1)
+			else:
+				self.settings.initialize_dynamic_settings(2)
 
 			# Reset the game statistics.
 			self.stats.reset_stats()
@@ -114,7 +128,7 @@ class AlienInvasion:
 
 		# Get rid of bullets that have disappeared.
 		for bullet in self.bullets.copy():
-			if bullet.rect.right >= self.settings.screen_width:
+			if bullet.rect.left >= self.settings.screen_width:
 				self.bullets.remove(bullet)
 				self.stats.bullets_left -= 1
 		
@@ -125,7 +139,9 @@ class AlienInvasion:
 			self.rectangles.empty()
 			self._create_rectangle()
 
-			self.play_button.draw_button()
+			self.play_button_easy.draw_button()
+			self.play_button_moderate.draw_button()
+			self.play_button_hard.draw_button()
 			pygame.mouse.set_visible(True)
 
 		else:
@@ -184,7 +200,9 @@ class AlienInvasion:
 
 		# Draw the play button if the game is inactive.
 		if not self.stats.game_active:
-			self.play_button.draw_button()
+			self.play_button_easy.draw_button()
+			self.play_button_moderate.draw_button()
+			self.play_button_hard.draw_button()
 
 		# Make the most recently drawn screen visible.
 		pygame.display.flip()

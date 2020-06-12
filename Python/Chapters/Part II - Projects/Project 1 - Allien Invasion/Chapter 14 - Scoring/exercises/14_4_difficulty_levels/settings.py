@@ -24,13 +24,29 @@ class Settings:
 
 		# How quickly the game speeds up
 		self.speedup_scale = 1.1
-		self.initialize_dynamic_settings()
+		self.initialize_dynamic_settings(0)
 
-	def initialize_dynamic_settings(self):
+	def initialize_dynamic_settings(self, level):
 		"""Initialize settings that change throughout the game."""
-		self.ship_speed = 1.5
-		self.bullet_speed = 3.0
-		self.rectangle_speed = 1.0
+		if level == 0:
+			self.ship_speed = 3.0
+			self.bullet_speed = 5
+			self.rectangle_speed = 1
+			self.bullet_width = 300
+			self.bullet_height = 60
+		elif level == 1:
+			self.ship_speed = 2.0
+			self.bullet_speed = 2
+			self.rectangle_speed = 3
+			self.bullet_width = 200
+			self.bullet_height = 40
+		elif level == 2:
+			self.ship_speed = 1
+			self.bullet_speed = 4
+			self.rectangle_speed = 5
+			self.bullet_width = 100
+			self.bullet_height = 20
+		
 		self.rectangle_direction = 1
 
 	def increase_speed(self):
