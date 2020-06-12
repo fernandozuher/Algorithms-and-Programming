@@ -206,9 +206,13 @@ Refactoring
 Commands:
 
 with open('file.txt') as file_object:
+	for line in file_object:
+		...
+
 	all_content = file_object.read()
 
 	lines = file_object.readlines()
+	
 
 int()
 float()
