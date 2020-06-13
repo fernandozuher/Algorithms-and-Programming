@@ -6,6 +6,7 @@ import pygame
 from settings import Settings
 from game_stats import GameStats
 from scoreboard import Scoreboard
+from soundtrack import Soundtrack
 from button import Button
 from ship import Ship
 from bullet import Bullet
@@ -26,6 +27,8 @@ class AlienInvasion:
 		self.settings.screen_height = self.screen.get_rect().height
 		pygame.display.set_caption("Alien Invasion")
 
+		self.soundtrack = Soundtrack()
+
 		# Create an instance to store game statistics,
 		#	and create a scoreboard.
 		self.stats = GameStats(self)
@@ -39,6 +42,9 @@ class AlienInvasion:
 		
 		# Make the Play button.
 		self.play_button = Button(self, "Play")
+
+		# Play initial soundtrack
+		self.soundtrack.play_sound('menu')
 
 	def _check_keydown_events(self, event):
 		"""Respond to keypresses."""
@@ -73,6 +79,7 @@ class AlienInvasion:
 		if len(self.bullets) < self.settings.bullets_allowed:
 			new_bullet = Bullet(self)
 			self.bullets.add(new_bullet)
+			self.soundtrack.play_sound('shots')
 
 	def _check_events(self):
 		"""Respond to keypresses and mouse events."""
@@ -97,26 +104,35 @@ class AlienInvasion:
 		"""Start a new game when the player clicks Play."""
 		button_clicked = self.play_button.rect.collidepoint(mouse_pos)
 		if button_clicked and not self.stats.game_active:
-			# Reset the game settings.
-			self.settings.initialize_dynamic_settings()
-			
-			# Reset the game statistics.
-			self.stats.reset_stats()
-			self.stats.game_active = True
-			self.sb.prep_score()
-			self.sb.prep_level()
-			self.sb.prep_ships()
+			self._start_game()
 
-			# Get rid of any remaining aliens and bullets.
-			self.aliens.empty()
-			self.bullets.empty()
+	def _start_game(self):
 
-			# Create a new fleet and center the ship.
-			self._create_fleet()
-			self.ship.center_ship()
+		# Play background music
+		self.soundtrack.play_sound('playing')
+		self.sb.new_high_score = False
 
-			# Hide the mouse cursor.
-			pygame.mouse.set_visible(False)
+		# Reset the game settings.
+		self.settings.initialize_dynamic_settings()
+		
+		# Reset the game statistics.
+		self.stats.reset_stats()
+		self.stats.game_active = True
+		self.sb.prep_images()
+		#self.sb.prep_score()
+		#self.sb.prep_level()
+		#self.sb.prep_ships()
+
+		# Get rid of any remaining aliens and bullets.
+		self.aliens.empty()
+		self.bullets.empty()
+
+		# Create a new fleet and center the ship.
+		self._create_fleet()
+		self.ship.center_ship()
+
+		# Hide the mouse cursor.
+		pygame.mouse.set_visible(False)
 
 	def _update_bullets(self):
 		"""Update position of bullets and get rid of old bullets."""
@@ -138,12 +154,18 @@ class AlienInvasion:
 				self.bullets, self.aliens, True, True)
 
 		if collisions:
+			self.soundtrack.play_sound('exploded_alien')
 			for aliens in collisions.values():
 				self.stats.score += self.settings.alien_points * len(aliens)
 			self.sb.prep_score()
 			self.sb.check_high_score()
 		
+		self.start_new_level()
+		
+	def start_new_level(self):
 		if not self.aliens:
+			self.soundtrack.play_sound('new_level')
+
 			# Destroy existing bullets and create new fleet.
 			self.bullets.empty()
 			self._create_fleet()
@@ -152,7 +174,7 @@ class AlienInvasion:
 			# Increase level.
 			self.stats.level += 1
 			self.sb.prep_level()
-	
+
 	def _update_aliens(self):
 		"""
 		Check if the fleet is at an edge,
@@ -163,6 +185,7 @@ class AlienInvasion:
 
 		# Look for alien-ship collisions.
 		if pygame.sprite.spritecollideany(self.ship, self.aliens):
+			self.soundtrack.play_sound('lost_ship')
 			self._ship_hit()
 
 		# Look for aliens hitting the bottom of the screen.
@@ -186,7 +209,9 @@ class AlienInvasion:
 			# Pause.
 			sleep(0.5)
 		else:
+			self.soundtrack.play_sound('game_over')
 			self.stats.game_active = False
+			self.sb.text_color_high_score = (30, 30, 30)
 			pygame.mouse.set_visible(True)
 
 	def _create_fleet(self):
@@ -231,6 +256,7 @@ class AlienInvasion:
 		for alien in self.aliens.sprites():
 			if alien.rect.bottom >= screen_rect.bottom:
 				# Treat this the same as if the ship got hit.
+				self.soundtrack.play_sound('lost_ship')
 				self._ship_hit()
 				break
 	
