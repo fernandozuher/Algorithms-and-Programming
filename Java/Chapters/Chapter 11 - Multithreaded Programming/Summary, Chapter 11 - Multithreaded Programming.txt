@@ -1,0 +1,53 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 17 June 2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary*, Chapter 10 - Multithreaded Programming
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+Java provides built-in support for multithreaded programming. A multithreaded
+program contains two or more parts that can run concurrently. Each part of such
+a program is called a thread, and each thread defines a separate path of
+execution. Thus, multithreading is a specialized form of multitasking.
+
+...there are two distinct types
+of multitasking: process-based and thread-based. It is important to understand
+the difference between the two. For many readers, process-based multitasking is
+the more familiar form. A process is, in essence, a program that is executing.
+Thus, process-based multitasking is the feature that allows your computer to run
+two or more programs concurrently. For example, process-based multitasking
+enables you to run the Java compiler at the same time that you are using a text
+editor or visiting a web site. In process-based multitasking, a program is the
+smallest unit of code that can be dispatched by the scheduler.
+In a thread-based multitasking environment, the thread is the smallest unit of
+dispatchable code. This means that a single program can perform two or more
+tasks simultaneously. For instance, a text editor can format text at the same time
+that it is printing, as long as these two actions are being performed by two
+separate threads. Thus, process-based multitasking deals with the “big picture,”
+and thread-based multitasking handles the details.
+
+The Main Thread
+
+	static void sleep(long milliseconds) throws InterruptedException
+
+	The sleep( ) method has a second form, shown next, which allows you to
+	specify the period in terms of milliseconds and nanoseconds:
+	static void sleep(long milliseconds, int nanoseconds) throws
+	InterruptedException
+	This second form is useful only in environments that allow timing periods as
+	short as nanoseconds.
+
+	final void setName(String threadName)
+	final String getName( )
+
+Creating a Thread
+	
+	In the most general sense, you create a thread by instantiating an object of type
+	Thread. Java defines two ways in which this can be accomplished:
+		• You can implement the Runnable interface.
+		• You can extend the Thread class, itself.
+
