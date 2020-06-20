@@ -1,9 +1,9 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 17 June 2020
+Date: 19 June 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
-About: Summary*, Chapter 10 - Multithreaded Programming
+About: Summary*, Chapter 11 - Multithreaded Programming
 
 * Most of the text was drawn literally from the chapter.
 
@@ -29,6 +29,26 @@ tasks simultaneously. For instance, a text editor can format text at the same ti
 that it is printing, as long as these two actions are being performed by two
 separate threads. Thus, process-based multitasking deals with the “big picture,”
 and thread-based multitasking handles the details.
+
+Threads exist in several states. Here is a general description. A thread can be
+running. It can be ready to run as soon as it gets CPU time. A running thread can
+be suspended, which temporarily halts its activity. A suspended thread can then
+be resumed, allowing it to pick up where it left off. A thread can be blocked
+when waiting for a resource. At any time, a thread can be terminated, which
+halts its execution immediately. Once terminated, a thread cannot be resumed.
+
+Thread Priorities
+	
+	Java assigns to each thread a priority that determines how that thread should be
+	treated with respect to the others. Thread priorities are integers that specify the
+	relative priority of one thread to another. As an absolute value, a priority is
+	meaningless; a higher-priority thread doesn’t run any faster than a lower-priority
+	thread if it is the only thread running. Instead, a thread’s priority is used to
+	decide when to switch from one running thread to the next. This is called a
+	context switch.
+
+	CAUTION Portability problems can arise from the differences in the way that operating systems context-
+	switch threads of equal priority.
 
 The Main Thread
 
