@@ -503,4 +503,91 @@ Deadlock
 
 Suspending, Resuming, and Stopping Threads
 
+	Sometimes, suspending execution of a thread is useful. For example, a separate
+	thread can be used to display the time of day. If the user doesn’t want a clock,
+	then its thread can be suspended. Whatever the case, suspending a thread is a
+	simple matter. Once suspended, restarting the thread is also a simple matter.
 	
+	The mechanisms to suspend, stop, and resume threads differ between early
+	versions of Java, such as Java 1.0, and more modern versions, beginning with
+	Java 2. Prior to Java 2, a program used suspend(), resume(), and stop(), which
+	are methods defined by Thread, to pause, restart, and stop the execution of a
+	thread. Although these methods seem to be a perfectly reasonable and
+	convenient approach to managing the execution of threads, they must not be
+	used for new Java programs.
+
+		SuspendResume.java
+
+Obtaining a Thread’s State
+	
+	As mentioned earlier in this chapter, a thread can exist in a number of different
+	states. You can obtain the current state of a thread by calling the getState()
+	method defined by Thread. It is shown here:
+		
+		Thread.State getState()
+
+	It returns a value of type Thread.State that indicates the state of the thread at the
+	time at which the call was made. State is an enumeration defined by Thread.
+
+	Here are the values that can be returned by getState(): BLOCKED, NEW, RUNNABLE, TERMINATED, TIMED_WAITING, WAITING.
+	
+	Given a Thread instance, you can use getState( ) to obtain the state of a
+	thread. For example, the following sequence determines if a thread called thrd is
+	in the RUNNABLE state at the time getState( ) is called:
+		
+		Thread.State ts = thrd.getState();
+		if(ts == Thread.State.RUNNABLE) // ...
+
+	It is important to understand that a thread’s state may change after the call to
+	getState( ). Thus, depending on the circumstances, the state obtained by calling
+	getState( ) may not reflect the actual state of the thread only a moment later. For
+	this (and other) reasons, getState( ) is not intended to provide a means of
+	synchronizing threads. It’s primarily used for debugging or for profiling a
+	thread’s run-time characteristics.
+
+Using a Factory Method to Create and Start a Thread
+	
+	In some cases, it is not necessary to separate the creation of a thread from the
+	start of its execution. In other words, sometimes it is convenient to create and
+	start a thread at the same time. One way to do this is to use a static factory
+	method. A factory method is a method that returns an object of a class. Typically,
+	factory methods are static methods of a class. They are used for a variety of
+	reasons, such as to set an object to some initial state prior to use, to configure a
+	specific type of object, or in some cases to enable an object to be reused. As it
+	relates to creating and starting a thread, a factory method will create the thread,
+	call start( ) on the thread, and then return a reference to the thread. With this
+	approach, you can create and start a thread through a single method call, thus
+	streamlining your code.
+
+	Using createAndStart( ), you can now replace this sequence:
+		NewThread nt = new NewThread(); // create a new thread
+		nt.t.start(); // Start the thread
+	with
+		NewThread nt = NewThread.createAndStart();
+	
+	Now the thread is created and started in one step.
+	In cases in which you don’t need to keep a reference to the executing thread,
+	you can sometimes create and start a thread with one line of code, without the
+	use of a factory method. For example, again assuming the ThreadDemo
+	program, the following creates and starts a NewThread thread:
+
+		new NewThread().t.start();
+
+	However, in real-world applications, you will usually need to keep a reference to
+	the thread, so the factory method is often a good choice.
+
+Using Multithreading
+
+	The key to utilizing Java’s multithreading features effectively is to think
+	concurrently rather than serially. For example, when you have two subsystems
+	within a program that can execute concurrently, make them individual threads.
+	With the careful use of multithreading, you can create very efficient programs. A
+	word of caution is in order, however: If you create too many threads, you can
+	actually degrade the performance of your program rather than enhance it.
+	Remember, some overhead is associated with context switching. If you create
+	too many threads, more CPU time will be spent changing contexts than
+	executing your program! One last point: To create compute-intensive
+	applications that can automatically scale to make use of the available processors
+	in a multicore system, consider using the Fork/Join Framework, which is
+	described in Chapter 28.
+
