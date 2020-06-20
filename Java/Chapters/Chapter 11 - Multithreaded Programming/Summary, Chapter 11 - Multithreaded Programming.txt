@@ -251,7 +251,7 @@ Using isAlive() and join()
 
 Thread Priorities
 
-	To set a thread’s priority, use the setPriority( ) method, which is a member of
+	To set a thread’s priority, use the setPriority() method, which is a member of
 	Thread. This is its general form:
 
 		final void setPriority(int level)
@@ -322,8 +322,8 @@ Synchronization
 			...
 		}
 
-		This prevents other threads from entering call( ) while another thread is using it.
-		After synchronized has been added to call( ), the output of the program is as
+		This prevents other threads from entering call() while another thread is using it.
+		After synchronized has been added to call(), the output of the program is as
 		follows:
 
 			[Hello]
@@ -339,3 +339,168 @@ Synchronization
 
 	The synchronized Statement
 
+		While creating synchronized methods within classes that you create is an easy
+		and effective means of achieving synchronization, it will not work in all cases.
+		To understand why, consider the following. Imagine that you want to
+		synchronize access to objects of a class that was not designed for multithreaded
+		access. That is, the class does not use synchronized methods. Further, this class
+		was not created by you, but by a third party, and you do not have access to the
+		source code. Thus, you can’t add synchronized to the appropriate methods
+		within the class. How can access to an object of this class be synchronized?
+		Fortunately, the solution to this problem is quite easy: You simply put calls to the
+		methods defined by this class inside a synchronized block.
+		
+		This is the general form of the synchronized statement:
+
+			synchronized(objRef) {
+				// statements to be synchronized
+			}
+
+		Here, objRef is a reference to the object being synchronized. A synchronized
+		block ensures that a call to a synchronized method that is a member of objRef’s
+		class occurs only after the current thread has successfully entered objRef’s
+		monitor.
+		Here is an alternative version of the preceding example, using a synchronized
+		block within the run() method:
+
+			public void run() {
+				synchronized(target) {
+					target.call();
+				}
+			}
+
+		Here, the call() method is not modified by synchronized. Instead, the
+		synchronized statement is used inside Caller’s run() method. This causes the
+		same correct output as the preceding example, because each thread waits for the
+		prior one to finish before proceeding.
+
+Interthread Communication
+
+	The preceding examples unconditionally blocked other threads from
+	asynchronous access to certain methods. This use of the implicit monitors in
+	Java objects is powerful, but you can achieve a more subtle level of control
+	through interprocess communication. As you will see, this is especially easy in
+	Java.
+	
+	As discussed earlier, multithreading replaces event loop programming by
+	dividing your tasks into discrete, logical units. Threads also provide a secondary
+	benefit: they do away with polling. Polling is usually implemented by a loop that
+	is used to check some condition repeatedly. Once the condition is true,
+	appropriate action is taken. This wastes CPU time. For example, consider the
+	classic queuing problem, where one thread is producing some data and another is
+	consuming it. To make the problem more interesting, suppose that the producer
+	has to wait until the consumer is finished before it generates more data. In a
+	polling system, the consumer would waste many CPU cycles while it waited for
+	the producer to produce. Once the producer was finished, it would start polling,
+	wasting more CPU cycles waiting for the consumer to finish, and so on. Clearly,
+	this situation is undesirable.
+
+	To avoid polling, Java includes an elegant interprocess communication
+	mechanism via the wait(), notify(), and notifyAll() methods. These methods
+	are implemented as final methods in Object, so all classes have them. All three
+	methods can be called only from within a synchronized context. Although
+	conceptually advanced from a computer science perspective, the rules for using
+	these methods are actually quite simple:
+		• wait() tells the calling thread to give up the monitor and go to sleep
+		until some other thread enters the same monitor and calls notify() or
+		notifyAll().
+		• notify() wakes up a thread that called wait() on the same object.
+		• notifyAll() wakes up all the threads that called wait() on the same
+		object. One of the threads will be granted access.
+	
+	These methods are declared within Object, as shown here:
+		final void wait() throws InterruptedException
+		final void notify()
+		final void notify All()
+	
+	Additional forms of wait() exist that allow you to specify a period of time to
+	wait.
+
+	Before working through an example that illustrates interthread
+	communication, an important point needs to be made. Although wait() normally
+	waits until notify() or notifyAll() is called, there is a possibility that in very
+	rare cases the waiting thread could be awakened due to a spurious wakeup. In
+	this case, a waiting thread resumes without notify() or notifyAll() having been
+	called. (In essence, the thread resumes for no apparent reason.) Because of this
+	remote possibility, the Java API documentation recommends that calls to wait()
+	should take place within a loop that checks the condition on which the thread is
+	waiting. The following example shows this technique.
+
+		PC.java
+
+	Although the put( ) and get( ) methods on Q are synchronized, nothing stops the
+	producer from overrunning the consumer, nor will anything stop the consumer
+	from consuming the same queue value twice. Thus, you get the erroneous output
+	shown here (the exact output will vary with processor speed and task load):
+
+		Put: 1
+		Got: 1
+		Got: 1
+		Got: 1
+		Got: 1
+		Got: 1
+		Put: 2
+		Put: 3
+		Put: 4
+		Put: 5
+		Put: 6
+		Put: 7
+		Got: 7
+
+	The proper way to write this program in Java is to use wait( ) and notify( ) to
+	signal in both directions, as shown here:
+
+		PCFixed.java
+
+	Inside get( ), wait( ) is called. This causes its execution to suspend until
+	Producer notifies you that some data is ready. When this happens, execution
+	inside get( ) resumes. After the data has been obtained, get( ) calls notify( ). This
+	tells Producer that it is okay to put more data in the queue. Inside put( ), wait( )
+	suspends execution until Consumer has removed the item from the queue.
+	When execution resumes, the next item of data is put in the queue, and notify( )
+	is called. This tells Consumer that it should now remove it.
+	
+	Here is some output from this program, which shows the clean synchronous
+	behavior:
+
+		Put: 1
+		Got: 1
+		Put: 2
+		Got: 2
+		Put: 3
+		Got: 3
+		Put: 4
+		Got: 4
+		Put: 5
+		Got: 5
+
+Deadlock
+
+	A special type of error that you need to avoid that relates specifically to
+	multitasking is deadlock, which occurs when two threads have a circular
+	dependency on a pair of synchronized objects. For example, suppose one thread
+	enters the monitor on object X and another thread enters the monitor on object Y.
+	If the thread in X tries to call any synchronized method on Y, it will block as
+	expected. However, if the thread in Y, in turn, tries to call any synchronized
+	method on X, the thread waits forever, because to access X, it would have to
+	release its own lock on Y so that the first thread could complete. Deadlock is a
+	difficult error to debug for two reasons:
+		• In general, it occurs only rarely, when the two threads time-slice in just
+		the right way.
+		• It may involve more than two threads and two synchronized objects.
+		(That is, deadlock can occur through a more convoluted sequence of events
+		than just described.)
+
+		Deadlock.java
+
+	Because the program has deadlocked, you need to press CTRL-C to end the
+	program. You can see a full thread and monitor cache dump by pressing CTRL-
+	BREAK on a PC. You will see that RacingThread owns the monitor on b, while it
+	is waiting for the monitor on a. At the same time, MainThread owns a and is
+	waiting to get b. This program will never complete. As this example illustrates,
+	if your multithreaded program locks up occasionally, deadlock is one of the first
+	conditions that you should check for.
+
+Suspending, Resuming, and Stopping Threads
+
+	
