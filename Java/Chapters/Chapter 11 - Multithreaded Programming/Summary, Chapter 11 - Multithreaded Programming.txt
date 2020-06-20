@@ -30,25 +30,60 @@ that it is printing, as long as these two actions are being performed by two
 separate threads. Thus, process-based multitasking deals with the “big picture,”
 and thread-based multitasking handles the details.
 
-Threads exist in several states. Here is a general description. A thread can be
-running. It can be ready to run as soon as it gets CPU time. A running thread can
-be suspended, which temporarily halts its activity. A suspended thread can then
-be resumed, allowing it to pick up where it left off. A thread can be blocked
-when waiting for a resource. At any time, a thread can be terminated, which
-halts its execution immediately. Once terminated, a thread cannot be resumed.
+The Java Thread Model
 
-Thread Priorities
+	Threads exist in several states. Here is a general description. A thread can be
+	running. It can be ready to run as soon as it gets CPU time. A running thread can
+	be suspended, which temporarily halts its activity. A suspended thread can then
+	be resumed, allowing it to pick up where it left off. A thread can be blocked
+	when waiting for a resource. At any time, a thread can be terminated, which
+	halts its execution immediately. Once terminated, a thread cannot be resumed.
+
+	Thread Priorities
+		
+		Java assigns to each thread a priority that determines how that thread should be
+		treated with respect to the others. Thread priorities are integers that specify the
+		relative priority of one thread to another. As an absolute value, a priority is
+		meaningless; a higher-priority thread doesn’t run any faster than a lower-priority
+		thread if it is the only thread running. Instead, a thread’s priority is used to
+		decide when to switch from one running thread to the next. This is called a
+		context switch.
+
+		CAUTION Portability problems can arise from the differences in the way that operating systems context-
+		switch threads of equal priority.
+
+	Synchronization
+
+		Because multithreading introduces an asynchronous behavior to your programs,
+		there must be a way for you to enforce synchronicity when you need it. For
+		example, if you want two threads to communicate and share a complicated data
+		structure, such as a linked list, you need some way to ensure that they don’t
+		conflict with each other. That is, you must prevent one thread from writing data
+		while another thread is in the middle of reading it. For this purpose, Java
+		implements an elegant twist on an age-old model of interprocess
+		synchronization: the monitor. The monitor is a control mechanism first defined
+		by C.A.R. Hoare. You can think of a monitor as a very small box that can hold
+		only one thread. Once a thread enters a monitor, all other threads must wait until
+		that thread exits the monitor. In this way, a monitor can be used to protect a
+		shared asset from being manipulated by more than one thread at a time.
+
+		In Java, there is no class “Monitor”; instead, each object has its own implicit
+		monitor that is automatically entered when one of the object’s synchronized
+		methods is called. Once a thread is inside a synchronized method, no other
+		thread can call any other synchronized method on the same object. This enables
+		you to write very clear and concise multithreaded code, because synchronization
+		support is built into the language.
+
+	Messaging
 	
-	Java assigns to each thread a priority that determines how that thread should be
-	treated with respect to the others. Thread priorities are integers that specify the
-	relative priority of one thread to another. As an absolute value, a priority is
-	meaningless; a higher-priority thread doesn’t run any faster than a lower-priority
-	thread if it is the only thread running. Instead, a thread’s priority is used to
-	decide when to switch from one running thread to the next. This is called a
-	context switch.
-
-	CAUTION Portability problems can arise from the differences in the way that operating systems context-
-	switch threads of equal priority.
+		After you divide your program into separate threads, you need to define how
+		they will communicate with each other. When programming with some other
+		languages, you must depend on the operating system to establish communication
+		between threads. This, of course, adds overhead. By contrast, Java provides a
+		clean, low-cost way for two or more threads to talk to each other, via calls to
+		predefined methods that all objects have. Java’s messaging system allows a
+		thread to enter a synchronized method on an object, and then wait there until
+		some other thread explicitly notifies it to come out.
 
 The Main Thread
 
