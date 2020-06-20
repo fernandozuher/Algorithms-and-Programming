@@ -75,7 +75,7 @@ The Java Thread Model
 		support is built into the language.
 
 	Messaging
-	
+
 		After you divide your program into separate threads, you need to define how
 		they will communicate with each other. When programming with some other
 		languages, you must depend on the operating system to establish communication
@@ -85,19 +85,60 @@ The Java Thread Model
 		thread to enter a synchronized method on an object, and then wait there until
 		some other thread explicitly notifies it to come out.
 
-The Main Thread
+	The Thread Class and the Runnable Interface
+	
+		Java’s multithreading system is built upon the Thread class, its methods, and its
+		companion interface, Runnable. Thread encapsulates a thread of execution.
+		Since you can’t directly refer to the ethereal state of a running thread, you will
+		deal with it through its proxy, the Thread instance that spawned it. To create a
+		new thread, your program will either extend Thread or implement the
+		Runnable interface.
 
-	static void sleep(long milliseconds) throws InterruptedException
+		The Thread class defines several methods that help manage threads. Several
+		of those used in this chapter are shown here:
+			getName()
+			getPriority()
+			isAlive()
+			join()
+			run()
+			sleep()
+			start()
 
-	The sleep( ) method has a second form, shown next, which allows you to
-	specify the period in terms of milliseconds and nanoseconds:
-	static void sleep(long milliseconds, int nanoseconds) throws
-	InterruptedException
-	This second form is useful only in environments that allow timing periods as
-	short as nanoseconds.
+	The Main Thread
 
-	final void setName(String threadName)
-	final String getName( )
+		When a Java program starts up, one thread begins running immediately. This is
+		usually called the main thread of your program, because it is the one that is
+		executed when your program begins. The main thread is important for two
+		reasons:
+			• It is the thread from which other “child” threads will be spawned.
+			• Often, it must be the last thread to finish execution because it performs
+			various shutdown actions.
+			
+		Although the main thread is created automatically when your program is
+		started, it can be controlled through a Thread object. To do so, you must obtain
+		a reference to it by calling the method currentThread( ), which is a public
+		static member of Thread. Its general form is shown here:
+			
+			static Thread currentThread()
+		
+		This method returns a reference to the thread in which it is called. Once you
+		have a reference to the main thread, you can control it just like any other thread.
+
+
+
+
+
+		static void sleep(long milliseconds) throws InterruptedException
+
+		The sleep( ) method has a second form, shown next, which allows you to
+		specify the period in terms of milliseconds and nanoseconds:
+		static void sleep(long milliseconds, int nanoseconds) throws
+		InterruptedException
+		This second form is useful only in environments that allow timing periods as
+		short as nanoseconds.
+
+		final void setName(String threadName)
+		final String getName( )
 
 Creating a Thread
 	
