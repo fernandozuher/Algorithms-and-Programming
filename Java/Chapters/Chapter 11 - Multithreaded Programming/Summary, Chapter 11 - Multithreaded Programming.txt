@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 19 June 2020
+Date: 20 June 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
 About: Summary*, Chapter 11 - Multithreaded Programming
 
@@ -113,10 +113,10 @@ The Java Thread Model
 			• It is the thread from which other “child” threads will be spawned.
 			• Often, it must be the last thread to finish execution because it performs
 			various shutdown actions.
-			
+
 		Although the main thread is created automatically when your program is
 		started, it can be controlled through a Thread object. To do so, you must obtain
-		a reference to it by calling the method currentThread( ), which is a public
+		a reference to it by calling the method currentThread(), which is a public
 		static member of Thread. Its general form is shown here:
 			
 			static Thread currentThread()
@@ -124,21 +124,28 @@ The Java Thread Model
 		This method returns a reference to the thread in which it is called. Once you
 		have a reference to the main thread, you can control it just like any other thread.
 
+		Notice the output produced when t is used as an argument to println(). This
+		displays, in order: the name of the thread, its priority, and the name of its group.
+		By default, the name of the main thread is main. Its priority is 5, which is the
+		default value, and main is also the name of the group of threads to which this
+		thread belongs. A thread group is a data structure that controls the state of a
+		collection of threads as a whole.
 
+		The sleep() method causes the thread from which it is called to
+		suspend execution for the specified period of milliseconds. Its general form is
+		shown here:
+			static void sleep(long milliseconds) throws InterruptedException
 
-
-
-		static void sleep(long milliseconds) throws InterruptedException
-
-		The sleep( ) method has a second form, shown next, which allows you to
+		The sleep() method has a second form, shown next, which allows you to
 		specify the period in terms of milliseconds and nanoseconds:
-		static void sleep(long milliseconds, int nanoseconds) throws
-		InterruptedException
+			
+			static void sleep(long milliseconds, int nanoseconds) throws InterruptedException
+
 		This second form is useful only in environments that allow timing periods as
 		short as nanoseconds.
 
-		final void setName(String threadName)
-		final String getName( )
+			final void setName(String threadName)
+			final String getName()
 
 Creating a Thread
 	
@@ -146,4 +153,189 @@ Creating a Thread
 	Thread. Java defines two ways in which this can be accomplished:
 		• You can implement the Runnable interface.
 		• You can extend the Thread class, itself.
+
+
+	The following two sections look at each method, in turn.
+	
+	Implementing Runnable
+	
+		The easiest way to create a thread is to create a class that implements the
+		Runnable interface. Runnable abstracts a unit of executable code. You can
+		construct a thread on any object that implements Runnable. To implement
+		Runnable, a class need only implement a single method called run(), which is
+		declared like this:
+		
+			public void run()
+
+		Inside run(), you will define the code that constitutes the new thread. It is
+		important to understand that run() can call other methods, use other classes, and
+		declare variables, just like the main thread can. The only difference is that run()
+		establishes the entry point for another, concurrent thread of execution within
+		your program. This thread will end when run() returns.
+		
+		After you create a class that implements Runnable, you will instantiate an
+		object of type Thread from within that class. Thread defines several
+		constructors. The one that we will use is shown here:
+		
+			Thread(Runnable threadOb, String threadName)
+
+		In this constructor, threadOb is an instance of a class that implements the
+		Runnable interface. This defines where execution of the thread will begin. The
+		name of the new thread is specified by threadName.
+		
+		After the new thread is created, it will not start running until you call its
+		start() method, which is declared within Thread. In essence, start() initiates a
+		call to run(). The start() method is shown here:
+			
+			void start()
+
+	Extending Thread
+		
+		The second way to create a thread is to create a new class that extends Thread,
+		and then to create an instance of that class. The extending class must override
+		the run() method, which is the entry point for the new thread. As before, a call
+		to start() begins execution of the new thread.
+
+			ExtendThread.java
+
+		Notice the call to super() inside NewThread. This invokes the following
+		form of the Thread constructor:
+			public Thread(String threadName)
+		Here, threadName specifies the name of the thread.
+
+	Choosing an Approach
+		
+		At this point, you might be wondering why Java has two ways to create child
+		threads, and which approach is better. The answers to these questions turn on the
+		same point. The Thread class defines several methods that can be overridden by
+		a derived class. Of these methods, the only one that must be overridden is run().
+		This is, of course, the same method required when you implement Runnable.
+		Many Java programmers feel that classes should be extended only when they are
+		being enhanced or adapted in some way. So, if you will not be overriding any of
+		Thread’s other methods, it is probably best simply to implement Runnable.
+		Also, by implementing Runnable, your thread class does not need to inherit
+		Thread, making it free to inherit a different class. Ultimately, which approach to
+		use is up to you. However, throughout the rest of this chapter, we will create
+		threads by using classes that implement Runnable.
+
+Creating Multiple Threads
+
+	NewThread nt1 = new NewThread("One");
+	NewThread nt2 = new NewThread("Two");
+	NewThread nt3 = new NewThread("Three");
+
+		MultiThreadDemo.java
+
+Using isAlive() and join()
+	
+	Two ways exist to determine whether a thread has finished. First, you can call
+	isAlive() on the thread. This method is defined by Thread, and its general form
+	is shown here:
+		
+		final boolean isAlive()
+	
+	The isAlive() method returns true if the thread upon which it is called is still
+	running. It returns false otherwise.
+	
+	While isAlive() is occasionally useful, the method that you will more
+	commonly use to wait for a thread to finish is called join(), shown here:
+		
+		final void join() throws InterruptedException
+	
+	This method waits until the thread on which it is called terminates. Its name
+	comes from the concept of the calling thread waiting until the specified thread
+	joins it. Additional forms of join() allow you to specify a maximum amount of
+	time that you want to wait for the specified thread to terminate.
+
+		DemoJoin.java
+
+Thread Priorities
+
+	To set a thread’s priority, use the setPriority( ) method, which is a member of
+	Thread. This is its general form:
+
+		final void setPriority(int level)
+
+	Here, level specifies the new priority setting for the calling thread. The value of
+	level must be within the range MIN_PRIORITY and MAX_PRIORITY.
+	Currently, these values are 1 and 10, respectively. To return a thread to default
+	priority, specify NORM_PRIORITY, which is currently 5. These priorities are
+	defined as static final variables within Thread.
+	
+	You can obtain the current priority setting by calling the getPriority()
+	method of Thread, shown here:
+		
+		final int getPriority()
+
+	Implementations of Java may have radically different behavior when it comes
+	to scheduling. Most of the inconsistencies arise when you have threads that are
+	relying on preemptive behavior, instead of cooperatively giving up CPU time.
+	The safest way to obtain predictable, cross-platform behavior with Java is to use
+	threads that voluntarily give up control of the CPU.
+	
+Synchronization
+
+	When two or more threads need access to a shared resource, they need some way to ensure that the resource will be used by only one thread at a time. The process
+	by which this is achieved is called synchronization. As you will see, Java
+	provides unique, language-level support for it.
+
+	Key to synchronization is the concept of the monitor. A monitor is an object
+	that is used as a mutually exclusive lock. Only one thread can own a monitor at a
+	given time. When a thread acquires a lock, it is said to have entered the monitor.
+	All other threads attempting to enter the locked monitor will be suspended until
+	the first thread exits the monitor. These other threads are said to be waiting for
+	the monitor.
+
+	You can synchronize your code in either of two ways. Both involve the use of
+	the synchronized keyword, and both are examined here.
+
+	Using Synchronized Methods
+
+		To enter an object’s monitor, just call a method
+		that has been modified with the synchronized keyword. While a thread is inside
+		a synchronized method, all other threads that try to call it (or any other
+		synchronized method) on the same instance have to wait. To exit the monitor and
+		relinquish control of the object to the next waiting thread, the owner of the
+		monitor simply returns from the synchronized method.
+
+			Synch.java
+
+			[Hello[Synchronized[World]
+			]
+			]
+
+		As you can see, by calling sleep(), the call() method allows execution to switch
+		to another thread. This results in the mixed-up output of the three message
+		strings. In this program, nothing exists to stop all three threads from calling the
+		same method, on the same object, at the same time. This is known as a race
+		condition, because the three threads are racing each other to complete the
+		method. This example used sleep() to make the effects repeatable and obvious.
+		In most situations, a race condition is more subtle and less predictable, because
+		you can’t be sure when the context switch will occur. This can cause a program
+		to run right one time and wrong the next.
+		
+		To fix the preceding program, you must serialize access to call(). That is, you
+		must restrict its access to only one thread at a time. To do this, you simply need
+		to precede call()’s definition with the keyword synchronized, as shown here:
+
+		synchronized void call(String msg) {
+			...
+		}
+
+		This prevents other threads from entering call( ) while another thread is using it.
+		After synchronized has been added to call( ), the output of the program is as
+		follows:
+
+			[Hello]
+			[Synchronized]
+			[World]
+
+		Any time that you have a method, or group of methods, that manipulates the
+		internal state of an object in a multithreaded situation, you should use the
+		synchronized keyword to guard the state from race conditions. Remember, once
+		a thread enters any synchronized method on an instance, no other thread can
+		enter any other synchronized method on the same instance. However,
+		nonsynchronized methods on that instance will continue to be callable.
+
+	The synchronized Statement
 
