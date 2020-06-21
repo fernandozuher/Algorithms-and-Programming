@@ -189,9 +189,15 @@ Pages: 305 - 3
 
 		A static local variable is useful for avoiding order dependencies among nonlocal variables
 		(§15.4.1).
+	
 		There are no local functions; if you feel you need one, use a function object or a lambda expres-
 		sion (§3.4.3, §11.4).
+	
 		The scope of a label (§9.6), should you be foolhardy enough to use one, is the complete func-
 		tion, independent of which nested scope it may be in.
+
+12.2 Argument Passing
+
+	12.2.1 Reference Arguments
 
 		
