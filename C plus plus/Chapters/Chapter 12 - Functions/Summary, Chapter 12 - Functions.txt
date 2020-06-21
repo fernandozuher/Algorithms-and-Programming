@@ -1,0 +1,184 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 21 June 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 12 - Functions
+Pages: 305 - 3
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+12.1 Function Declarations
+
+	12.1.1 Why Functions?
+
+		The most basic advice is to keep a function of a size so that you can look at it in total on a
+		screen. Bugs tend to creep in when we can view only part of an algorithm at a time. For many pro-
+		grammers that puts a limit of about 40 lines on a function. My ideal is a much smaller size still,
+		maybe an average of 7 lines.
+
+		In essentially all cases, the cost of a function call is not a significant factor. Where that cost
+		could be significant (e.g., for frequently used access functions, such as vector subscripting) inlining
+		can eliminate it (§12.1.5). Use functions as a structuring mechanism.
+
+	12.1.2 Parts of a Function Declaration
+		
+		In addition to specifying a name, a set of arguments, and a return type, a function declaration can
+		contain a variety of specifiers and modifiers. In all we can have:
+			• The name of the function; required
+			• The argument list, which may be empty () ; required
+			• The return type, which may be void and which may be prefix or suffix (using auto ); required
+			• inline, indicating a desire to have function calls implemented by inlining the function body
+			(§12.1.5)
+			• constexpr, indicating that it should be possible to evaluate the function at compile time if
+			given constant expressions as arguments (§12.1.6)
+			• noexcept, indicating that the function may not throw an exception (§13.5.1.1)
+			• A linkage specification, for example, static (§15.2)
+			• [[noreturn]], indicating that the function will not return using the normal call/return mecha-
+			nism (§12.1.4)
+		
+		In addition, a member function may be specified as:
+			• virtual, indicating that it can be overridden in a derived class (§20.3.2)
+			• override, indicating that it must be overriding a virtual function from a base class (§20.3.4.1)
+			• final, indicating that it cannot be overriden in a derived class (§20.3.4.2)
+			• static, indicating that it is not associated with a particular object (§16.2.12)
+			• const, indicating that it may not modify its object (§3.2.1.1, §16.2.9.1)
+
+	12.1.3 Function Definitions
+
+		The definition and all declarations for a function must specify the same type. Unfortunately, to pre-
+		serve C compatibility, a const is ignored at the highest level of an argument type. For example, this
+		is two declarations of the same function:
+		
+			void f(int); // type is void(int)
+			void f(const int); // type is void(int)
+		
+		That function, f() , could be defined as:
+			void f(int x) { /* we can modify x here */ }
+		
+		Alternatively, we could define f() as:
+			void f(const int x) { /* we cannot modify x here */ }
+		
+		In either case, the argument that f() can or cannot modify is a copy of what a caller provided, so
+		there is no danger of an obscure modification of the calling context.
+
+		Naming arguments in declarations that are not definitions is optional and commonly used to sim-
+		plify documentation. Conversely, we can indicate that an argument is unused in a function defini-
+		tion by not naming it. For example:
+			void search(table∗ t, const char∗ key, const char∗)
+			{
+			// no use of the third argument
+			}
+		Typically, unnamed arguments arise from the simplification of code or from planning ahead for
+		extensions. In both cases, leaving the argument in place, although unused, ensures that callers are
+		not affected by the change.
+
+		In addition to functions, there are a few other things that we can call; these follow most rules
+		defined for functions, such as the rules for argument passing (§12.2):
+			• Constructors (§2.3.2, §16.2.5) are technicallly not functions; in particular, they don’t return
+			a value, can initialize bases and members (§17.4), and can’t hav e their address taken.
+			• Destructors (§3.2.1.2, §17.2) can’t be overloaded and can’t hav e their address taken.
+			• Function objects (§3.4.3, §19.2.2) are not functions (they are objects) and can’t be over-
+			loaded, but their operator() s are functions.
+			• Lambda expressions (§3.4.3, §11.4) are basically a shorthand for defining function objects.
+
+	12.1.4 Returning Values
+
+		Traditionally, in C and C++, the return type comes first in a function declaration (before the name of the function). However, a function declaration can also be written using a syntax that places the return type after the argument list. For example, the following two declarations are equivalent:
+			
+			string to_string(int a); // prefix return type
+			auto to_string(int a) −> string; // suffix return type
+		
+		The essential use for a suffix return type comes in function template declarations in which the
+		return type depends on the arguments. For example:
+
+			template<class T, class U>
+			auto product(const vector<T>& x, const vector<U>& y) −> decltype(x∗y);
+		
+		However, the suffix return syntax can be used for any function. There is an obvious similarity
+		between the suffix return syntax for a function and the lambda expression syntax (§3.4.3, §11.4); it
+		is a pity those two constructs are not identical.
+
+		A value must be returned from a function that is not declared void (however, main() is special; see §2.2.1).
+
+		void f6() { return; } // OK
+
+		A function that calls itself is said to be recursive.
+
+		A return -statement initializes a variable of the returned type. The type of a return expression is checked against the type of the returned type, and all standard and user-defined type conversions are performed. For example:
+			double f() { return 1; } // 1 is implicitly converted to double{1}
+
+		Each time a function is called, a new copy of its arguments and local (automatic) variables is cre-
+		ated. The store is reused after the function returns, so a pointer to a local non- static variable should
+		never be returned. The contents of the location pointed to will change unpredictably:
+
+			int∗ fp()
+			{
+				int local = 1;
+				// ...
+				return &local; // bad
+			}
+			
+		An equivalent error can occur when using references:
+
+			int& fr()
+			{
+				int local = 1;
+				// ...
+				return local; // bad
+			}
+
+		There are no void values. However, a call of a void function may be used as the return value of a
+		void function. For example:
+			void g(int∗ p);
+
+			void h(int∗ p)
+			{
+				// ...
+				return g(p); // OK: equivalent to ‘‘g(p); return;’’
+			}
+			
+		This form of return is useful to avoid special cases when writing template functions where the 		return type is a template parameter.
+
+		A function that does not return normally (i.e., through a return or ‘‘falling off the end’’) can be marked [[noreturn]] (§12.1.7).
+
+	12.1.5 inline Functions
+
+		A function can be defined to be inline . For example:
+			inline int fac(int n)
+			{
+				return (n<2) ? 1 : n∗fac(n−1);
+			}
+
+		The inline specifier is a hint to the compiler that it should attempt to generate code for a call of fac()
+		inline rather than laying down the code for the function once and then calling through the usual
+		function call mechanism. A clever compiler can generate the constant 720 for a call fac(6). The
+		possibility of mutually recursive inline functions, inline functions that recurse or not depending on
+		input, etc., makes it impossible to guarantee that every call of an inline function is actually inlined.
+		The degree of cleverness of a compiler cannot be legislated, so one compiler might generate 720,
+		another 6∗fac(5), and yet another an un-inlined call fac(6). If you want a guarantee that a value is
+		computed at compile time, declare it constexpr and make sure that all functions used in its evalua-
+		tion are constexpr (§12.1.6).
+
+		To make inlining possible in the absence of unusually clever compilation and linking facilities,
+		the definition – and not just the declaration – of an inline function must be in scope (§15.2). An
+		inline specifier does not affect the semantics of a function. In particular, an inline function still has
+		a unique address, and so do static variables (§12.1.8) of an inline function.
+
+	12.1.7 [[noreturn]] Functions
+
+		A construct [[ ... ]] is called an attribute and can be placed just about anywhere in the C++ syntax.
+		In general, an attribute specifies some implementation-dependent property about the syntactic
+		entity that precedes it. In addition, an attribute can be placed in front of a declaration. There are
+		only two standard attributes (§iso.7.6), and [[noreturn]] is one of them. The other is [[carries_depen-
+		dency]] (§41.3).
+		
+		Placing [[noreturn]] at the start of a function declaration indicates that the function is not
+		expected to return. For example:
+			
+			[[noreturn]] void exit(int); // exit will never return
+
+		Knowing that a function does not return is useful for both comprehension and code generation.
+		What happens if the function returns despite a [[noreturn]] attribute is undefined.
