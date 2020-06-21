@@ -182,3 +182,16 @@ Pages: 305 - 3
 
 		Knowing that a function does not return is useful for both comprehension and code generation.
 		What happens if the function returns despite a [[noreturn]] attribute is undefined.
+
+	12.1.8 Local Variables
+
+		A static local variable allows the function to preserve information between calls without introducing a global variable that might be accessed and corrupted by other functions (see also §16.2.12).
+
+		A static local variable is useful for avoiding order dependencies among nonlocal variables
+		(§15.4.1).
+		There are no local functions; if you feel you need one, use a function object or a lambda expres-
+		sion (§3.4.3, §11.4).
+		The scope of a label (§9.6), should you be foolhardy enough to use one, is the complete func-
+		tion, independent of which nested scope it may be in.
+
+		
