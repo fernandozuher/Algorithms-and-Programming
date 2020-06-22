@@ -239,4 +239,118 @@ Pages: 305 - 3
 
 	12.2.2 Array Arguments
 
+		...an argument of type T[] will be converted to a T∗ when passed as an argument. This implies that an assignment to an element of an array argument changes the value of an element of the argument array. In other words, arrays differ from other types in that an array is not passed by value. Instead, a pointer is passed (by value).
+		
+		A parameter of array type is equivalent to a parameter of pointer type. For example:
+			void odd(int∗ p);
+			void odd(int a[]);
+			void odd(int buf[1020]);
+		
+		These three declarations are equivalent and declare the same function. As usual, the argument names do not affect the type of the function (§12.1.3). The rules and techniques for passing multidimensional arrays can be found in §7.4.3.
+		
+		The size of an array is not available to the called function. This is a major source of errors, but there are several ways of circumventing this problem. C-style strings are zero-terminated, so their size can be computed (e.g., by a potentially expensive call of strlen(); §43.4). For other arrays, a second argument specifying the size can be passed. For example:
+			void compute1(int∗ vec_ptr, int vec_size); // one way
+
+		At best, this is a workaround. It is usually preferable to pass a reference to some container, such as vector (§4.4.1, §31.4), array (§34.2.1), or map (§4.4.3, §31.4.3).
+		
+		If you really want to pass an array, rather than a container or a pointer to the first element of an array, you can declare a parameter of type reference to array. For example:
+
+			void f(int(&r)[4]);
+
+			void g()
+			{
+				int a1[] = {1,2,3,4};
+				int a2[] = {1,2};
+				f(a1); // OK
+				f(a2); // error: wrong number of elements
+			}
+
+		array_reference_parameter.cpp
+
+		Note that the number of elements is part of a reference-to-array type. That makes such references far less flexible than pointers and containers (such as vector). The main use of references to arrays is in templates, where the number of elements is then deduced. For example:
+			template<class T, int N> void f(T(&r)[N])
+			{
+				// ...
+			}
+			
+			int a1[10];
+			double a2[100];
+			void g()
+			{
+				f(a1); // T is int; N is 10
+				f(a2); // T is double; N is 100
+			}
+			
+		This typically gives rise to as many function definitions as there are calls to f() with distinct array types.
+		
+		Multidimensional arrays are tricky (see §7.3), but often arrays of pointers can be used instead, and they need no special treatment. For example:
+			const char∗ day[] = {
+				"mon", "tue", "wed", "thu", "fri", "sat", "sun"
+			};
+
+		As ever, vector and similar types are alternatives to the built-in, low-level arrays and pointers.
+
+	12.2.3 List Arguments
+
+		A {}-delimited list can be used as an argument to a parameter of:
+			[1] Type std::initializer_list<T> , where the values of the list can be implicitly converted to T
+			[2] A type that can be initialized with the values provided in the list
+			[3] A reference to an array of T , where the values of the list can be implicitly converted to T
+		
+		Technically, case [2] covers all examples, but I find it easier to think of the three cases separately. Consider:
+
+			template<class T>
+			void f1(initializer_list<T>);
+			
+			struct S {
+				int a;
+				string s;
+			};
+			void f2(S);
+
+			template<class T, int N>
+			void f3(T (&r)[N]);
+			
+			void f4(int);
+			
+			void g()
+			{
+				f1({1,2,3,4}); // T is int and the initializer_list has size() 4
+				f2({1,"MKS"}); // f2(S{1,"MKS"})
+				f3({1,2,3,4}); // T is int and N is 4
+				f4({1}); // f4(int{1});
+			}
+			
+		If there is a possible ambiguity, an initializer_list parameter takes priority.
+
+	12.2.4 Unspecified Number of Arguments
+		
+		For some functions, it is not possible to specify the number and type of all arguments expected in a call. To implement such interfaces, we have three choices:
+			[1] Use a variadic template (§28.6): this allows us to handle an arbitrary number of arbitrary types in a type-safe manner by writing a small template metaprogram that interprets the argument list to determine its meaning and take appropriate actions.
+			[2] Use an initializer_list as the argument type (§12.2.3). This allows us to handle an arbitrary number of arguments of a single type in a type-safe manner. In many contexts, such homogeneous lists are the most common and important case.
+			[3] Terminate the argument list with the ellipsis ( ... ), which means ‘‘and maybe some more arguments.’’ This allows us to handle an arbitrary number of (almost) arbitrary types by using some macros from <cstdarg> . This solution is not inherently type-safe and can be hard to use with sophisticated user-defined types. However, this mechanism has been used from the earliest days of C.
+		
+		The first two mechanisms are described elsewhere, so I describe only the third mechanism (even though I consider it inferior to the others for most uses). For example:
+			int printf(const char∗, ...);
+		
+		This specifies that a call of the standard-library function printf() (§43.3) must have at least one argument, a C-style string, but may or may not have others. For example:
+			printf("Hello, world!\n");
+			printf("My name is %s %s\n", first_name , second_name);
+			printf("%d + %d = %d\n",2,3,5);
+		
+		Such a function must rely on information not available to the compiler when interpreting its argument list. In the case of printf() , the first argument is a format string containing special character sequences that allow printf() to handle other arguments correctly; %s means ‘‘expect a char∗ argument’’ and %d means ‘‘expect an int argument.’’ However, the compiler cannot in general ensure that the expected arguments are really provided in a call or that an argument is of the expected type. For example:
+			#include <cstdio>
+			int main()
+			{
+				std::printf("My name is %s %s\n",2);
+			}
+		
+		This is not valid code, but most compilers will not catch this error. At best, it will produce some strange-looking output (try it!).
+
+		Clearly, if an argument has not been declared, the compiler does not have the information needed to perform the standard type checking and type conversion for it. In that case, a char or a short is passed as an int and a float is passed as a double. This is not necessarily what the programmer expects.
+
+		lacking_arguments.cpp
+
+		A well-designed program needs at most a few functions for which the argument types are not completely specified. Overloaded functions, functions using default arguments, functions taking initializer_list arguments, and variadic templates can be used to take care of type checking in most cases when one would otherwise consider leaving argument types unspecified. Only when both the number of arguments and the types of arguments vary and a variadic template solution is deemed undesirable is the ellipsis necessary.
+
 		
