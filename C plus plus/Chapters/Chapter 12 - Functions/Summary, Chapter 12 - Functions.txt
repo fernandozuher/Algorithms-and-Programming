@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 21 June 2020
+Date: 22 June 2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary*, Chapter 12 - Functions
 Pages: 305 - 3
@@ -191,6 +191,52 @@ Pages: 305 - 3
 
 12.2 Argument Passing
 
+	The semantics of argument passing are identical to the semantics of initialization (copy initialization, to be precise; §16.2.6). In particular, the type of an actual argument is checked against the type of the corresponding formal argument, and all standard and user-defined type conversions are performed. Unless a formal argument (parameter) is a reference, a copy of the actual argument is passed to the function.
+
 	12.2.1 Reference Arguments
+
+		Consider:
+			void f(int val, int& ref)
+			{
+				++val;
+				++ref;
+			}
+		When f() is called, ++val increments a local copy of the first actual argument, whereas ++ref
+		increments the second actual argument. Consider:		
+			void g()
+			{
+				int i = 1;
+				int j = 1;
+				f(i,j);
+			}
+		The call f(i,j) will increment j but not i. The first argument, i , is passed by value; the second argument, j, is passed by reference. As mentioned in §7.7, functions that modify call-by-reference arguments can make programs hard to read and should most often be avoided (but see §18.2.5). It can, however, be noticeably more efficient to pass a large object by reference than to pass it by value. In that case, the argument might be declared a const reference to indicate that the reference is used for efficiency reasons only and not to enable the called function to change the value of the object:
+			void f(const Large& arg)
+			{
+				// the value of ‘‘arg’’ cannot be changed
+				// (except by using explicit type conversion; §11.5)
+			}
+
+		The absence of const in the declaration of a reference argument is taken as a statement of intent to modify the variable:
+			void g(Large& arg); // assume that g() modifies arg
+
+		Similarly, declaring a pointer argument const tells readers that the value of an object pointed to by that argument is not changed by the function. For example:
+			
+			int strlen(const char∗); // number of characters in a C-style string
+			char∗ strcpy(char∗ to, const char∗ from); // copy a C-style string
+			int strcmp(const char∗, const char∗); // compare C-style strings
+		
+		The importance of using const arguments increases with the size of a program.
+
+		How do we choose among the ways of passing arguments? My rules of thumb are:
+			[1] Use pass-by-value for small objects.
+			[2] Use pass-by- const -reference to pass large values that you don’t need to modify.
+			[3] Return a result as a return value rather than modifying an object through an argument.
+			[4] Use rvalue references to implement move (§3.3.2, §17.5.2) and forwarding (§23.5.2.1).
+			[5] Pass a pointer if ‘‘no object’’ is a valid alternative (and represent ‘‘no object’’ by nullptr ).
+			[6] Use pass-by-reference only if you have to.
+		
+		The ‘‘when you have to’’ in the last rule of thumb refers to the observation that passing pointers is often a less obscure mechanism for dealing with objects that need modification (§7.7.1, §7.7.4) than using references.
+
+	12.2.2 Array Arguments
 
 		
