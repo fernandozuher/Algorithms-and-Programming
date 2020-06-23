@@ -1,10 +1,10 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 22 June 2020
+Date: 23 June 2020
 Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
 About: Summary*, Chapter 12 - Functions
-Pages: 305 - 3
+Pages: 305 - 341
 
 * Most of the text was drawn literally from the chapter.
 
@@ -31,7 +31,7 @@ Pages: 305 - 3
 		
 		In addition to specifying a name, a set of arguments, and a return type, a function declaration can contain a variety of specifiers and modifiers. In all we can have:
 			• The name of the function; required
-			• The argument list, which may be empty () ; required
+			• The argument list, which may be empty (); required
 			• The return type, which may be void and which may be prefix or suffix (using auto); required
 			• inline, indicating a desire to have function calls implemented by inlining the function body (§12.1.5)
 			• constexpr, indicating that it should be possible to evaluate the function at compile time if given constant expressions as arguments (§12.1.6)
@@ -353,4 +353,246 @@ Pages: 305 - 3
 
 		A well-designed program needs at most a few functions for which the argument types are not completely specified. Overloaded functions, functions using default arguments, functions taking initializer_list arguments, and variadic templates can be used to take care of type checking in most cases when one would otherwise consider leaving argument types unspecified. Only when both the number of arguments and the types of arguments vary and a variadic template solution is deemed undesirable is the ellipsis necessary.
 
+	12.2.5 Default Arguments
+
+		complex(double r ={}, double i ={}) :re{r}, im{i} {}
+
+		Default arguments may be provided for trailing arguments only. For example:
+			int f(int, int =0, char∗ =nullptr); // OK
+			int g(int =0, int =0, char∗); // error
+			int h(int =0, int, char∗ =nullptr); // error
+			
+	
+		Note that the space between the ∗ and the = is significant (∗= is an assignment operator; §10.3):
+			int nasty(char∗=nullptr); // syntax error
+
+12.3 Overloaded Functions
+
+	Most often, it is a good idea to give different functions different names, but when different functions conceptually perform the same task on objects of different types, it can be more convenient to give them the same name. Using the same name for operations on different types is called overloading. The technique is already used for the basic operations in C++. That is, there is only one name for addition, + , yet it can be used to add values of integer and floating-point types and combinations of such types. This idea is easily extended to functions defined by the programmer. For example:
+		void print(int); // print an int
+		void print(const char∗); // print a C-style string
+
+	As far as the compiler is concerned, the only thing functions of the same name have in common is that name. Presumably, the functions are in some sense similar, but the language does not constrain or aid the programmer. Thus, overloaded function names are primarily a notational convenience. This convenience is significant for functions with conventional names such as sqrt, print, and open. When a name is semantically significant, this convenience becomes essential. This happens, for example, with operators such as + , ∗ , and << , in the case of constructors (§16.2.5, §17.1), and in generic programming (§4.5, Chapter 32).
+	
+	Templates provide a systematic way of defining sets of overloaded functions (§23.5).
+
+	12.3.1 Automatic Overload Resolution
+
+		When a function fct is called, the compiler must determine which of the functions named fct to invoke. This is done by comparing the types of the actual arguments with the types of the parameters of all functions in scope called fct . The idea is to invoke the function that is the best match to the arguments and give a compile-time error if no function is the best match. For example:
+
+			void print(double);
+			void print(long);
+
+			void f()
+			{
+				print(1L); // print(long)
+				print(1.0); // print(double)
+				print(1); // error, ambiguous: print(long(1)) or print(double(1))?
+			}
+
+12.5 Pointer to Function
+	Like a (data) object, the code generated for a function body is placed in memory somewhere, so it has an address. We can have a pointer to a function just as we can have a pointer to an object. However, for a variety of reasons – some related to machine architecture and others to system design – a pointer to function does not allow the code to be modified. There are only two things one can do to a function: call it and take its address. The pointer obtained by taking the address of a function can then be used to call the function. For example:
+	
+		void error(string s) { /* ... */ }
+
+		void (∗efct)(string); // pointer to function taking a string argument and returning nothing
 		
+		void f()
+		{
+			efct = &error; // efct points to error
+			efct("error"); // call error through efct
+		}
+
+	The compiler will discover that efct is a pointer and call the function pointed to. That is, dereferencing a pointer to function using ∗ is optional. Similarly, using & to get the address of a function is optional:
+		
+		void (∗f1)(string) = &error; // OK: same as = error
+		void (∗f2)(string) = error; // OK: same as = &error
+		
+		void g()
+		{
+			f1("Vasa"); // OK: same as (*f1)("Vasa")
+			(∗f1)("Mary Rose"); // OK: as f1("Mary Rose")
+		}
+		
+	Pointers to functions have argument types declared just like the functions themselves. In pointer assignments, the complete function type must match exactly.
+
+	Pointers to functions provide a way of parameterizing algorithms. Because C does not have function objects (§3.4.3) or lambda expressions (§11.4), pointers to functions are widely used as function arguments in C-style code. For example, we can provide the comparison operation needed by a sorting function as a pointer to function:
+
+		using CFT = int(const void∗, const void∗);
+
+		void ssort(void∗ base, siz e_t n, size_t sz, CFT cmp)
+		/*
+			Sort the "n" elements of vector "base" into increasing order
+			using the comparison function pointed to by "cmp".
+			The elements are of size "sz".
+
+			Shell sort (Knuth, Vol3, pg84)
+		*/
+		{ ... }
+
+	The ssort() routine does not know the type of the objects it sorts, only the number of elements (the array size), the size of each element, and the function to call to perform a comparison. The type of ssort() was chosen to be the same as the type of the standard C library sort routine, qsort(). Real programs use qsort(), the C++ standard-library algorithm sort (§32.6), or a specialized sort routine. This style of code is common in C, but it is not the most elegant way of expressing this algorithm in C++ (see §23.5, §25.3.4.1).
+
+12.6 Macros
+
+	Macros are very important in C but have far fewer uses in C++. The first rule about macros is: don’t use them unless you have to. Almost ev ery macro demonstrates a flaw in the programming language, in the program, or in the programmer. Because they rearrange the program text before the compiler proper sees it, macros are also a major problem for many programming support tools. So when you use macros, you should expect inferior service from tools such as debuggers, cross-reference tools, and profilers. If you must use macros, please read the reference manual for your own implementation of the C++ preprocessor carefully and try not to be too clever. Also, to warn readers, follow the convention to name macros using lots of capital letters. The syntax of macros is presented in §iso.16.3.
+
+	I recommend using macros only for conditional compilation (§12.6.1) and in particular for include guards (§15.3.3).
+
+	A simple macro is defined like this:
+	
+		#define NAME rest of line
+
+	Where NAME is encountered as a token, it is replaced by rest of line . For example:
+		named = NAME
+	will expand into
+		named = rest of line
+
+	Macro names cannot be overloaded, and the macro preprocessor cannot handle recursive calls:
+		#define PRINT(a,b) cout<<(a)<<(b)
+		#define PRINT(a,b,c) cout<<(a)<<(b)<<(c) /* trouble?: redefines, does not overload */
+		
+		#define FAC(n) (n>1)?n∗FA C(n−1):1 /* trouble: recursive macro */
+
+	Macros manipulate character strings and know little about C++ syntax and nothing about C++ types or scope rules. Only the expanded form of a macro is seen by the compiler, so an error in a macro will be reported when the macro is expanded, not when it is defined. This leads to very obscure error messages.
+	
+	Here are some plausible macros:
+		#define CASE break;case
+		#define FOREVER for(;;)
+		
+	Here are some completely unnecessary macros:
+		#define PI 3.141593
+		#define BEGIN {
+		#define END }
+	
+	Here are some dangerous macros:
+		#define SQUARE(a) a∗a
+		#define INCR_xx (xx)++
+	
+	To see why they are dangerous, try expanding this:
+		int xx = 0; // global counter
+		void f(int xx)
+		{
+			int y = SQUARE(xx+2); // y=xx+2*xx+2; that is, y=xx+(2*xx)+2
+			INCR_xx; // increments argument xx (not the global xx)
+		}
+	
+	If you must use a macro, use the scope resolution operator, :: , when referring to global names (§6.3.4) and enclose occurrences of a macro argument name in parentheses whenever possible. For example:
+		#define MIN(a,b) (((a)<(b))?(a):(b))
+
+	This handles the simpler syntax problems (which are often caught by compilers), but not the problems with side effects. For example:
+		int x = 1;
+		int y = 10;
+		int z = MIN(x++,y++); // x becomes 3; y becomes 11
+	
+	If you must write macros complicated enough to require comments, it is wise to use /∗ ∗/ comments because old C preprocessors that do not know about // comments are sometimes used as part of C++ tools. For example:
+	
+		#define M2(a) something(a) /* thoughtful comment */
+
+	Using macros, you can design your own private language. Even if you prefer this ‘‘enhanced language’’ to plain C++, it will be incomprehensible to most C++ programmers. Furthermore, the pre-processor is a very simple-minded macro processor. When you try to do something nontrivial, you are likely to find it either impossible or unnecessarily hard to do. The auto, constexpr, const, 	decltype, enum, inline, lambda expressions, namespace, and template mechanisms can be used as better-behaved alternatives to many traditional uses of preprocessor constructs.
+
+	When writing a macro, it is not unusual to need a new name for something. A string can be created by concatenating two strings using the ## macro operator. For example:
+		#define NAME2(a,b) a##b
+	
+		int NAME2(hack,cah)();
+	will produce
+		int hackcah();
+
+	A single # before a parameter name in a replacement string means a string containing the macro argument. For example:
+		#define printx(x) cout << #x " = " << x << '\n';
+		
+		int a = 7;
+		string str = "asdf";
+
+		void f()
+		{
+			printx(a); // cout << "a" << " = " << a << '\n';
+			printx(str); // cout << "str" << " = " << str << '\n';
+		}
+		
+	Writing #x " = " rather than #x << " = " is obscure ‘‘clever code’’ rather than an error. Adjacent string literals are concatenated (§7.3.2).
+
+	The directive 
+		#undef X
+	
+	ensures that no macro called X is defined – whether or not one was before the directive. This affords some protection against undesired macros. However, it is not always easy to know what the effects of X on a piece of code were supposed to be.
+
+	Macros can even be variadic. For example:
+		#define err_print(...) fprintf(stderr,"error: %s %d\n", __VA_ARGS__)
+		err_print("The answer",54);
+
+	The ellipsis (...) means that __VA_ARGS__ represents the arguments actually passed as a string, so the output is:
+		error: The answer 54
+
+	12.6.1 Conditional Compilation
+		
+		One use of macros is almost impossible to avoid. The directive
+		
+			#ifdef IDENTIFIER
+		
+		does nothing if IDENTIFIER is (NOT, ERROR OF THE BOOK) defined, but if it is not (IT IS, ERROR), the directive causes all input to be ignored until a #endif directive is seen. For example:
+			int f(int a
+			#ifdef arg_two
+			,int b
+			#endif
+			);
+		
+		Unless a macro called arg_two has been #define d, this produces:
+			int f(int a
+			);
+		
+		This example confuses tools that assume sane behavior from the programmer.
+
+		Most uses of #ifdef are less bizarre, and when used with restraint, #ifdef and its complement #ifndef do little harm. See also §15.3.3.
+
+		Names of the macros used to control #ifdef should be chosen carefully so that they don’t clash with ordinary identifiers. For example:
+
+		struct Call_info {
+			Node∗ arg_one;
+			Node∗ arg_two;
+			// ...
+		};
+		
+		This innocent-looking source text will cause some confusion should someone write:
+			#define arg_two x
+		
+		Unfortunately, common and unavoidable headers contain many dangerous and unnecessary macros.
+
+	12.6.2 Predefined Macros
+
+		A few macros are predefined by the compiler (§iso.16.8, §iso.8.4.1):
+
+			• __cplusplus : defined in a C++ compilation (and not in a C compilation). Its value is 201103L in a C++11 program; previous C++ standards have lower values.
+			• __DATE__ : date in ‘‘yyyy:mm:dd’’ format.
+			• __TIME__ : time in ‘‘hh:mm:ss’’ format.
+			• __FILE__ : name of current source file.
+			• __LINE__ : source line number within the current source file.
+			• __FUNC__ : an implementation-defined C-style string naming the current function.
+			• __STDC_HOSTED__ : 1 if the implementation is hosted (§6.1.1); otherwise 0.
+
+		predefined_macros.cpp
+
+12.7 Advice
+
+	[1] ‘‘Package’’ meaningful operations as carefully named functions; §12.1.
+	[2] A function should perform a single logical operation; §12.1.
+	[3] Keep functions short; §12.1.
+	[4] Don’t return pointers or references to local variables; §12.1.4.
+	[5] If a function may have to be evaluated at compile time, declare it constexpr; §12.1.6.
+	[6] If a function cannot return, mark it [[noreturn]]; §12.1.7.
+	[7] Use pass-by-value for small objects; §12.2.1.
+	[8] Use pass-by- const -reference to pass large values that you don’t need to modify; §12.2.1.
+	[9] Return a result as a return value rather than modifying an object through an argument; §12.2.1.
+	[10] Use rvalue references to implement move and forwarding; §12.2.1.
+	[11] Pass a pointer if ‘‘no object’’ is a valid alternative (and represent ‘‘no object’’ by nullptr); §12.2.1.
+	[12] Use pass-by-non-const-reference only if you have to; §12.2.1.
+	[13] Use const extensively and consistently; §12.2.1.
+	[14] Assume that a char∗ or a const char∗ argument points to a C-style string; §12.2.2.
+	[15] Avoid passing arrays as pointers; §12.2.2.
+	[16] Pass a homogeneous list of unknown length as an initializer_list<T> (or as some other container); §12.2.3.
+	[17] Avoid unspecified numbers of arguments ( ... ); §12.2.4.
+	[18] Use overloading when functions perform conceptually the same task on different types; §12.3.
+	[19] When overloading on integers, provide functions to eliminate common ambiguities; §12.3.5.
+	[20] Specify preconditions and postconditions for your functions; §12.4.
+	[21] Prefer function objects (including lambdas) and virtual functions to pointers to functions; §12.5.
+	[22] Avoid macros; §12.6.
+	[23] If you must use macros, use ugly names with lots of capital letters; §12.6.
