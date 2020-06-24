@@ -1,0 +1,92 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 23 June 2020
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
+About: Summary*, APPENDIX B - Standard Library
+
+* Most of the text was drawn literally from the chapter.
+
+PAGES 241 - 
+PDF 255 - 
+
+*/
+
+The standard library is not part of the C language proper, but an environment that supports standard C will provide the function declarations and type and macro definitions of this library. We have omitted a few functions that are of limited utility or easily synthesized from others; we have omitted multi-byte characters; and we have omitted discussion of locale issues, that is, properties that depend on local language, nationality, or culture.
+
+The functions, types and macros of the standard library are declared in standard headers:
+<assert.h> <float.h> <math.h> <stdarg.h> <stdlib.h>
+<ctype.h> <limits.h> <setjmp.h> <stddef.h> <string.h>
+<errno.h> <locale.h> <signal.h> <stdio.h> <time.h>
+
+A header can be accessed by
+	#include <header>
+
+Headers may be included in any order and any number of times. A header must be included outside of any external declaration or definition and before any use of anything it declares. A header need not be a source file.
+
+External identifiers that begin with an underscore are reserved for use by the library, as are all other identifiers that begin with an underscore and an upper-case letter or another underscore.
+
+B1. Input and Output: <stdio.h>
+	The input and output functions, types, and macros defined in <stdio.h> represent nearly one third of the library.
+
+	A stream is a source or destination of data that may be associated with a disk or other peripheral. The library supports text streams and binary streams, although on some systems, notably UNIX, these are identical. A text stream is a sequence of lines; each line has zero or more characters and is terminated by '\n'.
+
+	A binary stream is a sequence of unprocessed bytes that record internal data, with the property that if it is written, then read back on the same system, it will compare equal.
+
+	A stream is connected to a file or device by opening it; the connection is broken by closing the stream. Opening a file returns a pointer to an object of type FILE, which records whatever information is necessary to control the stream. We will use "file pointer" and "stream" interchangeably when there is no ambiguity.
+
+	When a program begins execution, the three streams stdin, stdout, and stderr are already open.
+
+	B1.1 File Operations
+		
+		The following functions deal with operations on files. The type size_t is the unsigned integral type produced by the sizeof operator.
+
+		FILE *fopen(const char *filename, const char *mode)
+			Filenames are limited to FILENAME_MAX characters. At most FOPEN_MAX files may be open at once.
+
+		FILE *freopen(const char *filename, const char *mode, FILE *stream)
+
+		int fflush(FILE *stream)
+			fflush(NULL)
+
+		int fclose(FILE *stream)
+
+		int remove(const char *filename)
+
+		int rename(const char *oldname, const char *newname)
+
+		FILE *tmpfile(void)
+
+		char *tmpnam(char s[L_tmpnam])
+			tmpnam(NULL), L_tmpnam, TMP_MAX
+
+		int setvbuf(FILE *stream, char *buf, int mode, size_t size)
+			modes:
+				_IOFBF: full buffering,
+				_IOLBF: line buffering of text files,
+				_IONBF: no buffering.
+			If buf is not NULL, it will be used as the buffer; otherwise a buffer will be allocated.
+
+		void setbuf(FILE *stream, char *buf)
+		
+	B1.2 Formatted Output
+
+		The printf functions provide formatted output conversion.
+		
+		int fprintf(FILE *stream, const char *format, ...)
+
+		%p: void *; print as a pointer (implementation-dependent representation).
+		%n: int *; the number of characters written so far by this call to printf is written into the argument. No argument is converted.
+
+		int printf(const char *format, ...)
+			printf(...) is equivalent to fprintf(stdout, ...)
+
+		int sprintf(char *s, const char *format, ...)
+
+		vprintf(const char *format, va_list arg)
+		vfprintf(FILE *stream, const char *format, va_list arg)
+		vsprintf(char *s, const char *format, va_list arg)
+
+	B1.3 Formatted Input
+
+		
