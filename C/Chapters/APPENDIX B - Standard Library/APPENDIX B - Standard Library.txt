@@ -267,4 +267,117 @@ B4. Mathematical Functions: <math.h>
 		modf(x, double *ip)
 		fmod(x, y)
 
+B5. Utility Functions: <stdlib.h>
+
+	The header <stdlib.h> declares functions for number conversion, storage allocation, and similar tasks.
+
+	double atof(const char *s)
+		
+	int atoi(const char *s)
+		
+	long atol(const char *s)
+
+	double strtod(const char *s, char **endp)
+
+	long strtol(const char *s, char **endp, int base)
+
+	unsigned long strtoul(const char *s, char **endp, int base)
+
+	int rand(void)
+		rand returns a pseudo-random integer in the range 0 to RAND_MAX, which is at least 32767.
+
+	void srand(unsigned int seed)
+		srand uses seed as the seed for a new sequence of pseudo-random numbers. The initial seed is 1.
+
+	void *calloc(size_t nobj, size_t size)
+		The space is initialized to zero bytes.
+
+	void *malloc(size_t size)
+		The space is uninitialized.
+
+	void *realloc(void *p, size_t size)
+
+	void free(void *p)
+		p must be a pointer to space previouslyallocated by calloc, malloc, or realloc.
+
+	void abort(void)
+		abort causes the program to terminate abnormally, as if by raise (SIGABRT).
+
+	void exit(int status)
+		exit causes normal program termination. atexi t functions are called in reverse order of registration, open files are flushed, open streams are closed, and control is returned to the environment. How status is returned to the environment is implementation-dependent, but zero is taken as successful termination. The values EXIT_SUCCESS and EXIT_FAILURE may also be used.
+
+	int atexit(void (*fcn)(void))
+		atexit registers the function fcn to be called when the program terminates normally; it returns non-zero if the registration    cannot be made.
+
+			void teste() { printf("\nsaindo...\n"); }
+			main() { atexit(teste); }
+
+	int system(const char *s)
+		system passes the string s to the environmentfor execution. If s is NULL, system returns non-zero if there is a command processor. If s is not NULL, the return value is implementation-dependent.
+
+		system("sudo reboot");
+		system("ls");
+		...
+
+	char *getenv(const char *name)
+
+	void *bsearch(const void *key, const void *base, size_t n, size_t size, int (*cmp) (const void *keyval, const void *datum))
+
+		bsearch searches base[0]...base[n-1] for an item that matches *key. The function cmp must return negative if its first argument (the search key) is less than its second (a table entry), zero if equal, and positive if greater. Items in the array base must be in ascending order. bsearch returns a pointer to a matching item, or NULL if none exists.
+
+	void qsort(void *base, size_t n, size_t size, int (*cmp) (const void *, const void *))
+		qsort sorts into ascending order an array base[0]...base[n-1] of objects of size "size". The comparison function cmp is as in bsearch.
+
+	int abs(int n)
+		There is the fabs(double n) from math.h.
+
+	long labs(long n)
+
+	div_t div(int num, int denom)
+		div computes the quotient and remainder of num/denom. The results are stored in the int members quot and rem of a structure of type div_t.
+
+			div_t temp = div(7, 3);
+			printf("\n7 / 3 = %d, resto %d\n", temp.quot, temp.rem);
+
+	ldiv_t ldiv(long num, long denom)
+
+
+B6. Diagnostics: <assert.h>
+
+	The assert macro is used to add diagnosticsto programs:
+		void assert (int expression)
+
+	If expression is zero when
+		assert(expression)
 	
+	is executed, the assert macro will print on stderr a message, such as	
+		Assertion failed: expression, file filename, line nnn
+	
+	It then calls abort to terminate execution. The source filenameand line number come from the preprocessor macros __FILE__ and __LINE__.
+		
+	If NDEBUG is defined at the time <assert.h> is included, the assert macro is ignored.
+
+	assert(7==3);
+
+B7. Variable Argument Lists: <stdarg.h>
+
+	The headet <stdarg.h> provides facilities for stepping through a list of function arguments of unknown number and type.
+	
+	Suppose lastarg is the last named parameter of a function f with a variable number of arguments. Then declare within f a variable ap of type va_list that will point to each argument in turn:
+		
+		va_list ap;
+
+	ap must be initialized once with the macro va_start before any unnamed argument is accessed:
+		
+		va_start(va_list ap, lastarg);
+
+	Thereafter, each execution of the macro va_arg will produce a value that has the type and value of the next unnamed argument, and will also modify ap so the next use of va_arg returns the next argument:
+
+		type va_arg(va_list ap, type);
+
+	The macro
+
+		void va_end(va_list ap);
+	
+	must be called once after the arguments have been processed but before f is exited.
+
