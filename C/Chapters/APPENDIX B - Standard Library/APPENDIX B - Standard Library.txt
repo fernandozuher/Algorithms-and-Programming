@@ -381,3 +381,59 @@ B7. Variable Argument Lists: <stdarg.h>
 	
 	must be called once after the arguments have been processed but before f is exited.
 
+B8. Non-local Jumps: <setjmp.h>
+
+	The declarations in <setjmp. h> provide a way to avoid the normal function call and return sequence, typically to permit an immediate return from a deeply nested function call.
+
+	int setjmp(jmp_buf env)
+
+	void longjmp(jmp_buf env, int val)
+
+B9. Signals: <signal.h>
+
+	The header <signal.h> provides facilities for handling exceptional conditions that arise during execution, such as an interrupt signal from an external source or an error in execution.
+
+	void (*signal(int sig, void (*handler)(int)))(int)
+
+	int raise(int sig)
+
+B10. Date and Time Functions: <time.h>
+
+	The header <time. h> declares types and functions for manipulating date and time. Some functions process local time, which may differ from calendar time, for example because of time zone. clock_t and time_t are arithmetic types representing times, and struct tm holds the components of a calendar time:
+
+		...
+
+	clock_t clock(void)
+		clock returns the processor time used by the program since the beginning of execution, or -1 if unavailable. clock()/CLOCKS_PER_SEC is a time in seconds.
+
+	time_t time(time_t *tp)
+		time returns the current calendar time or -1 if the time is not available. If tp is not NULL,the return value is also assigned to *tp.
+
+	double difftime(time_t time2, time_t time1)
+		difftime returns time2-time1 expressed in seconds.
+
+	time_t mktime(struct tm *tp)
+		mktime converts the local time in the structure *tp into calendar time in the same representation used by time. The components will have values in the ranges shown. mktime returns the calendar time or -1 if it cannot be represented.
+
+	The next four functions return pointers to static objects that may be overwritten by other calls.
+
+	char *asctime(const struct tm *tp)
+
+	char *ctime(const time_t *tp)
+
+	struct tm *gmtime(const time_t *tp)
+
+	struct tm *localtime(const time_t *tp)
+
+	size_t strftime(char *s, size_t smax, const char *fmt, const struct tm *tp)
+
+B11. Implementation-defined Limits: <limits.h> and <float.h>
+
+	The header <1imits.h> defines constants for the sizes of integral types. The values below are acceptable minimum magnitudes; larger values may be used.
+
+	The names in the table below, a subset of <float.h>, are constants related to floating-point arithmetic. When a value is given, it represents the minimum magnitude for the corresponding quantity. Each implementation defines appropriate values.
+
+	
+
+
+
