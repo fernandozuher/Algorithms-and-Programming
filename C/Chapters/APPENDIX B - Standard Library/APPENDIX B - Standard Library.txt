@@ -238,4 +238,33 @@ B3. String Functions: <string.h>
 		void *memchr(cs,c,n)
 		void *memset(s,c,n)
 
+B4. Mathematical Functions: <math.h>
+
+	The header <math.h> declares mathematical functions and macros.
+	The macros EDOM and ERANGE (found in <errno.h>) are non-zero integral constants that are used to signal domain and range errors for the functions; HUGE_VAL is a positive double value. A domain error occurs if an argument is outside the domain over which the function is defined. On a domain error, errno is set to EDOM; the return value is implementation-dependent. A range error occurs if the result of the function cannot be represented as a double. If the result overflows, the function returns HUGE_VAL with the right sign, and errno is set to ERANGE. If the result underflows, the function returns zero; whether errno is set to ERANGE is implementation-defined.
+
+	In the following table, x and y are of type double, n is an int, and all functions return double. Angles for trigonometric functions are expressed in radians.
+		sin(x)
+		cos(x)
+		tan(x)
+		asin(x)
+		acos(x)
+		atan(x)
+		atan2(y, x)
+		sinh(x)
+		cosh(x)
+		tanh(x)
+		exp(x)
+		log(x)
+		log10(x)
+		pow(x,y)
+		sqrt(x)
+		ceil(x)
+		floor(x)
+		fabs(x)
+		ldexp(x,n)
+		frexp(x, int *exp)
+		modf(x, double *ip)
+		fmod(x, y)
+
 	
