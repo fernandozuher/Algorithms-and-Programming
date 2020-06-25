@@ -7,8 +7,8 @@ About: Summary*, APPENDIX B - Standard Library
 
 * Most of the text was drawn literally from the chapter.
 
-PAGES 241 - 
-PDF 255 - 
+PAGES 241 - 258
+PDF 255 - 272
 
 */
 
@@ -432,8 +432,3 @@ B11. Implementation-defined Limits: <limits.h> and <float.h>
 	The header <1imits.h> defines constants for the sizes of integral types. The values below are acceptable minimum magnitudes; larger values may be used.
 
 	The names in the table below, a subset of <float.h>, are constants related to floating-point arithmetic. When a value is given, it represents the minimum magnitude for the corresponding quantity. Each implementation defines appropriate values.
-
-	
-
-
-
