@@ -1,0 +1,35 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 25 June 2020
+Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
+About: Summary*, APPENDIX C - Summary of Changes
+
+* Most of the text was drawn literally from the chapter.
+
+PAGES 259 - 261
+PDF 273 - 275
+
+*/
+
+Adjacent string literals are concatenated.
+
+The Standard places explicit minima on the ranges of the arithmetic types, and mandates headers (<limits.h> and <float.h>) giving the characteristics of each particular implementation.
+
+The Standard adopts from C++ the notion of type qualifier, for example const (§A8.2).
+	Interesting!
+
+A unary + operator is introduced for symmetry with unary -.
+
+A pointer to a function may be used as a function designator without an explicit * operator. See IA7.3.2.
+
+The sizeof operator, in the first edition, yielded type int; subsequently, many implementations made it unsigned. The Standard makes its type explicitly implementation-dependent, but requires the type, size_t, to be defined in a standard header (<stddef.h>). A similar change occurs in the
+type (ptrdiff_t) of the difference between pointers. See §A7.4.8 and §A7.7.
+
+The address-of operator &. may not be applied to an object declared register, even if the implementation chooses not to keep the object in a register.
+
+The Standard legalizes the creation of a pointer just beyond the end of an array, and allows arithmetic and relations on it; see §A7.7.
+
+The Standard introduces (borrowing from C++) the notion of a function prototype declaration that incorporates the types of the parameters, and includes an explicit recognition of variadic functions together with an approved way of dealing with them. See §§A7.3.2, A8.6.3, B7. The older style is still accepted, with restrictions.
+
+The controlling expression, and the case labels, of a switch may have any integral type.
