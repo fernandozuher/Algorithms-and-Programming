@@ -1,7 +1,7 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 23 June 2020
+Date: 24 June 2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE.
 About: Summary*, APPENDIX B - Standard Library
 
@@ -202,3 +202,40 @@ B2. Character Class Tests: <ctype.h>
 
 	If c is an upper-case letter, tolower(c) returns the corresponding lower-case letter; otherwise it returns c. If c is a lower-case letter, toupper(c) returns the corresponding upper-case letter; otherwise it returns c.
 
+B3. String Functions: <string.h>
+
+	There are two groups of string functions defined in the header <string.h>. The first have names beginning with str; the second have names beginning with mem.
+
+	In the followingtable, variables sand t are of type char *; cs and ct are of type const char *; n is of type size_t; and c is an int converted to char.
+		char *strcpy(s,ct)
+		char *strncpy(s,ct,n)
+
+		char *strcat(s,ct)
+		char *strncat(s,ct,n)
+
+		int strcmp(cs,ct)
+		int strncmp(cs,ct,n)
+
+		char *strchr(cs,c)
+		char *strrchr(cs,c)
+
+		size_t strspn(cs,ct)
+		size_t strcspn(cs,ct)
+
+		char *strpbrk(cs,ct)
+		char *strstr(cs,ct)
+
+		size_t strlen(cs)
+		char *strerror(n)
+		char *strtok(s,ct)
+
+	The mem... functions are meant for manipulating objects as character arrays; the intent is an interface to efficient routines. In the following table, sand t are of type void *; cs and ct are of type const void *; n is of type size_ t; and c is an int converted to an unsigned char.
+		void *memcpy(s,ct,n)
+		void *memmove(s,ct,n)
+
+		int memcmp(cs,ct,n)
+		
+		void *memchr(cs,c,n)
+		void *memset(s,c,n)
+
+	
