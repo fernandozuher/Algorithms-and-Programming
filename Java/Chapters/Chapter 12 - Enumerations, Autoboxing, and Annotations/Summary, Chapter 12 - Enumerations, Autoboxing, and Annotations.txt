@@ -1,0 +1,11 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 26 June 2020
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary*, Chapter 12 - Enumerations, Autoboxing, and Annotations
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
