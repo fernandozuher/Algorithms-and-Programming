@@ -205,4 +205,66 @@ Autoboxing
 
 Annotations
 
-	
+	Java provides a feature that enables you to embed supplemental information into a source file. This information, called an annotation, does not change the actions of a program. Thus, an annotation leaves the semantics of a program unchanged. However, this information can be used by various tools during both development and deployment. For example, an annotation might be processed by a source-code generator. The term metadata is also used to refer to this feature, but the term annotation is the most descriptive and more commonly used.
+
+	Annotation Basics
+
+		An annotation is created through a mechanism based on the interface. Let’s begin with an example. Here is the declaration for an annotation called MyAnno:
+			// A simple annotation type.
+			@interface MyAnno {
+				String str();
+				int val();
+			}
+
+		First, notice the @ that precedes the keyword interface. This tells the compiler that an annotation type is being declared. Next, notice the two members str() and val(). All annotations consist solely of method declarations. However, you don’t provide bodies for these methods. Instead, Java implements these methods. Moreover, the methods act much like fields, as you will see.
+
+		An annotation cannot include an extends clause. However, all annotation types automatically extend the Annotation interface. Thus, Annotation is a super-interface of all annotations. It is declared within the java.lang.annotation package. It overrides hashCode(), equals(), and toString(), which are defined by Object. It also specifies annotationType(), which returns a Class object that represents the invoking annotation.
+
+		Any type of declaration can have an annotation associated with it. For example, classes, methods, fields, parameters, and enum constants can be annotated. Even an annotation can be annotated. In all cases, the annotation precedes the rest of the declaration.
+
+		When you apply an annotation, you give values to its members. For example, here is an example of MyAnno being applied to a method declaration:
+			// Annotate a method.
+			@MyAnno(str = "Annotation Example", val = 100)
+			public static void myMeth() { // ...
+
+		This annotation is linked with the method myMeth(). Look closely at the annotation syntax. The name of the annotation, preceded by an @, is followed by a parenthesized list of member initializations. To give a member a value, that member’s name is assigned a value. Therefore, in the example, the string "Annotation Example" is assigned to the str member of MyAnno. Notice that no parentheses follow str in this assignment. When an annotation member is given a value, only its name is used. Thus, annotation members look like fields in this context.
+
+	Specifying a Retention Policy
+
+		Before exploring annotations further, it is necessary to discuss annotation retention policies. A retention policy determines at what point an annotation is discarded. Java defines three such policies, which are encapsulated within the java.lang.annotation.RetentionPolicy enumeration. They are SOURCE, CLASS, and RUNTIME.
+		
+		An annotation with a retention policy of SOURCE is retained only in the source file and is discarded during compilation.
+
+		An annotation with a retention policy of CLASS is stored in the .class file during compilation. However, it is not available through the JVM during run time.
+
+		An annotation with a retention policy of RUNTIME is stored in the .class file during compilation and is available through the JVM during run time. Thus, RUNTIME retention offers the greatest annotation persistence.
+
+		NOTE: An annotation on a local variable declaration is not retained in the .class file.
+
+		A retention policy is specified for an annotation by using one of Java’s built-in annotations: @Retention. Its general form is shown here:
+			@Retention(retention-policy)
+
+		Here, retention-policy must be one of the previously discussed enumeration constants. If no retention policy is specified for an annotation, then the default policy of CLASS is used.
+
+		The following version of MyAnno uses @Retention to specify the RUNTIME retention policy. Thus, MyAnno will be available to the JVM during program execution.
+
+			@Retention(RetentionPolicy.RUNTIME)
+			@interface MyAnno {
+				String str();
+				int val();
+			}
+
+	Obtaining Annotations at Run Time by Use of Reflection
+
+		Although annotations are designed mostly for use by other development or deployment tools, if they specify a retention policy of RUNTIME, then they can be queried at run time by any Java program through the use of reflection. Reflection is the feature that enables information about a class to be obtained at run time. The reflection API is contained in the java.lang.reflect package. There are a number of ways to use reflection, and we won’t examine them all here. We will, however, walk through a few examples that apply to annotations.
+		
+		The first step to using reflection is to obtain a Class object that represents the class whose annotations you want to obtain. Class is one of Java’s built-in classes and is defined in java.lang. It is described in detail in Part II. There are various ways to obtain a Class object. One of the easiest is to call getClass(), which is a method defined by Object. Its general form is shown here:
+			final Class<?> getClass( )
+		
+		It returns the Class object that represents the invoking object.
+
+		NOTE: Notice the <?> that follows Class in the declaration of getClass() just shown. This is related to Java’s generics feature. getClass() and several other reflection-related methods discussed in this chapter make use of generics. Generics are described in Chapter 14. However, an understanding of generics is not needed to grasp the fundamental principles of reflection.
+
+		...
+
+		and continue. All the content is pretty particular to be rememberd. So when it is need to use it, read th ebook section about Annotation.
