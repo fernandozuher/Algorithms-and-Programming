@@ -1,11 +1,207 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 26 June 2020
+Date: 27 June 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
 About: Summary*, Chapter 12 - Enumerations, Autoboxing, and Annotations
 
 * Most of the text was drawn literally from the chapter.
 
+Pages 446 - 502
+
 */
+
+This chapter examines three features that were not originally part of Java, but over time each has become a near indispensable aspect of Java programming: enumerations, autoboxing, and annotations. Originally added by JDK 5, each is a feature upon which Java programmers have come to rely because each offers a streamlined approach to handling common programming tasks. This chapter also discusses Java’s type wrappers and introduces reflection.
+
+Although Java enumerations might, at first glance, appear similar to enumerations in other languages, this similarity may be only skin deep because, in Java, an enumeration defines a class type. By making enumerations into classes, the capabilities of the enumeration are greatly expanded. For example, in Java, an enumeration can have constructors, methods, and instance variables. Because of their power and flexibility, enumerations are widely used throughout the Java API library.
+
+Enumeration Fundamentals
+
+	An enumeration is created using the enum keyword.
+		enum Apple {
+			Jonathan, GoldenDel, RedDel, Winesap, Cortland
+		}
+
+
+
+	The identifiers Jonathan, GoldenDel, and so on, are called enumeration constants. Each is implicitly declared as a public, static final member of Apple. Furthermore, their type is the type of the enumeration in which they are declared, which is Apple in this case. Thus, in the language of Java, these constants are called self-typed, in which “self” refers to the enclosing enumeration.
+
+	However, even though enumerations define a class type, you do not instantiate an enum using new. Instead, you declare and use an enumeration variable in much the same way as you do one of the primitive types. For example, this declares ap as a variable of enumeration type Apple: 
+		
+		Apple ap;
+		ap = Apple.RedDel;
+
+	An enumeration value can also be used to control a switch statement. Of course, all of the case statements must use constants from the same enum as that used by the switch expression.
+
+	Notice that in the case statements, the names of the enumeration constants are used without being qualified by their enumeration type name. That is, Winesap, not Apple.Winesap, is used. This is because the type of the enumeration in the switch expression has already implicitly specified the enum type of the case constants. There is no need to qualify the constants in the case statements with their enum type name. In fact, attempting to do so will cause a compilation error.
+
+	System.out.println(Apple.Winesap);
+		the name Winesap is displayed.
+
+	The values() and valueOf() Methods
+
+		All enumerations automatically contain two predefined methods: values() and valueOf(). Their general forms are shown here:
+			public static enum-type [] values()
+			public static enum-type valueOf(String str)
+				Apple.valueOf("Winesap") is Winesap.
+
+		The values() method returns an array that contains a list of the enumeration constants. The valueOf() method returns the enumeration constant whose value corresponds to the string passed in str.
+
+		EnumDemo2.java
+
+	Java Enumerations Are Class Types
+
+		Thus, when you define a constructor for an enum, the constructor is called when each enumeration constant is created. Also, each enumeration constant has its own copy of any instance variables defined by the enumeration.
+
+		EnumDemo3.java
+
+		Here are two restrictions that apply to enumerations. First, an enumeration can’t inherit another class. Second, an enum cannot be a superclass. This means that an enum can’t be extended. Otherwise, enum acts much like any other class type. The key is to remember that each of the enumeration constants is an object of the class in which it is defined.
+
+	Enumerations Inherit Enum
+	
+		Although you can’t inherit a superclass when declaring an enum, all enumerations automatically inherit one: java.lang.Enum. This class defines several methods that are available for use by all enumerations. The Enum class is described in detail in Part II, but three of its methods warrant a discussion at this time.
+			
+			final int ordinal()
+
+			final int compareTo(enum-type e)
+				Remember, both the invoking constant and e must be of the same enumeration.
+
+		You can compare for equality an enumeration constant with any other object by using equals(), which overrides the equals() method defined by Object. Although equals() can compare an enumeration constant to any other object, those two objects will be equal only if they both refer to the same constant, within the same enumeration. Simply having ordinal values in common will not cause equals() to return true if the two constants are from different enumerations.
+
+		Remember, you can compare two enumeration references for equality by using ==.
+
+		EnumDemo4.java
+
+Type Wrappers
+	
+	As you know, Java uses primitive types (also called simple types), such as int or double, to hold the basic data types supported by the language. Primitive types, rather than objects, are used for these quantities for the sake of performance. Using objects for these values would add an unacceptable overhead to even the simplest of calculations. Thus, the primitive types are not part of the object hierarchy, and they do not inherit Object.
+
+	Despite the performance benefit offered by the primitive types, there are times when you will need an object representation. For example, you can’t pass a primitive type by reference to a method. Also, many of the standard data structures implemented by Java operate on objects, which means that you can’t use these data structures to store primitive types. To handle these (and other) situations, Java provides type wrappers, which are classes that encapsulate a primitive type within an object. The type wrapper classes are described in detail in Part II, but they are introduced here because they relate directly to Java’s autoboxing feature.
+
+	The type wrappers are Double, Float, Long, Integer, Short, Byte, Character, and Boolean. These classes offer a wide array of methods that allow you to fully integrate the primitive types into Java’s object hierarchy. Each is briefly examined next.
+
+	Character
+
+		static Character valueOf(char ch)
+			It returns a Character object that wraps ch.
+
+		char charValue( )
+			It returns the encapsulated character.
+
+	Boolean
+
+		static Boolean valueOf(boolean boolValue)
+		static Boolean valueOf(String boolString) // "true" "false" upper/lower case allowed
+			Each returns a Boolean object that wraps the indicated value.
+
+		boolean booleanValue()
+			It returns the boolean equivalent of the invoking object.
+
+	The Numeric Type Wrappers
+		
+		By far, the most commonly used type wrappers are those that represent numeric values. These are Byte, Short, Integer, Long, Float, and Double. All of the numeric type wrappers inherit the abstract class Number. Number declares methods that return the value of an object in each of the different number formats. These methods are shown here:
+			byte byteValue()
+			double doubleValue()
+			float floatValue()
+			int intValue()
+			long longValue()
+			short shortValue()
+
+		The valueOf() method is a static member of all of the numeric wrapper classes and all numeric classes support forms that convert a numeric value or a string into an object. For example, here are two of the forms supported by Integer:
+			
+			static Integer valueOf(int val)
+			static Integer valueOf(String valStr) throws NumberFormatException
+
+		Here, val specifies an integer value and valStr specifies a string that represents a properly formatted numeric value in string form. Each returns an Integer object that wraps the specified value. Here is an example:
+			
+			Integer iOb = Integer.valueOf(100);
+
+		All of the type wrappers override toString(). It returns the human-readable form of the value contained within the wrapper. This allows you to output the value by passing a type wrapper object to println(), for example, without having to convert it into its primitive type.
+		
+		The following program demonstrates how to use a numeric type wrapper to encapsulate a value and then extract that value.
+
+			Wrap.java
+
+		The process of encapsulating a value within an object is called boxing. Thus, in the program, this line boxes the value 100 into an Integer:
+			
+			Integer iOb = Integer.valueOf(100);
+
+		The process of extracting a value from a type wrapper is called unboxing. For example, the program unboxes the value in iOb with this statement:
+			
+			int i = iOb.intValue();
+
+		The same general procedure used by the preceding program to box and unbox values has been available for use since the original version of Java. However, today, Java provides a more streamlined approach, which is described next.
+
+Autoboxing
+
+	Beginning with JDK 5, Java has included two important features: autoboxing and auto-unboxing. Autoboxing is the process by which a primitive type is automatically encapsulated (boxed) into its equivalent type wrapper whenever an object of that type is needed. There is no need to explicitly construct an object. Auto-unboxing is the process by which the value of a boxed object is automatically extracted (unboxed) from a type wrapper when its value is needed. There is no need to call a method such as intValue() or doubleValue().
+
+	Autoboxing and auto-unboxing greatly streamline the coding of several algorithms, removing the tedium of manually boxing and unboxing values. They also help prevent errors. Moreover, they are very important to generics, which operate only on objects. Finally, autoboxing makes working with the Collections Framework (described in Part II) much easier.
+
+	With autoboxing, it is not necessary to manually construct an object in order to wrap a primitive type. You need only assign that value to a type-wrapper reference. Java automatically constructs the object for you. For example, here is the modern way to construct an Integer object that has the value 100:
+		
+		Integer iOb = 100; // autobox an int
+
+	Notice that the object is not explicitly boxed. Java handles this for you, automatically.
+	To unbox an object, simply assign that object reference to a primitive-type variable. For example, to unbox iOb, you can use this line:
+		
+		int i = iOb; // auto-unbox
+
+	Java handles the details for you.
+	Here is the preceding program rewritten to use autoboxing/unboxing:
+
+		AutoBox.java
+
+	Autoboxing and Methods
+
+		In addition to the simple case of assignments, autoboxing automatically occurs whenever a primitive type must be converted into an object; auto-unboxing takes place whenever an object must be converted into a primitive type. Thus, autoboxing/unboxing might occur when an argument is passed to a method, or when a value is returned by a method. For example, consider this:
+			AutoBox2.kava
+
+	Autoboxing/Unboxing Occurs in Expressions
+
+		In general, autoboxing and unboxing take place whenever a conversion into an object or from an object is required. This applies to expressions. Within an expression, a numeric object is automatically unboxed. The outcome of the expression is reboxed, if necessary.
+
+		In the program, pay special attention to this line:
+			++iOb;
+		This causes the value in iOb to be incremented. It works like this: iOb is unboxed, the value is incremented, and the result is reboxed.
+
+		Auto-unboxing also allows you to mix different types of numeric objects in an expression. Once the values are unboxed, the standard type promotions and conversions are applied.
+
+		Because of auto-unboxing, you can use Integer numeric objects to control a switch statement.
+
+		As the examples in the programs show, because of autoboxing/unboxing, using numeric objects in an expression is both intuitive and easy. In the past, such code would have involved casts and calls to methods such as intValue().
+
+	Autoboxing/Unboxing Boolean and Character Values
+
+		As described earlier, Java also supplies wrappers for boolean and char. These are Boolean and Character. Autoboxing/unboxing applies to these wrappers, too.
+
+		The most important thing to notice about this program is the auto-unboxing of b inside the if conditional expression. As you should recall, the conditional expression that controls an if must evaluate to type boolean. Because of auto-unboxing, the boolean value contained within b is automatically unboxed when the conditional expression is evaluated. Thus, with autoboxing/unboxing, a Boolean object can be used to control an if statement.
+		
+		Because of auto-unboxing, a Boolean object can now also be used to control any of Java’s loop statements. When a Boolean is used as the conditional expression of a while, for, or do/while, it is automatically unboxed into its boolean equivalent. For example, this is perfectly valid code:
+			Boolean b;
+			// ...
+			while(b) { // ...
+
+	Autoboxing/Unboxing Helps Prevent Errors
+
+		In general, because autoboxing always creates the proper object, and auto-unboxing always produces the proper value, there is no way for the process to produce the wrong type of object or value. In the rare instances where you want a type different than that produced by the automated process, you can still manually box and unbox values. Of course, the benefits of autoboxing/unboxing are lost. In general, you should employ autoboxing/unboxing. It is the way that modern Java code is written.
+
+	A Word of Warning
+
+		Because of autoboxing and auto-unboxing, some might be tempted to use objects such as Integer or Double exclusively, abandoning primitives altogether. For example, with autoboxing/unboxing it is possible to write code like this:
+			// A bad use of autoboxing/unboxing!
+			Double a, b, c;
+
+			a = 10.0;
+			b = 4.0;
+
+			c = Math.sqrt(a*a + b*b);
+
+			System.out.println("Hypotenuse is " + c);
+
+		In this example, objects of type Double hold values that are used to calculate the hypotenuse of a right triangle. Although this code is technically correct and does, in fact, work properly, it is a very bad use of autoboxing/unboxing. It is far less efficient than the equivalent code written using the primitive type double. The reason is that each autobox and auto-unbox adds overhead that is not present if the primitive type is used.
+
+		In general, you should restrict your use of the type wrappers to only those cases in which an object representation of a primitive type is required. Autoboxing/unboxing was not added to Java as a “back door” way of eliminating the primitive types.
+
+	Annotations
 
