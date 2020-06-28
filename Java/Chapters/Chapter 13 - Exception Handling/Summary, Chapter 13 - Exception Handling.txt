@@ -1,0 +1,13 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 28 June 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 13 - Exception Handling
+Pages: 343 - 
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+I moved to study "Programming: Principles and Practice using C++ (2nd edition)" from the same author. It is a proper "beginning book".
