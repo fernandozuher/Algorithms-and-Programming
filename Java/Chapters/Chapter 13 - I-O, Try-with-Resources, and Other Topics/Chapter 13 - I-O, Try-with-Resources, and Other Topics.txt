@@ -7,7 +7,7 @@ About: Summary*, Chapter 13 - I/O, Try-with-Resources, and Other Topics
 
 * Most of the text was drawn literally from the chapter.
 
-Pages 503
+Pages 503 - 546
 
 */
 
