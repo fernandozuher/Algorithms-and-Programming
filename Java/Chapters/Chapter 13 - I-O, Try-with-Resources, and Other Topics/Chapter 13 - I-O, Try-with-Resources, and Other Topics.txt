@@ -1,13 +1,13 @@
 /*
 Author: Fernando Zuher
 Place: Brazil
-Date: 03 July 2020
+Date: 04 July 2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
 About: Summary*, Chapter 13 - I/O, Try-with-Resources, and Other Topics
 
 * Most of the text was drawn literally from the chapter.
 
-Pages 
+Pages 503 - 546
 
 */
 
@@ -195,7 +195,175 @@ I/O Basics
 
 		There is one other aspect to try-with-resources that needs to be mentioned. In general, when a try block executes, it is possible that an exception inside the try block will lead to another exception that occurs when the resource is closed in a finally clause. In the case of a “normal” try statement, the original exception is lost, being preempted by the second exception. However, when using try-with-resources, the second exception is suppressed. It is not, however, lost. Instead, it is added to the list of suppressed exceptions associated with the first exception. The list of suppressed exceptions can be obtained by using the getSuppressed() method defined by Throwable.
 
+The transient and volatile Modifiers
+
+	Java defines two interesting type modifiers: transient and volatile. These modifiers are used to handle somewhat specialized situations.
+
+	When an instance variable is declared as transient, its value need not persist when an object is stored. For example:
+
+		class T {
+			transient int a; // will not persist
+			int b; // will persist
+		}
+
+	The volatile modifier tells the compiler that the variable modified by volatile can be changed unexpectedly by other parts of your program. One of these situations involves multithreaded programs. In a multithreaded program, sometimes two or more threads share the same variable. For efficiency considerations, each thread can keep its own, private copy of such a shared variable. The real (or master) copy of the variable is updated at various times, such as when a synchronized method is entered. While this approach works fine, it may be inefficient at times. In some cases, all that really matters is that the master copy of a variable always reflects its current state. To ensure this, simply specify the variable as volatile, which tells the compiler that it must always use the master copy of a volatile variable (or, at least, always keep any private copies up-to-date with the master copy, and vice versa). Also, accesses to the shared variable must be executed in the precise order indicated by the program.
+
+Using instanceof
+
+	Sometimes, knowing the type of an object during run time is useful. For example, you might have one thread of execution that generates various types of objects, and another thread that processes these objects. In this situation, it might be useful for the processing thread to know the type of each object when it receives it. Another situation in which knowledge of an object’s type at run time is important involves casting. In Java, an invalid cast causes a run-time error. Many invalid casts can be caught at compile time. However, casts involving class hierarchies can produce invalid casts that can be detected only at run time.
+
+	For example, a superclass called A can produce two subclasses, called B and C. Thus, casting a B object into type A or casting a C object into type A is legal, but casting a B object into type C (or vice versa) isn’t legal. Because an object of type A can refer to objects of either B or C, how can you know, at run time, what type of object is actually being referred to before attempting the cast to type C? It could be an object of type A, B, or C. If it is an object of type B, a run-time exception will be thrown. Java provides the run-time operator instanceof to answer this question.
+
+	The instanceof operator has this general form:
 		
+		objref instanceof type
 
+	Here, objref is a reference to an instance of a class, and type is a class type. If objref is of the specified type or can be cast into the specified type, then the instanceof operator evaluates to true. Otherwise, its result is false. Thus, instanceof is the means by which your program can obtain run-time type information about an object.
 
+	The following program demonstrates instanceof:
+		InstanceOf.java
+
+	The instanceof operator isn’t needed by most programs, because, generally, you know the type of object with which you are working. However, it can be very useful when you’re writing generalized routines that operate on objects of acomplex class hierarchy.
+
+strictfp
+
+	With the creation of Java 2 several years ago, the floating-point computation model was relaxed slightly. Specifically, the new model does not require the truncation of certain intermediate values that occur during a computation. This prevents overflow or underflow in some cases. By modifying a class, a method, or interface with strictfp, you ensure that floating-point calculations (and thus all truncations) take place precisely as they did in earlier versions of Java. When a class is modified by strictfp, all the methods in the class are also modified by strictfp automatically.
+	
+	For example, the following fragment tells Java to use the original floating-point model for calculations in all methods defined within MyClass:
+		strictfp class MyClass { //...
+	Frankly, most programmers never need to use strictfp, because it affects only a very small class of problems.
+
+Native Methods
+
+	Although it is rare, occasionally you may want to call a subroutine that is written in a language other than Java. Typically, such a subroutine exists as executable code for the CPU and environment in which you are working—that is, native code. For example, you may want to call a native code subroutine to achieve faster execution time. Or, you may want to use a specialized, third-party library, such as a statistical package. However, because Java programs are compiled to bytecode, which is then interpreted (or compiled on-the-fly) by the Java run-time system, it would seem impossible to call a native code subroutine from within your Java program. Fortunately, this conclusion is false. Java provides the native keyword, which is used to declare native code methods. Once declared, these methods can be called from inside your Java program just as you call any other Java method. The mechanism used to integrate native code with a Java program is called the Java Native Interface (JNI).
+
+	To declare a native method, precede the method with the native modifier, but do not define any body for the method. For example:
+
+		public native int meth();
+
+	After you declare a native method, you must write the native method and follow a rather complex series of steps to link it with your Java code. Consult the Java documentation for current details.
+
+Using assert
+
+	It is used during program development to create an assertion, which is a condition that should be true during the execution of the program. For example, you might have a method that should always return a positive integer value. You might test this by asserting that the return value is greater than zero using an assert statement. At run time, if the condition is true, no other action takes place. However, if the condition is false, then an AssertionError is thrown. Assertions are often used during testing to verify that some expected condition is actually met. They are not usually used for released code.
+
+	The assert keyword has two forms. The first is shown here:
+		
+		assert condition;
+
+	Here, condition is an expression that must evaluate to a Boolean result. If the result is true, then the assertion is true and no other action takes place. If the condition is false, then the assertion fails and a default AssertionError object is thrown.
+
+	The second form of assert is shown here:
+		
+		assert condition: expr ;
+
+	In this version, expr is a value that is passed to the AssertionError constructor. This value is converted to its string format and displayed if an assertion fails. Typically, you will specify a string for expr, but any non-void expression is allowed as long as it defines a reasonable string conversion.
+	
+	Here is an example that uses assert. It verifies that the return value of getnum() is positive.
+		AssertDemo.java
+
+	To enable assertion checking at run time, you must specify the -ea option. For example, to enable assertions for AssertDemo, execute it using this line:
+		java -ea AssertDemo
+
+	As explained, you can specify the message displayed when an assertion fails. For example, if you substitute
+		assert n > 0 : "n is not positive!";
+	for the assertion in the preceding program, then another output will be generated.
+
+	One important point to understand about assertions is that you must not rely on them to perform any action actually required by the program. The reason is that normally, released code will be run with assertions disabled.
+
+	Assertions can be quite useful because they streamline the type of error checking that is common during development. For example, prior to assert, if you wanted to verify that n was positive in the preceding program, you had to use a sequence of code similar to this:
+
+		if (n < 0) {
+			System.out.println("n is negative!");
+			return; // or throw an exception
+		}
+
+	With assert, you need only one line of code. Furthermore, you don’t have to remove the assert statements from your released code.
+
+	Assertion Enabling and Disabling Options
+
+		When executing code, you can disable all assertions by using the -da option. You can enable or disable a specific package (and all of its subpackages) by specifying its name followed by three periods after the -ea or -da option. For example, to enable assertions in a package called MyPack, use
+		
+			-ea:MyPack...
+		
+		To disable assertions in MyPack, use
+			
+			-da:MyPack...
+
+		You can also specify a class with the -ea or -da option. For example, this enables AssertDemo individually:
+			
+			-ea:AssertDemo
+
+Static Import
+
+	Java includes a feature called static import that expands the capabilities of the import keyword. By following import with the keyword static, an import statement can be used to import the static members of a class or interface. When using static import, it is possible to refer to static members directly by their names, without having to qualify them with the name of their class. This simplifies and shortens the syntax required to use a static member.
+
+	To understand the usefulness of static import, let’s begin with an example that does not use it. The following program computes the hypotenuse of a right triangle. It uses two static methods from Java’s built-in math class Math, which is part of java.lang. The first is Math.pow(), which returns a value raised to a specified power. The second is Math.sqrt(), which returns the square root of its argument.
+
+	Hypot.java
+
+	Because pow() and sqrt() are static methods, they must be called through the use of their class’ name, Math. This results in a somewhat unwieldy hypotenuse calculation:
+
+		hypot = Math.sqrt(Math.pow(side1, 2) + Math.pow(side2, 2));
+
+	As this simple example illustrates, having to specify the class name each time pow() or sqrt() (or any of Java’s other math methods, such as sin(), cos(), and tan()) is used can grow tedious.
+
+	You can eliminate the tedium of specifying the class name through the use of static import, as shown in the following version of the preceding program:
+
+		HypotStaticImport.java
+
+	hypot = sqrt(pow(side1, 2) + pow(side2, 2));
+	As you can see, this form is considerably more readable.
+
+	There are two general forms of the import static statement. The first, which is used by the preceding example, brings into view a single name. Its general form is shown here:
+
+		import static pkg.type-name.static-member-name ;
+
+	Here, type-name is the name of a class or interface that contains the desired static member. Its full package name is specified by pkg. The name of the member is specified by static-member-name.
+
+	The second form of static import imports all static members of a given class or interface. Its general form is shown here:
+
+		import static pkg.type-name.*;
+
+	If you will be using many static methods or fields defined by a class, then this form lets you bring them into view without having to specify each individually. Therefore, the preceding program could have used this single import statement to bring both pow() and sqrt() (and all other static members of Math) into view:
+
+		import static java.lang.Math.*;
+
+	Of course, static import is not limited just to the Math class or just to methods. For example, this brings the static field System.out into view:
+		
+		import static java.lang.System.out;
+
+	After this statement, you can output to the console without having to qualify out with System, as shown here:
+		
+		out.println("After importing System.out, you can use out directly.");
+
+	Whether importing System.out as just shown is a good idea is subject to debate. Although it does shorten the statement, it is no longer instantly clear to anyone reading the program that the out being referred to is System.out.
+
+	One other point: in addition to importing the static members of classes and interfaces defined by the Java API, you can also use static import to import the static members of classes and interfaces that you create.
+
+	As convenient as static import can be, it is important not to abuse it. Remember, the reason that Java organizes its libraries into packages is to avoid namespace collisions. When you import static members, you are bringing those members into the current namespace. Thus, you are increasing the potential for namespace conflicts and inadvertent name hiding. If you are using a staticmember once or twice in the program, it’s best not to import it. Also, some static names, such as System.out, are so recognizable that you might not want to import them. Static import is designed for those situations in which you are using a static member repeatedly, such as when performing a series of mathematical computations. In essence, you should use, but not abuse, this feature.
+
+Invoking Overloaded Constructors Through this()
+
+	When working with overloaded constructors, it is sometimes useful for one constructor to invoke another. In Java, this is accomplished by using another form of the this keyword. The general form is shown here:
+		
+		this(arg-list)
+
+	When this() is executed, the overloaded constructor that matches the parameter list specified by arg-list is executed first. Then, if there are any statements inside the original constructor, they are executed. The call to this() must be the first statement within the constructor.
+
+		...
+
+	This class contains three constructors, each of which initializes the values of a and b. The first is passed individual values for a and b. The second is passed just one value, which is assigned to both a and b. The third gives a and b default values of zero.
+
+	By using this(), it is possible to rewrite MyClass as shown here:
+
+		...
+
+	One reason why invoking overloaded constructors through this() can be useful is that it can prevent the unnecessary duplication of code. In many cases, reducing duplicate code decreases the time it takes to load your class because often the object code is smaller. This is especially important for programs delivered via the Internet in which load times are an issue. Using this() can also help structure your code when constructors contain a large amount of duplicate code.
+
+	However, you need to be careful. Constructors that call this() will execute a bit slower than those that contain all of their initialization code inline. This is because the call and return mechanism used when the second constructor is invoked adds overhead. If your class will be used to create only a handful of objects, or if the constructors in the class that call this() will be seldom used, then this decrease in run-time performance is probably insignificant. However, if your class will be used to create a large number of objects (on the order of thousands) during program execution, then the negative impact of the increased overhead could be meaningful. Because object creation affects all users of your class, there will be cases in which you must carefully weigh the benefits of faster load time against the increased time it takes to create an object.
+
+	Here is another consideration: for very short constructors, such as those used by MyClass, there is often little difference in the size of the object code whether this() is used or not. (Actually, there are cases in which no reduction in the size of the object code is achieved.) This is because the bytecode that sets up and returns from the call to this( ) adds instructions to the object file. Therefore, in these types of situations, even though duplicate code is eliminated, using this() will not obtain significant savings in terms of load time. However, the added cost in terms of overhead to each object’s construction will still be incurred. Therefore, this() is most applicable to constructors that contain large amounts of initialization code, not those that simply set the value of a handful of fields.
+
+	There are two restrictions you need to keep in mind when using this(). First, you cannot use any instance variable of the constructor’s class in a call to this(). Second, you cannot use super() and this() in the same constructor because each must be the first statement in the constructor.
 
