@@ -10,3 +10,6 @@ About: Summary*, Chapter 14 - Generics
 Pages 547 - 611
 
 */
+
+This chapter describes the syntax, theory, and use of generics. It also shows how generics provide type safety for some previously difficult cases. Once you have completed this chapter, you will want to examine Chapter 19, which covers the Collections Framework. There you will find many examples of generics at work.
+
