@@ -1,0 +1,57 @@
+/*
+Summarizer: Fernando Zuher
+Place: Brazil
+Date: 08 July 2020
+Source: MDN web docs, Learn web development, JavaScript — Dynamic client-side scripting
+Summary*: 
+    01 > JavaScript First Steps
+        01 > What is JavaScript?
+
+    Link: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/What_is_JavaScript
+
+* Most of the text was drawn literally from the website.
+*/
+
+What is even more exciting however is the functionality built on top of the client-side JavaScript language. So-called Application Programming Interfaces (APIs) provide you with extra superpowers to use in your JavaScript code.
+
+APIs are ready-made sets of code building blocks that allow a developer to implement programs that would otherwise be hard or impossible to implement. They do the same thing for programming that ready-made furniture kits do for home building — it is much easier to take ready-cut panels and screw them together to make a bookshelf than it is to work out the design yourself, go and find the correct wood, cut all the panels to the right size and shape, find the correct-sized screws, and then put them together to make a bookshelf.
+
+They generally fall into two categories.
+
+Browser APIs are built into your web browser, and are able to expose data from the surrounding computer environment, or do useful complex things. For example:
+
+    The DOM (Document Object Model) API allows you to manipulate HTML and CSS, creating, removing and changing HTML, dynamically applying new styles to your page, etc. Every time you see a popup window appear on a page, or some new content displayed (as we saw above in our simple demo) for example, that's the DOM in action.
+
+    The Geolocation API retrieves geographical information. This is how Google Maps is able to find your location and plot it on a map.
+
+    The Canvas and WebGL APIs allow you to create animated 2D and 3D graphics. People are doing some amazing things using these web technologies —see Chrome Experiments and webglsamples.
+    
+    Audio and Video APIs like HTMLMediaElement and WebRTC allow you to do really interesting things with multimedia, such as play audio and video right in a web page, or grab video from your web camera and display it on someone else's computer (try our simple Snapshot demo to get the idea).
+
+Note: Many of the above demos won't work in an older browser — when experimenting, it's a good idea to use a modern browser like Firefox, Chrome, Edge or Opera to run your code in. You will need to consider cross browser testing in more detail when you get closer to delivering production code (i.e. real code that real customers will use).
+
+Third party APIs are not built into the browser by default, and you generally have to grab their code and information from somewhere on the Web. For example:
+
+    The Twitter API allows you to do things like displaying your latest tweets on your website.
+    The Google Maps API and OpenStreetMap API allows you to embed custom maps into your website, and other such functionality.
+
+Note: These APIs are advanced, and we'll not be covering any of these in this module. You can find out much more about these in our Client-side web APIs module.
+
+There's a lot more available, too! However, don't get over excited just yet. You won't be able to build the next Facebook, Google Maps, or Instagram after studying JavaScript for 24 hours — there are a lot of basics to cover first. And that's why you're here — let's move on!
+
+Internal JavaScript
+	apply-javascript.html
+
+External JavaScript
+	script.js
+
+Inline JavaScript handlers
+	<button onclick="createParagraph()">Click me!</button>
+
+Script loading strategies
+
+    async and defer both instruct the browser to download the script(s) in a separate thread, while the rest of the page (the DOM, etc.) is downloading, so the page loading is not blocked by the scripts.
+
+    If your scripts should be run immediately and they don't have any dependencies, then use async.
+
+    If your scripts need to wait for parsing and depend on other scripts and/or the DOM being in place, load them using defer and put their corresponding <script> elements in the order you want the browser to execute them.
