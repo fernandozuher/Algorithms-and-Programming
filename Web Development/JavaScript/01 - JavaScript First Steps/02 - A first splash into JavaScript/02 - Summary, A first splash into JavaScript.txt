@@ -1,0 +1,49 @@
+/*
+Summarizer: Fernando Zuher
+Place: Brazil
+Date: 08 July 2020
+Source: MDN web docs, Learn web development, JavaScript — Dynamic client-side scripting
+Summary*: 
+    01 > JavaScript First Steps
+        02 > A first splash into JavaScript
+
+    Link: https://developer.mozilla.org/en-US/docs/Learn/JavaScript/First_steps/A_first_splash
+
+* Most of the text was drawn literally from the website.
+*/
+
+number-guessing-game-start.html
+
+Common code in JS:
+
+    document.querySelector();
+    document.querySelectorAll();
+
+    variable.textContent
+
+    console.log(...)
+
+    alert(...)
+
+    prompt()
+
+    function nameFunction() {
+        ...
+    }
+
+    for (let i = 0; i < count; i++) {
+        ...
+    }
+
+    guesses.style.backgroundColor = 'yellow';
+    guesses.style.fontSize = '200%';
+    guesses.style.padding = '10px';
+    guesses.style.boxShadow = '3px 3px 6px black';
+
+    document.createElement('button');
+    document.body.append(resetButton);
+    guessSubmit.addEventListener('click', checkGuess);
+
+    Math.floor(Math.random() * 100) + 1;
+
+    guessField.focus();
