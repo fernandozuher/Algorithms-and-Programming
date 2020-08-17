@@ -1,5 +1,5 @@
 # Algorithms-and-Programming
 
-Study on Algorithms and Programming Languages (C, C++, Java, Python, JavaScript)
+Study on Algorithms and Programming Languages (C, C++, Java, Python and JavaScript)
 
 Updating...
