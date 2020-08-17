@@ -1,1 +1,0 @@
-print('Provérbios 27:17, "Como o ferro com o ferro se aguça, assim o homem afia o rosto do seu amigo."')

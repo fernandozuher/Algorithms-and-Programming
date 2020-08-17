@@ -1,0 +1,12 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 28 June 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 1 - Computers, People, and Programming
+Pages: 17 - 
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+

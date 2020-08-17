@@ -1,0 +1,6 @@
+Exercise 4-6. Add commands for handling variables. (It's easy to provide twenty-six variables with single-letter names.) Add a variable for the most recently printed value.
+	***Em que situação variáveis seriam usadas na expressão? E quais seriam os valores imediatos delas?
+		Só acrescentei uma variável para o último elemento.
+
+
+***Eu deveria usar void na versão atual C como tipo de parâmetro de função quando não há nenhum parâmetro?

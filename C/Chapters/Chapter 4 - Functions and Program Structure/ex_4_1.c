@@ -3,7 +3,7 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 25/02/2020
 Book: The C programming language, second edition. Authors: BRIAN W KERNIGHAN and DENNIS M. RITCHIE
-About: Summary, Chapter 4 - Functions and Program Structure
+About: Exercise, Chapter 4 - Functions and Program Structure
 */
 
 /*

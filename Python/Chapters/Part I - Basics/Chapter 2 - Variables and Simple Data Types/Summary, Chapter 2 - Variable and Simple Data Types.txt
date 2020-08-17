@@ -1,0 +1,42 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 24/02/2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary, Chapter 2 - Variables and Simple Data Types
+
+variable.title()
+variable.upper()
+variable.lower()
+f"{}" # f-strings
+
+variable.rstrip()
+variable = variable.rstrip()
+
+variable.lstrip()
+variable = variable.lstrip()
+
+variable.strip()
+variable = varaible.strip()
+
+import this
+
+
+>>> 2 + 3*4
+14
+>>> (2 + 3) * 4
+20
+	The spacing in these examples has no effect on how Python evaluates the expressions; it simply helps you more quickly spot the operations that have priority when you’re reading through the code.
+
+
+Usar letras maiúsculas para representar constantes porque Python não tem forma explícita de fazer isso.
+
+Underscores in Numbers
+universe_age = 14_000_000_000
+
+Multiple Assignment
+x, y, z = 0, 0, 0
+
+>>> 3 ** 2
+9
+
+# Comment here

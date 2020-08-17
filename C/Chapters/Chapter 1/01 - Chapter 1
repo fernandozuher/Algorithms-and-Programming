@@ -1,0 +1,50 @@
+Chapter 1
+
+A #define line defines a symbolic name or symbolic constant to be a particular string of characters:
+#define name replacement text
+
+Symbolic constant names are conventionally written in upper case so they can be readily distinguished from lower case variable names.
+
+1.5 Character Input and Output
+Text input or output, regardless of where it originates or where it goes to, is dealt with as streams of characters,
+
+EOF is an integer defined in <stdio. h>
+
+In C, any assignment is an expression and has a value, which is the value of the left hand side after the assignment. This means that an assignment can appear as part of a larger expression.
+
+printf("%3d "%6d\n", fahr, celsius);
+printf: %o, %x
+
+The choice between while and for is arbitrary, based on which seems clearer. The for is usually appropriate for loopsin which the initialization and increment are single statements and logically related, since it is more compact than while and it keeps the loop control statements together in one place.
+
+The quantities LOWER, UPPER and STEP are symbolic constants, not variables, so they do not appear in declarations. Symbolic constant names are conventionally written in upper case so they can be readily distinguished from lower case variable names. Notice that there is no semicolon at the end of a Idefine line.
+
+"You may have noticed that there is a return statement at the end of main.
+Since main is a function like any other, it may return a value to its caller,
+which is in effect the environment in which the program was executed. Typi-
+cally, a return value of zero implies normal termination; non-zero values signal
+unusual or erroneous termination conditions. In the interests of simplicity, we
+have omitted return statements from our main functions up to this point, but
+we will include them hereafter, as a reminder that programs should return
+status to their environment."
+
+
+"
+You should note that we are using the words definition and declaration care-
+fully when we refer to external variables in this section. "Definition" refers to
+the place where the variable is created or assigned storage; "declaration" refers
+to places where the nature of the variable is stated but no storage is allocated.
+"
+
+"By the way, there is a tendency to make everything in sight an extern vari-
+able because it appears to simplify communications-argument lists are short
+and variables are always there when you want them. But external variables are
+always there even when you don't want them. Relying too heavily on external
+variables is fraught with peril since it leads to programs whose data connections
+are not at all obvious-variables can be changed in unexpected and even inad-
+vertent ways, and the program is hard to modify. The second version of the
+longest-line program is inferior to the first, partly for these reasons, and partly
+because it destroys the generality of two useful functions by wiring into them
+the names of the variables they manipulate.
+"
+

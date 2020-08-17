@@ -119,3 +119,6 @@ In this case, it may not be immediately clear to someone reading your code what 
 
 As you would expect, you can also use local variable type inference with user-defined classes, as the following program illustrates. It creates a class called MyClass and then uses local variable type inference to declare and initialize an object of that class.
 
+-------------------
+
+protected, private, public

@@ -1,0 +1,53 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: March 2020
+Book: Introduction to algorithms, third edition. Authors: THOMAS H. CORMEN, CHARLES E. LEISERSON, RONALD L. RIVEST, CLIFFORD STEIN.
+About: Summary, Chapter 2 - Getting Started
+*/
+
+Ver Apêndice A
+
+2.1 Insertion sort
+The algorithm sorts the input numbers in place: it rearranges the numbers within the array A, with at most a constant number of them stored outside the array at any time.
+
+Pseudocode conventions
+	We use the keyword to when a for loop increments its loop counter in each iteration, and we use the keyword downto when a for loop decrements its loop counter. When the loop counter changes by an amount greater than 1, the amount of change follows the optional keyword by.
+
+
+
+
+
+loop invariant
+
+We use loop invariants to help us understand why an algorithm is correct. We must show three things about a loop invariant:
+Initialization: It is true prior to the first iteration of the loop.
+Maintenance: If it is true before an iteration of the loop, it remains true before the next iteration.
+Termination: When the loop terminates, the invariant gives us a useful property that helps show that the algorithm is correct.
+
+
+
+2.2 Analyzing algorithms
+Analyzing an algorithm has come to mean predicting the resources that the algorithm requires.
+
+Many computers have a “shift left” instruction, which in constant time shifts the bits of an integer by k positions to the left. In most computers, shifting the bits of an integer by one position to the left is equivalent to multiplication by 2, so that shifting the bits by k positions to the left is equivalent to multiplication by 2k. Therefore, such computers can compute 2 k in one constant-time instruction by shifting the integer 1 by k positions to the left, as long as k is no more than the number of bits in a computer word. We will endeavor to avoid such gray areas in the RAM model, but we will treat computation of 2k as a constant-time operation when k is a small enough positive integer.
+
+
+***Chequem o meu exercício 2.2-2 para ver se está certo.
+
+
+
+
+2.3.1 The divide-and-conquer approach
+The divide-and-conquer paradigm involves three steps at each level of the recursion:
+	Divide the problem into a number of subproblems that are smaller instances of the same problem.
+	Conquer the subproblems by solving them recursively. If the subproblem sizes are small enough, however, just solve the subproblems in a straightforward manner.
+	Combine the solutions to the subproblems into the solution for the original problem.
+
+
+
+
+2.3.2 Analyzing divide-and-conquer algorithms
+	When an algorithm contains a recursive call to itself, we can often describe its running time by a recurrence equation or recurrence, which describes the overall running time on a problem of size n in terms of the running time on smaller inputs.
+
+	

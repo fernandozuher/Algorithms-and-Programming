@@ -1,0 +1,3 @@
+Exercise 1-11. How would you test the word count program? What kinds of input are most likely to uncover bugs if there are any?
+	Colocaria um texto de um livro no qual seria grande o suficiente para extrapolar o limite de palavras que um dado do tipo int suportaria.
+

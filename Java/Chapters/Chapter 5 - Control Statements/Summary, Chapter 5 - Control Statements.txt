@@ -3,7 +3,10 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 28/02/2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
-About: Summary, Chapter 5 - Control Statements
+About: Summary*, Chapter 5 - Control Statements
+
+* Most of the written is taken literally from the chapter.
+
 */
 
 Java’s program control statements can be put into the following categories: selection, iteration, and jump.

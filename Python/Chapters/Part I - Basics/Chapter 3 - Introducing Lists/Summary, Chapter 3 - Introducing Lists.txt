@@ -1,0 +1,37 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 24 February 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary, Chapter 3 - Introducing Lists
+
+Índices -1, -2, -3 pegam os últimos elementos de uma lista.
+
+variavel_lista = []
+add:
+	variavel_lista.append('name')
+	variavel_lista.insert(indice, 'name') # it doesn't overwrite.
+
+remove:
+	del variavel_lista[indice]
+	ultimo_da_lista_removido = variavel_lista.pop()
+	indice_da_lista_removido = variavel_lista.pop(indice)
+
+	"If you’re unsure whether to use the del statement or the pop() method, here’s a simple way to decide: when you want to delete an item from a list and not use that item in any way, use the del statement; if you want to use an item as you remove it, use the pop() method."
+
+	variavel_lista.remove('value')
+
+	"The remove() method deletes only the first occurrence of the value you specify. If there’s a possibility the value appears more than once in the list, you’ll need to use a loop to make sure all occurrences of the value are removed."
+
+sort:
+	# It sorts permanently
+	variavel_lista.sort()
+	variavel_lista.sort(reverse=True)
+	
+	# It doesn't sort permanently
+	variavel_lista_temporariamente_ordenada = sorted(variavel_lista)
+	variavel_lista_temporariamente_ordenada = sorted(variavel_lista, reverse=True)
+
+	# Just reverse the original list
+	variavel_lista.reverse()
+
+len(variavel_lista)

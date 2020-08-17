@@ -1,0 +1,30 @@
+1.1-1
+Ordenar do menor para o maior preço uma lista de produtos retornados por meio da pesquisa "TV" no site da Americanas.
+
+
+1.1-2
+Espaço em memória alocado.
+
+1.1-3
+Array. Uma de suas forças são o acesso rápido a um elemento qualquer por meio do uso de seu índice. Uma de suas fraquezas é o fato de ser obrigatório uma alocação de espaço pré-determinado a despeito de usá-lo todo ou não.
+
+1.1-4
+Eles são similares com respeito ao encontro do menor caminho entre dois pontos, um origem e outro destino. A diferença reside em que o segundo problema termina no ponto de origem, enquanto o outro não.
+
+1.1-5
+Entrega de encomendas do ponto origem ao ponto destino por meio de uma reta; apenas drones poderiam fazer dentro de determinados contextos.
+A solução aproximada seria a entrega por meio do menor caminho possível considerando as limitações de transporte. Por exemplo, entrega de comida do iFood por meio de moto.
+
+1.2-1
+Chamar Uber. Quando selecionado o destino da viagem a partir de um ponto origem identificado pelo sinal de GPS, o algoritmo traça um caminho eficiente (menor caminho em termos de tempo e distância) entre ambos os pontos.
+
+1.2-2
+No lo so.
+
+1.2-3
+0 ou 15. Fiz programa pra calcular.
+
+Problems
+1-1
+
+Fim em planilha do Excel.

@@ -2,8 +2,11 @@
 Author: Fernando Zuher
 Place: Brazil
 Date: 24/02/2020
-Book: Java The Complete Reference, 11th Edition
-About: Summary, Chapter 4 - Operators
+Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
+About: Summary*, Chapter 4 - Operators
+
+* Most of the written is taken literally from the chapter.
+
 */
 
 Arithmetic Operators

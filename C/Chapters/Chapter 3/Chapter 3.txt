@@ -1,0 +1,32 @@
+"
+The continue statement is often used when the part of the loop that follows is
+complicated, so that reversing a test and indenting another level would nest the
+program too deeply.
+"
+
+"
+C provides the infinitely-abusable goto statement, and labels to branch to.
+Formally, the goto is never necessary, and in practice it is almost always easy
+to write code without it. We have not used goto in this book.
+
+Nevertheless, there are a few situations where gotos may find a place. The
+most common is to abandon processing in some deeply nested structure, such as
+breaking out of two or more loops at once. The break statement cannot be
+used directly since it only exits from the innermost loop. Thus:
+
+for ( ...)
+	for ( ...) {
+		if (disaster)
+			goto error;
+		}
+
+error:
+	clean up the mess
+"
+
+"
+With a few exceptions like those cited here, code that relies on qoto state-
+ments is generally harder to understand and to maintain than code without
+qotos. Although we are not dogmatic about the matter, it does seem that
+qoto statements should be used rarely, if at all.
+"

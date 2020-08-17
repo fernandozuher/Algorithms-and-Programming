@@ -1,0 +1,26 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 29 February 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary, Chapter 5 - if Statements
+
+True ou False
+
+if variable == anything:
+	blabla
+elif ...:
+	blabla
+else:
+	blabla
+
+and
+or
+
+'something' in lista
+'something' not in lista
+
+Checar se uma lista não está vazia:
+if requested_toppings:
+
+Estilos:
+age < 4 better than age<4

@@ -3,7 +3,10 @@ Author: Fernando Zuher
 Place: Brazil
 Date: 22/03/2020
 Book: Java The Complete Reference, 11th Edition. Author: Herbert Schildt.
-About: Summary, Chapter 6 - Introducing Classes
+About: Summary*, Chapter 6 - Introducing Classes
+
+* Most of the written is taken literally from the chapter.
+
 */
 
 Declaring Objects

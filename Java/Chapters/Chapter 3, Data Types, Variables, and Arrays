@@ -1,0 +1,41 @@
+var variable
+
+implicit and cast conversion of data types
+
+Implicit:
+	When one type of data is assigned to another type of variable, an automatic type conversion will take place if the following two conditions are met:
+		• The two types are compatible.
+		• The destination type is larger than the source type.
+
+	Cast means explicit conversion using the (type) before the value.
+
+
+"
+As useful as the automatic promotions are, they can cause confusing compile-time errors. For example, this seemingly correct code causes a problem:
+byte b = 50;
+b = b * 2; // Error! Cannot assign an int to a byte!
+
+The code is attempting to store 50 * 2, a perfectly valid byte value, back into a byte variable. However, because the operands were automatically promoted to int when the expression was evaluated, the result has also been promoted to int.
+
+Thus, the result of the expression is now of type int, which cannot be assigned to a byte without the use of a cast. This is true even if, as in this particular case, the value being assigned would still fit in the target type.
+
+In cases where you understand the consequences of overflow, you should use an explicit cast, such as
+byte b = 50;
+b = (byte)(b * 2);
+
+which yields the correct value of 100.
+"
+
+"
+The Type Promotion Rules
+Java defines several type promotion rules that apply to expressions. They are as follows: First, all byte, short, and char values are promoted to int, as just described. Then, if one operand is a long, the whole expression is promoted tolong. If one perand is a float, the entire expression is promoted to float. If any of the operands are double, the result is double.
+"
+
+In expressions can be the implicit conversion to int even if one uses short because of the use 
+
+type array[]
+type[] array
+
+[][] not obligated quadratic array
+
+it is possible declare only the lines of an 2 dimensional array. Then the colums to the lines according to what is wished.

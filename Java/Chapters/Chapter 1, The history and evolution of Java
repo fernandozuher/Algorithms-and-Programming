@@ -1,0 +1,37 @@
+"In the final analysis, although C is one of the world’s great programming
+languages, there is a limit to its ability to handle complexity. Once the size of a
+program exceeds a certain point, it becomes so complex that it is difficult to
+grasp as a totality. While the precise size at which this occurs differs, depending
+upon both the nature of the program and the programmer, there is always a
+threshold at which a program becomes unmanageable. C++ added features that
+enabled this threshold to be broken, allowing programmers to comprehend and
+manage larger programs."
+
+
+The Creation of Java
+
+"Java was conceived by James Gosling, Patrick Naughton, Chris Warth, Ed
+Frank, and Mike Sheridan at Sun Microsystems, Inc. in 1991. It took 18 months
+to develop the first working version. This language was initially called “Oak,”
+but was renamed “Java” in 1995. Between the initial implementation of Oak in
+the fall of 1992 and the public announcement of Java in the spring of 1995,
+many more people contributed to the design and evolution of the language. Bill
+Joy, Arthur van Hoff, Jonathan Payne, Frank Yellin, and Tim Lindholm were key
+contributors to the maturing of the original prototype."
+
+"As mentioned at the start of this chapter, computer languages evolve for two
+reasons: to adapt to changes in environment and to implement advances in the
+art of programming. The environmental change that prompted Java was the need
+for platform-independent programs destined for distribution on the Internet.
+However, Java also embodies changes in the way that people approach the
+writing of programs. For example, Java enhanced and refined the object-oriented
+paradigm used by C++, added integrated support for multithreading, and
+provided a library that simplified Internet access. In the final analysis, though, it
+was not the individual features of Java that made it so remarkable. Rather, it was
+the language as a whole. Java was the perfect response to the demands of the
+then newly emerging, highly distributed computing universe. Java was to
+Internet programming what C was to system programming: a revolutionary force
+that changed the world."
+
+
+Portability, Web, Secure, Applets...

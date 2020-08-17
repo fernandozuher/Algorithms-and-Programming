@@ -1,0 +1,20 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: 12 April 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Summary, Chapter 7 - User Input and while Loops
+
+--------------------------------------
+
+input
+while
+
+answer = input("Tell me something: ")
+
+string += another string
+
+age = int(string)
+
+while
+	break
+	continue

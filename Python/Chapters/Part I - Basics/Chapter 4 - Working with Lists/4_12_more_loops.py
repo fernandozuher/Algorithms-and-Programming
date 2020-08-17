@@ -1,0 +1,20 @@
+# Author: Fernando Zuher
+# Place: Brazil
+# Date: February 2020
+# Book: Python Crash Course, 2nd Edition. Author: ERIC MATTHES.
+# About: Exercise, Chapter 4 - Working with Lists
+
+my_foods = ['pizza', 'falafel', 'carrot cake']
+friend_foods = my_foods[:]
+
+my_foods.append('cannoli')
+friend_foods.append('ice cream')
+
+print("My favorite foods are:")
+for food in my_foods:
+    print(food)
+
+print("\nMy friend's favorite foods are:")
+for food in friend_foods:
+    print(food)
+    
