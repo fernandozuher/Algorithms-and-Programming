@@ -1,0 +1,31 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 14 January 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 1 - Computers, People, and Programming
+Pages: 17 - 40
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+1.6 Ideals for programmers
+
+correctness, reliability, well designed, affordable
+
+This line of thinking leads to the idea that “programming is understanding”:
+when you can program a task, you understand it. Conversely, when you under-
+stand a task thoroughly, you can write a program to do it. In other words, we
+can see programming as part of an effort to thoroughly understand a topic. A
+program is a precise representation of our understanding of a topic.
+
+When you program, you spend significant time trying to understand the task
+you are trying to automate.
+
+...
+
+Programming is part practical, part theoretical. If you are just practical, you
+will produce non-scalable, unmaintainable hacks. If you are just theoretical,
+you will produce unusable (or unaffordable) toys.
+
