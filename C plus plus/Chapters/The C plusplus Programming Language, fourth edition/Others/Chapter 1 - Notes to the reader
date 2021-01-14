@@ -1,0 +1,113 @@
+
+"
+My standard introduction of C++ used to start:
+	• C++ is a general-purpose programming language with a bias toward systems programming.
+This is still true. What has changed over the years is an increase in the importance, power, and
+flexibility of C++’s abstraction mechanisms:
+	• C++ is a general-purpose programming language pro viding a direct and efficient model of
+hardware combined with facilities for defining lightweight abstractions.
+Or terser:
+	• C++ is a language for developing and using elegant and efficient abstractions.
+By general-purpose programming language I mean a language designed to support a wide variety
+of uses. C++ has indeed been used for an incredible variety of uses (from microcontrollers to huge
+distributed commercial applications), but the key point is that C++ is not deliberately specialized
+for any giv en application area. No language is ideal for every application and every programmer,
+but the ideal for C++ is to support the widest possible range of application areas well.
+
+By systems programming I mean writing code that directly uses hardware resources, has serious
+resource constraints, or closely interacts with code that does.
+"
+
+"
+The C++ language features most directly support four programming styles:
+• Procedural programming
+• Data abstraction
+• Object-oriented programming
+• Generic programming
+"
+
+"
+As is usual with important terms in the computing world, a wide variety of definitions of these
+terms are popular in various parts of the computing industry and academia. For example, what I
+refer to as a ‘‘programming style,’’ others call a ‘‘programming technique’’ or a ‘‘paradigm.’’ I pre-
+fer to use ‘‘programming technique’’ for something more limited and language-specific. I feel
+uncomfortable with the word ‘‘paradigm’’ as pretentious and (from Kuhn’s original definition) hav-
+ing implied claims of exclusivity.
+"
+
+"
+With minor exceptions, C is a subset of
+C++. Compared to C, C++ provides further support for procedural programming in the
+form of many additional language constructs and a stricter, more flexible, and more support-
+iv e type system.
+"
+
+"
+Each of these styles of design and programming has contributed to the synthesis that is C++.
+Focusing exclusively on one of these styles is a mistake: except for toy examples, doing so leads to
+wasted development effort and suboptimal (inflexible, verbose, poorly performing, unmaintainable,
+etc.) code.
+"
+
+"
+I wince when someone characterizes C++ exclusively through one of these styles (e.g., ‘‘C++ is
+an object-oriented language’’) or uses a term (e.g., ‘‘hybrid’’ or ‘‘mixed paradigm’’) to imply that a
+more restrictive language would be preferable. The former misses the fact that all the styles men-
+tioned have contributed something significant to the synthesis; the latter denies the validity of the
+synthesis. The styles mentioned are not distinct alternatives: each contributes techniques to a more
+expressive and effective style of programming, and C++ provides direct language support for their
+use in combination.
+"
+
+"
+1.2.2 Type Checking
+The connection between the language in which we think/program and the problems and solutions
+we can imagine is very close. For this reason, restricting language features with the intent of elimi-
+nating programmer errors is, at best, dangerous. A language provides a programmer with a set of
+conceptual tools; if these are inadequate for a task, they will be ignored. Good design and the
+absence of errors cannot be guaranteed merely by the presence or absence of specific language fea-
+tures. However, the language features and the type system are provided for the programmer to pre-
+cisely and concisely represent a design in code.
+"
+
+
+"
+1.2.3 C Compatibility
+C++ was developed from the C programming language and, with few exceptions, retains C as a subset. The main reasons for relying on C were to build on a proven set of low-level language facilities and to be part of a technical community.
+"
+
+"
+The difference between C and C++ is primarily in the degree of emphasis on types and struc-
+ture. C is expressive and permissive. Through extensive use of the type system, C++ is even more
+expressive without loss of performance.
+"
+
+"The idea of writing all software in a single language is a fantasy.
+From the beginning, C++ was designed to interoperate simply and
+efficiently with C, assembler, and Fortran."
+
+
+
+1.3 Learning C++
+
+"What is perfect for one task is often seriously flawed for another because perfection in one area implies specialization."
+
+"The most important thing to do when learning C++ is to focus on fundamental concepts (such
+as type safety, resource management, and invariants) and programming techniques (such as
+resource management using scoped objects and the use of iterators in algorithms) and not get lost in
+language-technical details. The purpose of learning a programming language is to become a better
+programmer, that is, to become more effective at designing and implementing new systems and at
+maintaining old ones. For this, an appreciation of programming and design techniques is far more
+important than understanding all the details. The understanding of technical details comes with
+time and practice."
+
+"Thoughtlessly applying techniques effective in one language to another typically leads to awk-
+ward, poorly performing, and hard-to-maintain code."
+
+
+1.5 Advice
+Each chapter contains an ‘‘Advice’’ section with a set of concrete recommendations related to its
+contents. Such advice consists of rough rules of thumb, not immutable laws. A piece of advice
+should be applied only where reasonable. There is no substitute for intelligence, experience, com-
+mon sense, and good taste.
+

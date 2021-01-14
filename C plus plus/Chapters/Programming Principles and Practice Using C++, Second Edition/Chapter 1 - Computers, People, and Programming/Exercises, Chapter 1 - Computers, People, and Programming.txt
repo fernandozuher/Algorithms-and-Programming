@@ -1,0 +1,200 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 14 January 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Exercises, Chapter 1 - Computers, People, and Programming
+Pages: 37 - 39
+
+*/
+
+1. What is software?
+    It is a set of programs designed to solve a problem by computer systems.
+
+2. Why is software important?
+    Because it allows us to express ideas in code understandable by machines in order to control them to solve problems.
+
+3. Where is software important?
+    In many places. Our society is moved by software, e.g, as a tool to write books, to use cellphones, to start a car and control a TV, to recover data about entities (goods in a supermarket stock, clinical registers, temperature during time) and so on.
+
+4. What could go wrong if some software fails? List some examples.
+    It depends on the kind of software and where it is used. In practical and demanding scenarios, e.g., a software used to control:
+        - the oxygen pumped to an intubated patiente: a patient may die without enough oxygen pumped to his/her body.
+        - a elevator: people may get stuck inside a elevator if it stops in the middle of a way during its travel.
+        - the conditioned air spread in rooms that contains sensitive material to temperatute: vaccines, meats, ...  may be lost in room temperature.
+        - etc...
+
+5. Where does software play an important role? List some examples.
+    In many places. As a tool: to design the fabrication of ships, to allow doctors to control robots in minimal invasive surgery, to allow communication among different users through internet, to automate fabrication of cars that, otherwise, would consume a bigger time if done by humans at all, etc.
+
+6. What are some jobs related to software development? List some.
+    Web developer, designer of cars/ships/airplanes/robots/..., analysis of genetic material of organisms, designer of graphical animations, etc.
+
+7. What’s the difference between computer science and programming?
+    Computer Science is a field of knowledge concerned with many topics related to computer systems. Programming is just one of those many topics approached in Computer Science.
+
+8. Where in the design, construction, and use of a ship is software used?
+    Design: To draw the parts/pieces that compound a ship.
+    Construction: To build compartments by machines in a high precision.
+    Use: To control the diverse machinery present in a ship.
+
+9. What is a server farm?
+    It is a place (big room) where many servers are located to provide a common service.
+
+10. What kinds of queries do you ask online? List some.
+    Technical details of functions in programming languages, the value of Real compared to Dolar and Euro, directions from a place to another, the current temperature in the town where I am, etc.
+
+11. What are some uses of software in science? List some.
+    Analysis of genoma, simulation of dinosaurs, communication between Earth and signals emitted from satelittes around the universe, analysis of waved caused by the movement of tectonic plates, etc.
+
+12. What are some uses of software in medicine? List some.
+    Images taken from MRI, control of robot in minimally invasive surgery, automatic control of flux of oxygen delivered for intubated patient, monitoring blood pressure and other signals from patient during surgery, etc.
+
+13. What are some uses of software in entertainment? List some.
+    Design of graphical animations, creation of hologram, tracking human movement to match with virtual animation, edition of music, etc.
+
+14. What general properties do we expect from good software?
+    Correctness, Reliability, Well designed, Affordable.
+
+15. What does a software developer look like?
+    A normal person.
+
+16. What are the stages of software development?
+    Analysis, Design, Programming and Test.
+
+17. Why can software development be difficult? List some reasons.
+    Good question. It requires practical/theoretical knowledge, experience, feedback...
+
+18. What are some uses of software that make your life easier?
+    Delivery of food by app, medical appointment by cellphone, transport by Uber, communication by WhatsApp, etc.
+
+19. What are some uses of software that make your life more difficult?
+    I can't think in anything about.
+
+-----------
+Terms
+
+These terms present the basic vocabulary of programming and of C++. If you
+want to understand what people say about programming topics and to articulate
+your own ideas, you should know what each means.
+
+affordability
+analysis
+blackboard
+CAD/CAM
+communication
+correctness
+customer
+design
+feedback
+GUI
+ideals
+implementation
+programmer
+programming
+software
+stereotype
+testing
+user
+
+-----------
+Exercises
+
+1. Pick an activity you do most days (such as going to class, eating dinner,
+or watching television). Make a list of ways computers are directly or
+indirectly involved.
+    Walking for 10km: I hear music or audio books while walking from my cellphone.
+
+2. Pick a profession, preferably one that you have some interest in or some
+knowledge of. Make a list of activities done by people in that profession
+that involve computers.
+    Professor: Registering presence, absence, grades of students; Preparing classes, tests, exams; Communicating with students by e-mail or website; etc.
+
+3. Swap your list from exercise 2 with a friend who picked a different profes-
+sion and improve his or her list. When you have both done that, compare
+your results. Remember: There is no perfect solution to an open-ended ex-
+ercise; improvements are always possible.
+    ...
+
+4. From your own experience, describe an activity that would not have been
+possible without computers.
+    Locate yourself by GPS.
+
+5. Make a list of programs (software applications) that you have directly
+used. List only examples where you obviously interact with a program
+(such as when selecting a new song on an MP3 player) and not cases
+where there just might happen to be a computer involved (such as turning
+the steering wheel of your car).
+    WhatsApp
+    Deezer
+    Gmail app
+    web browser
+    Sublime Text
+
+6. Make a list of ten activities that people do that do not involve computers
+in any way, even indirectly. This may be harder than you think!
+    1 - Walking for leisure in a known region.
+    2 - Throwing the garbage out in a container outside of home.
+    3 - Fishing.
+    4 - Cleaning house without household appliance.
+    5 - Weeding.
+    6 - Painting.
+    7 - Staging a play in outdoor.
+    8 - Watering plants and flowers.
+    9 - Picknick in outdoor.
+    10 - Reading a parchment.
+
+7. Identify five tasks for which computers are not used today, but for which
+you think they will be used at some time in the future. Write a few sen-
+tences to elaborate on each one that you choose.
+    To think about.
+
+8. Write an explanation (at least 100 words, but fewer than 500) of why you
+would like to be a computer programmer. If, on the other hand, you are
+convinced that you would not like to be a programmer, explain that. In
+either case, present well-thought-out, logical arguments.
+    ...
+
+9. Write an explanation (at least 100 words, but fewer than 500) of what
+role other than programmer you’d like to play in the computer industry
+(independently of whether “programmer” is your first choice).
+    ...
+
+10. Do you think computers will ever develop to be conscious, thinking be-
+ings, capable of competing with humans? Write a short paragraph (at
+least 100 words) supporting your position.
+    I think so. One of the aims in developing robots is to achieve a machine able to communicate naturally (using natural sensory channels for humans) and autonomously with humans.
+
+    Automation seeks to replace ordinary/repetitive/boring tasks realized by humans to be done by machines. If a boring particular task can be replaced by a machine (robot for example) that needs human capabilities ("...to be conscious, thinking beings, capable of competing..."), why not?
+
+    It can save much time in tasks done currently by humans that can not be totally replaced yet, such as: buying and cooking food, giving support to people in dangerous environments (nuclear disaster, earthquakes, ...), defusing bombs, etc.
+
+11. List some characteristics that most successful programmers share. Then
+list some characteristics that programmers are popularly assumed to have.
+    They discuss their ideas in a team, with clients, users. They look for feedback of their design in code. They know the practical and theorecial knowledge to implement.
+
+    Popularly programmers are known through some myths as being nerd, introspective, not sociable, fat, bearded, etc.
+
+12. Identify at least five kinds of applications for computer programs men-
+tioned in this chapter and pick the one that you find the most interesting
+and that you would most likely want to participate in someday. Write a
+short paragraph (at least 100 words) explaining why you chose the one
+you did.
+    Watches, ships, cellphones, minimal invasive surgery, space exploration.
+
+    Space exploration: Programming for a computer (robot) to be run autonomously in an adverse environment, and working with limited teleoperation support, is highly complex and appealing.
+
+    While human beings can not be in person in other planets, it would be great work on a machine that could be and work as much as independent of a human operator.
+    The demanding development of such machine helps to strengthen capabilities of work/programming that would enrich the curriculum of anyone. Likewise to see the result of your job in a machine working far away from millions of kilometers shall be marvelous.
+
+13. How much memory would it take to store (a) this page of text, (b) this
+chapter, (c) all of Shakespeare’s work? Assume one byte of memory holds
+one character and just try to be precise to about 20%.
+    a) 2.635 bytes
+    b) 23 (pages) * 2.635 bytes
+    c) 50 (pages) * 2.635 bytes
+
+14. How much memory does your computer have? Main memory? Disk?
+    16 GB RAM
+    120 SSD
+    1TB HD
