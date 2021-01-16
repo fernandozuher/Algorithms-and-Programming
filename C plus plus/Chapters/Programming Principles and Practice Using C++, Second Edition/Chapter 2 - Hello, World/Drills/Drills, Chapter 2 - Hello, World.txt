@@ -1,0 +1,12 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 16 January 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Drills, Chapter 2 - Hello, World!
+Pages: 53 - 
+
+*/
+
+1. Go to Appendix C and follow the steps required to set up a project. Set
+up an empty console C++ project called hello_world.

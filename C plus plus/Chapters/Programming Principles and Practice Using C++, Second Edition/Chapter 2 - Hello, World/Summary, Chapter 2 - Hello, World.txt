@@ -1,0 +1,35 @@
+/*
+Author: Fernando Zuher
+Place: Brazil
+Date: 16 January 2020
+Book: The C++ Programming Language, fourth edition. Author: Bjarne Stroustrup.
+About: Summary*, Chapter 2 - Hello, World!
+Pages: 43 - 57
+
+* Most of the text was drawn literally from the chapter.
+
+*/
+
+There is no really short, fully correct, and nontechnical way of summarizing where semico-
+lons are needed. For now, just copy our pattern of use, which can be summarized
+as: “Put a semicolon after every expression that doesn’t end with a right curly
+brace ( } ).”
+
+...
+
+Errors found by the compiler are called compile-time errors, errors found by the
+linker are called link-time errors, and errors not found until the program is run are
+called run-time errors or logic errors. Generally, compile-time errors are easier to un-
+derstand and fix than link-time errors, and link-time errors are often easier to find
+and fix than run-time errors and logic errors.
+
+...
+
+You might think you understand everything you read and everything your
+Mentor or instructor told you, but repetition and practice are necessary to de-
+velop programming skills. In this regard, programming is like athletics, music,
+dance, or any skill-based craft. Imagine people trying to compete in any of those
+fields without regular practice. You know how well they would perform. Constant
+practice — for professionals that means lifelong constant practice — is the only way
+to develop and maintain a high-level practical skill.
+
